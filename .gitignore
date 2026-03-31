@@ -36,3 +36,13 @@ temp/
 
 # If dashboard HTML is generated and should stay local, uncomment:
 # output/seo-dashboard.html
+# Generated processed artifacts
+data/processed/*.csv
+data/processed/*.json
+
+# Optional raw generated bundles
+data/raw/*.csv
+data/raw/*.json
+
+# Canonical generated dashboard contract
+output/data.json
