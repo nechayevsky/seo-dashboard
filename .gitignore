@@ -1,0 +1,38 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual environment
+.venv/
+venv/
+
+# macOS
+.DS_Store
+
+# Secrets / local auth
+config/credentials.json
+config/token.json
+settings.json
+
+# Logs
+logs/
+*.log
+
+# Editor / IDE
+.vscode/
+.idea/
+
+# Temporary files
+tmp/
+temp/
+
+# Optional runtime artifacts you usually do not want in git
+# Uncomment if you do NOT want generated data in the repo
+# data/raw/
+# data/processed/
+# output/data.json
+
+# If dashboard HTML is generated and should stay local, uncomment:
+# output/seo-dashboard.html

@@ -1,0 +1,20 @@
+{
+  "project_name": "seo-dashboard",
+  "site_url": "https://international-surrogacy.com/",
+  "sitemap_url": "https://international-surrogacy.com/sitemap.xml",
+  "ga4_property_id": "350621663",
+  "default_language": "ru",
+  "default_period_days": 28,
+  "comparison_period_days": 28,
+  "secondary_period_days": 90,
+  "long_term_period_days": 365,
+  "inspection_daily_limit": 700,
+  "crawl_frequency_days": 7,
+  "inspection_scope_prefix": "/blog/",
+  "output_html": "output/seo-dashboard.html",
+  "output_data_json": "output/data.json",
+  "log_app_file": "logs/app.log",
+  "log_error_file": "logs/error.log",
+  "google_oauth_credentials_file": "config/credentials.json",
+  "google_oauth_token_file": "config/token.json"
+}

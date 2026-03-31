@@ -1,0 +1,953 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SEO Analytics Dashboard</title>
+  
+  <script src="https://cdn.plot.ly/plotly-2.32.0.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      /* Delivering Dreams Theme (Modern, Premium, Safe) */
+      --bg-color: #fcfaff; /* Soft Lavender Tint */
+      --card-bg: #ffffff;
+      --text-main: #1e1b4b; /* Deep Indigo */
+      --text-muted: #64748b;
+      --border-color: #e2e8f0;
+      --primary: #7c3aed; /* Violet/Lavender */
+      --primary-hover: #6d28d9;
+      --primary-light: #f5f3ff;
+      --secondary: #0d9488; /* Teal */
+      --secondary-light: #f0fdfa;
+      
+      --accent-danger: #e11d48;
+      --accent-danger-bg: #fff1f2;
+      --accent-warning: #d97706;
+      --accent-warning-bg: #fffbeb;
+      --accent-success: #059669;
+      --accent-success-bg: #ecfdf5;
+      
+      --font-display: 'Poppins', sans-serif;
+      --font-body: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      
+      --shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+      --shadow-md: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+      --border-radius: 16px;
+      --border-radius-sm: 8px;
+    }
+
+    [data-theme="dark"] {
+      --bg-color: #0f172a;
+      --card-bg: #1e293b;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --border-color: #334155;
+      --primary: #a78bfa;
+      --primary-light: rgba(167, 139, 250, 0.1);
+      --secondary: #2dd4bf;
+      --secondary-light: rgba(45, 212, 191, 0.1);
+      --accent-danger: #fb7185;
+      --accent-danger-bg: rgba(251, 113, 133, 0.1);
+      --accent-warning: #fbbf24;
+      --accent-warning-bg: rgba(251, 191, 36, 0.1);
+      --accent-success: #34d399;
+      --accent-success-bg: rgba(52, 211, 153, 0.1);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    
+    body {
+      font-family: var(--font-body);
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      line-height: 1.5;
+      transition: background-color 0.2s, color 0.2s;
+    }
+
+    a { color: var(--primary); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    /* Layout */
+    .dashboard-container {
+      max-width: 1512px;
+      margin: 0 auto;
+      padding: 0 1.5rem 3rem;
+    }
+
+    /* Header */
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.5rem 0;
+      margin-bottom: 2rem;
+      position: sticky;
+      top: 0;
+      background: rgba(252, 250, 255, 0.8);
+      backdrop-filter: blur(12px);
+      z-index: 1000;
+      border-bottom: 1px solid var(--border-color);
+    }
+    [data-theme="dark"] header { background: rgba(15, 23, 42, 0.8); }
+
+    .header-info h1 {
+      font-family: var(--font-display);
+      font-size: 1.75rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      color: var(--primary);
+    }
+    .header-info p {
+      font-size: 0.9375rem;
+      color: var(--text-muted);
+      margin-top: 0.25rem;
+    }
+    .logo-svg {
+      width: 32px;
+      height: 32px;
+      color: var(--primary);
+    }
+    .controls-group {
+      display: flex;
+      gap: 0.75rem;
+    }
+    .btn-icon {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      padding: 0.625rem 1rem;
+      border-radius: var(--border-radius-sm);
+      cursor: pointer;
+      font-size: 0.875rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: all 0.2s;
+      box-shadow: var(--shadow-sm);
+    }
+    .btn-icon:hover { 
+      background: var(--primary-light); 
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    /* Grid Layouts */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: var(--border-radius);
+      padding: 1.25rem;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .kpi-card h3 {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 0.5rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .kpi-card .value {
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    /* Sections */
+    section { margin-bottom: 3rem; }
+    .section-header {
+      margin-bottom: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .section-header h2 {
+      font-family: var(--font-display);
+      font-size: 1.25rem;
+      font-weight: 700;
+    }
+    .filters {
+      display: flex;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+      background: var(--card-bg);
+      padding: 0.75rem;
+      border: 1px solid var(--border-color);
+      border-radius: var(--border-radius);
+      margin-bottom: 1.5rem;
+    }
+    .filter-input {
+      border: 1px solid var(--border-color);
+      background: var(--bg-color);
+      color: var(--text-main);
+      padding: 0.5rem;
+      border-radius: 6px;
+      font-size: 0.875rem;
+      min-width: 150px;
+      outline: none;
+    }
+    .filter-input:focus { border-color: var(--primary); }
+    .search-input { min-width: 250px; flex-grow: 1; }
+
+    /* Tables */
+    .table-container {
+      overflow-x: auto;
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: var(--border-radius);
+      max-height: 700px;
+      overflow-y: auto;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.875rem;
+    }
+    th {
+      position: sticky;
+      top: 0;
+      background: var(--bg-color);
+      color: var(--text-muted);
+      font-weight: 600;
+      padding: 0.75rem 1rem;
+      border-bottom: 2px solid var(--border-color);
+      cursor: pointer;
+      user-select: none;
+      white-space: nowrap;
+      z-index: 10;
+    }
+    th:hover { color: var(--primary); }
+    td {
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid var(--border-color);
+      color: var(--text-main);
+      vertical-align: middle;
+    }
+    tbody tr:hover { background-color: var(--primary-light); }
+    
+    .path-cell { 
+      font-family: var(--font-mono); 
+      font-size: 0.75rem; 
+      color: var(--primary); 
+      max-width: 320px; 
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    
+    /* Badges & Statuses */
+    .badge {
+      display: inline-block;
+      padding: 0.25rem 0.6rem;
+      border-radius: 6px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+    }
+    .badge-success { background: var(--accent-success-bg); color: var(--accent-success); }
+    .badge-error { background: var(--accent-danger-bg); color: var(--accent-danger); }
+    .badge-warning { background: var(--accent-warning-bg); color: var(--accent-warning); }
+    .badge-neutral { background: var(--primary-light); color: var(--primary); }
+
+    .status-badge {
+      cursor: pointer;
+      transition: transform 0.1s;
+      border: 1px solid transparent;
+      user-select: none;
+    }
+    .status-badge:hover { transform: scale(1.05); border-color: currentColor; }
+    
+    .status-not_started { background: #f1f5f9; color: #64748b; }
+    .status-in_progress { background: #e0f2fe; color: #0369a1; }
+    .status-done { background: #dcfce7; color: #166534; }
+    .status-blocked { background: #fee2e2; color: #991b1b; }
+
+    /* Action Buttons */
+    .action-group {
+      display: flex;
+      gap: 0.4rem;
+      flex-wrap: wrap;
+    }
+    .btn-action {
+      padding: 0.4rem 0.6rem;
+      border-radius: 6px;
+      border: 1px solid var(--border-color);
+      background: var(--card-bg);
+      cursor: pointer;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-muted);
+      transition: all 0.2s;
+    }
+    .btn-action:hover {
+      background: var(--primary-light);
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+    .btn-action.primary {
+      background: var(--primary);
+      color: white;
+      border: none;
+    }
+    .btn-action.primary:hover { background: var(--primary-hover); }
+
+    /* Opportunity Grid */
+    .opp-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+    .opp-item h4 { font-size: 0.75rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; margin-bottom: 0.5rem;}
+    .opp-val { font-size: 1.5rem; font-weight: 700; color: var(--primary); }
+    .opp-sub { font-size: 0.8125rem; color: var(--text-muted); }
+
+    /* My Tasks */
+    #my-tasks-section {
+      border-top: 2px solid var(--primary);
+      padding-top: 2rem;
+    }
+    .task-time { font-size: 0.7rem; color: var(--text-muted); display: block; }
+
+    /* Scrollbars */
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-track { background: var(--bg-color); }
+    ::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #cbd5e1; }
+
+    #error-overlay {
+      display: none;
+      background: var(--accent-danger-bg);
+      border: 1px solid var(--accent-danger);
+      color: var(--text-main);
+      padding: 1.5rem;
+      border-radius: var(--border-radius);
+      margin-bottom: 2rem;
+      line-height: 1.6;
+    }
+  </style>
+</head>
+<body data-theme="light">
+
+<div class="dashboard-container">
+  
+  <header>
+    <div class="header-info">
+      <h1>
+        <svg class="logo-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/>
+        </svg>
+        <span data-t="dashboardTitle">SEO Analytics Dashboard</span>
+      </h1>
+      <p>international-surrogacy.com &bull; <span data-t="lastUpdated">Updating...</span>: <span id="last-updated">Updating...</span></p>
+    </div>
+    <div class="controls-group">
+      <button class="btn-icon" id="lang-toggle-btn">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+        <span data-t="langToggle">EN</span>
+      </button>
+      <button class="btn-icon" id="theme-toggle-btn">
+        <svg id="theme-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+        <span data-t="themeToggle">Toggle Theme</span>
+      </button>
+    </div>
+  </header>
+
+  <div id="error-overlay">
+    <h3 style="margin-bottom:0.5rem;">⚠️ Local File Access Blocked</h3>
+    <p>Your browser is blocking local file loading (CORS policy). To view the dashboard with your data:</p>
+    <p style="margin-top:0.5rem;">Run <code>python3 -m http.server 8000</code> in the project root and open <a href="http://localhost:8000/output/seo-dashboard.html" style="color:var(--text-main);text-decoration:underline; font-weight:bold;">http://localhost:8000/output/seo-dashboard.html</a></p>
+  </div>
+
+  <section id="kpi-section">
+    <div class="kpi-grid">
+      <div class="card kpi-card"><h3 data-t="kpis.clicks">GSC Clicks</h3><div class="value" id="kpi-clicks">-</div></div>
+      <div class="card kpi-card"><h3 data-t="kpis.impressions">GSC Impressions</h3><div class="value" id="kpi-impressions">-</div></div>
+      <div class="card kpi-card"><h3 data-t="kpis.ctr">Avg CTR</h3><div class="value" id="kpi-ctr">-</div></div>
+      <div class="card kpi-card"><h3 data-t="kpis.position">Avg Position</h3><div class="value" id="kpi-position">-</div></div>
+      <div class="card kpi-card"><h3 data-t="kpis.sessions">GA4 Sessions</h3><div class="value" id="kpi-sessions">-</div></div>
+      <div class="card kpi-card"><h3 data-t="kpis.conversions">GA4 Conversions</h3><div class="value" id="kpi-conversions">-</div></div>
+    </div>
+  </section>
+
+  <section id="sitemap-gaps-section">
+    <div class="section-header">
+      <h2 data-t="sections.gaps">Sitemap Indexing Gaps</h2>
+      <span class="badge badge-neutral" id="gap-count">0 items</span>
+    </div>
+    <div class="card" style="margin-bottom: 1rem; background: var(--accent-warning-bg); border-color: var(--accent-warning);">
+      <p style="font-size: 0.875rem; color: var(--accent-warning);">
+        <strong data-t="misc.actionNeeded">Action Needed:</strong> <span data-t="misc.sitemapGapsDesc">These URLs are in your sitemap but have NO data in GSC/GA4.</span>
+      </p>
+    </div>
+    <div class="table-container">
+      <table id="gap-table">
+        <thead>
+          <tr>
+            <th data-t="columns.pagePath">Missing URL</th>
+            <th data-t="columns.action">Action</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section id="opportunities-section">
+    <div class="section-header"><h2 data-t="sections.highlights">Opportunity Highlights</h2></div>
+    <div class="card opp-grid">
+      <div class="opp-item"><h4 data-t="highlights.hiImpLowCtr">High Impression, Low CTR</h4><div class="opp-val" id="opp-hi-low">-</div><div class="opp-sub" data-t="misc.pagesIdentified">Pages identified</div></div>
+      <div class="opp-item"><h4 data-t="highlights.sessNoConv">Sessions, No Conversions</h4><div class="opp-val" id="opp-session-no-conv">-</div><div class="opp-sub" data-t="misc.pagesIdentified">Pages identified</div></div>
+      <div class="opp-item"><h4 data-t="highlights.inspIssues">Inspection Issues</h4><div class="opp-val" id="opp-issues">-</div><div class="opp-sub" data-t="misc.pagesWithWarnings">Pages with warnings/errors</div></div>
+      <div class="opp-item"><h4 data-t="highlights.quickWins">Strong Quick Wins</h4><div class="opp-val" id="opp-quick-wins">-</div><div class="opp-sub" data-t="misc.scoreAbove1000">Score > 1000</div></div>
+    </div>
+  </section>
+
+  <section id="quick-wins-section">
+    <div class="section-header">
+      <h2 data-t="sections.quickWins">Quick Wins Queue</h2>
+      <span class="badge badge-neutral" id="qw-count">0 items</span>
+    </div>
+    <div class="filters">
+      <input type="text" id="qw-search" class="filter-input search-input" data-t-placeholder="misc.search">
+      <select id="qw-reason-filter" class="filter-input"><option value="" data-t="misc.allReasonCodes">All Reason Codes</option></select>
+    </div>
+    <div class="table-container">
+      <table id="qw-table">
+        <thead>
+          <tr>
+            <th data-sort="path" data-t="columns.pagePath">Page Path</th>
+            <th data-sort="numeric" data-t="columns.status">Status</th>
+            <th data-sort="numeric" data-t="columns.winScore">Win Score</th>
+            <th data-sort="text" data-t="columns.action">Action</th>
+            <th data-t="columns.taskAction">Quick Tasks</th>
+            <th data-sort="numeric" data-t="columns.impressions">Imp</th>
+            <th data-sort="numeric" data-t="columns.position">Pos</th>
+            <th data-sort="numeric" data-t="columns.sessions">Sess</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section id="inspection-section">
+    <div class="section-header">
+      <h2 data-t="sections.inspection">Inspection Issues Monitor</h2>
+      <span class="badge badge-neutral" id="insp-count">0 items</span>
+    </div>
+    <div class="filters">
+      <input type="text" id="insp-search" class="filter-input search-input" data-t-placeholder="misc.search">
+      <select id="insp-verdict-filter" class="filter-input">
+        <option value="" data-t="misc.allVerdicts">All Verdicts</option>
+        <option value="PASS">PASS</option>
+        <option value="!PASS" data-t="misc.issuesOnly">Issues Only</option>
+      </select>
+    </div>
+    <div class="table-container">
+      <table id="insp-table">
+        <thead>
+          <tr>
+            <th data-sort="path" data-t="columns.pagePath">Page Path</th>
+            <th data-t="columns.status">Status</th>
+            <th data-sort="text" data-t="columns.verdict">Verdict</th>
+            <th data-sort="text" data-t="columns.robots">Robots</th>
+            <th data-t="columns.googleCanonical">Google Canonical</th>
+            <th data-t="columns.userCanonical">User Canonical</th>
+            <th data-t="columns.taskAction">Action</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section id="unified-section">
+    <div class="section-header">
+      <h2 data-t="sections.unified">Unified Pages Explorer</h2>
+      <span class="badge badge-neutral" id="uni-count">0 items</span>
+    </div>
+    <div class="filters">
+      <input type="text" id="uni-search" class="filter-input search-input" data-t-placeholder="misc.search">
+      <select id="uni-match-filter" class="filter-input"><option value="" data-t="misc.allMatchTypes">All Match Types</option></select>
+    </div>
+    <div class="table-container">
+      <table id="uni-table">
+        <thead>
+          <tr>
+            <th data-sort="path" data-t="columns.pagePath">Page Path</th>
+            <th data-t="columns.status">Status</th>
+            <th data-sort="numeric" data-t="columns.clicks">Clicks</th>
+            <th data-sort="numeric" data-t="columns.impressions">Imp</th>
+            <th data-sort="numeric" data-t="columns.ctr">CTR</th>
+            <th data-sort="numeric" data-t="columns.sessions">Sess</th>
+            <th data-sort="numeric" data-t="columns.conversions">Conv</th>
+            <th data-t="columns.taskAction">Actions</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section id="my-tasks-section">
+    <div class="section-header">
+      <h2 data-t="sections.myTasks">My Tasks</h2>
+      <div class="controls-group">
+        <button class="btn-action" onclick="exportTasksCSV()" data-t="misc.exportTasks">Export CSV</button>
+        <button class="btn-action" onclick="clearTasks()" data-t="misc.clearTasks">Clear All</button>
+      </div>
+    </div>
+    <div class="table-container">
+      <table id="tasks-table">
+        <thead>
+          <tr>
+            <th data-t="columns.timestamp">Timestamp</th>
+            <th data-t="columns.pagePath">Page Path</th>
+            <th data-t="columns.taskAction">Type</th>
+            <th data-t="columns.action">Details</th>
+          </tr>
+        </thead>
+        <tbody id="tasks-body"></tbody>
+      </table>
+    </div>
+  </section>
+
+</div>
+
+<script>
+  // Configuration
+  const SITE_URL = "https://international-surrogacy.com";
+  const GSC_RESOURCE_ID = SITE_URL + "/";
+  
+  const DATA_SOURCES = {
+    quickWins: '../data/processed/page_queue_top_100.csv',
+    unified: '../data/processed/unified_pages_inspected.csv',
+    gscTotals: '../data/raw/gsc_pages_last_28_days.csv',
+    ga4Totals: '../data/raw/ga4_landing_last_28_days.csv',
+    sitemapGaps: '../data/processed/sitemap_gaps.csv'
+  };
+
+  const TRANSLATIONS = {
+    en: {
+      dashboardTitle: "SEO Analytics Dashboard",
+      lastUpdated: "Last updated",
+      themeToggle: "Theme",
+      langToggle: "RU",
+      kpis: {
+        clicks: "GSC Clicks",
+        impressions: "GSC Impressions",
+        ctr: "Avg CTR",
+        position: "Avg Position",
+        sessions: "GA4 Sessions",
+        conversions: "GA4 Conversions"
+      },
+      sections: {
+        highlights: "Opportunity Highlights",
+        gaps: "Sitemap Indexing Gaps",
+        quickWins: "Quick Wins Queue",
+        inspection: "Inspection Monitor",
+        unified: "Unified Pages Explorer",
+        myTasks: "My Tasks Workspace"
+      },
+      highlights: {
+        hiImpLowCtr: "High Imp, Low CTR",
+        sessNoConv: "Sessions, No Conv",
+        inspIssues: "Inspection Issues",
+        quickWins: "Top Quick Wins"
+      },
+      columns: {
+        pagePath: "Page Path",
+        winScore: "Score",
+        reason: "Issue",
+        action: "Recommendation",
+        impressions: "Imp",
+        position: "Pos",
+        sessions: "Sess",
+        conversions: "Conv",
+        verdict: "Verdict",
+        robots: "Robots",
+        googleCanonical: "Google Canon",
+        userCanonical: "User Canon",
+        status: "Status",
+        matchType: "Match",
+        clicks: "Clicks",
+        timestamp: "Time",
+        taskAction: "Actions",
+        ctr: "CTR"
+      },
+      actions: {
+        rewrite: "Rewrite Meta",
+        expand: "Expand Content",
+        merge: "Merge Page",
+        request: "Request Index",
+        none: "No Action"
+      },
+      status: {
+        not_started: "Todo",
+        in_progress: "Pending",
+        done: "Done",
+        blocked: "Block"
+      },
+      misc: {
+        actionNeeded: "Action Needed",
+        sitemapGapsDesc: "These URLs are in your sitemap but have NO data in GSC/GA4.",
+        missingData: "Data Unavailable",
+        noTasks: "No tasks active.",
+        clearTasks: "Clear All",
+        exportTasks: "Export (CSV)",
+        search: "Search path...",
+        allReasonCodes: "All Reasons",
+        allVerdicts: "All Verdicts",
+        issuesOnly: "Issues Only",
+        allMatchTypes: "All Matches",
+        pagesIdentified: "Pages identified",
+        pagesWithWarnings: "With issues",
+        scoreAbove1000: "Score > 1000"
+      }
+    },
+    ru: {
+      dashboardTitle: "Дашборд SEO аналитики",
+      lastUpdated: "Обновлено",
+      themeToggle: "Тема",
+      langToggle: "EN",
+      kpis: {
+        clicks: "Клики GSC",
+        impressions: "Показы GSC",
+        ctr: "Средний CTR",
+        position: "Позиция",
+        sessions: "Сессии GA4",
+        conversions: "Конверсии GA4"
+      },
+      sections: {
+        highlights: "Ключевые показатели",
+        gaps: "Пробелы в индексе (Sitemap)",
+        quickWins: "Очередь быстрых побед",
+        inspection: "Мониторинг индексации",
+        unified: "Обзор всех страниц",
+        myTasks: "Мои задачи (Workflow)"
+      },
+      highlights: {
+        hiImpLowCtr: "Много показов, мало кликов",
+        sessNoConv: "Без конверсий",
+        inspIssues: "Ошибки индексации",
+        quickWins: "Топ возможностей"
+      },
+      columns: {
+        pagePath: "Путь страницы",
+        winScore: "Счёт",
+        reason: "Причина",
+        action: "Рекомендация",
+        impressions: "Показы",
+        position: "Поз",
+        sessions: "Сес",
+        conversions: "Конв",
+        verdict: "Статус",
+        robots: "Robots",
+        googleCanonical: "Canon (G)",
+        userCanonical: "Canon (U)",
+        status: "Статус",
+        matchType: "Тип",
+        clicks: "Клики",
+        timestamp: "Время",
+        taskAction: "Действия",
+        ctr: "CTR"
+      },
+      actions: {
+        rewrite: "Заголовки",
+        expand: "Развить",
+        merge: "Слияние",
+        request: "В индекс",
+        none: "Без действий"
+      },
+      status: {
+        not_started: "Ждёт",
+        in_progress: "В работе",
+        done: "Готово",
+        blocked: "Стоп"
+      },
+      misc: {
+        actionNeeded: "Внимание",
+        sitemapGapsDesc: "Эти адреса есть в Sitemap, но по ним нет данных за 28 дней.",
+        missingData: "Данные отсутствуют",
+        noTasks: "Список задач пуст.",
+        clearTasks: "Очистить",
+        exportTasks: "Экспорт CSV",
+        search: "Поиск...",
+        allReasonCodes: "Все причины",
+        allVerdicts: "Все статусы",
+        issuesOnly: "Только ошибки",
+        allMatchTypes: "Все типы",
+        pagesIdentified: "Станиц найдено",
+        pagesWithWarnings: "С ошибками",
+        scoreAbove1000: "Счёт > 1000"
+      }
+    }
+  };
+
+  // Shared State with persistence
+  const APP_STATE = {
+    lang: sessionStorage.getItem('seo_lang') || 'ru',
+    tasks: JSON.parse(sessionStorage.getItem('seo_tasks') || '[]'),
+    statuses: JSON.parse(sessionStorage.getItem('seo_statuses') || '{}'),
+    theme: localStorage.getItem('seo_theme') || 'light'
+  };
+
+  function saveState() {
+    sessionStorage.setItem('seo_tasks', JSON.stringify(APP_STATE.tasks));
+    sessionStorage.setItem('seo_statuses', JSON.stringify(APP_STATE.statuses));
+    sessionStorage.setItem('seo_lang', APP_STATE.lang);
+  }
+
+  function t(path) {
+    const keys = path.split('.');
+    let val = TRANSLATIONS[APP_STATE.lang];
+    for (const key of keys) { val = val[key]; }
+    return val || path;
+  }
+
+  function updateI18N() {
+    document.querySelectorAll('[data-t]').forEach(el => {
+      el.textContent = t(el.dataset.t);
+    });
+    document.querySelectorAll('[data-t-placeholder]').forEach(el => {
+      el.placeholder = t(el.dataset.tPlaceholder);
+    });
+    document.documentElement.lang = APP_STATE.lang;
+  }
+
+  // Action Button Handlers
+  function onActionClick(path, type, details = "") {
+    const task = {
+      id: Date.now(),
+      time: new Date().toLocaleString(APP_STATE.lang === 'ru' ? 'ru-RU' : 'en-US'),
+      path: path,
+      type: type,
+      details: details
+    };
+    APP_STATE.tasks.unshift(task);
+    APP_STATE.statuses[path] = 'in_progress';
+    
+    // Open links
+    if (type === 'request') {
+      const gscUrl = `https://search.google.com/search-console/inspect?resource_id=${encodeURIComponent(GSC_RESOURCE_ID)}&url=${encodeURIComponent(SITE_URL + path)}`;
+      window.open(gscUrl, '_blank');
+    } else if (type === 'rewrite' || type === 'expand') {
+      window.open(`${SITE_URL}${path}?seo_task=${type}`, '_blank');
+    } else if (type === 'none') {
+      APP_STATE.statuses[path] = 'done';
+    }
+
+    saveState();
+    renderAll();
+  }
+
+  function onStatusCycle(path) {
+    const cycle = ['not_started', 'in_progress', 'done', 'blocked'];
+    const current = APP_STATE.statuses[path] || 'not_started';
+    const next = cycle[(cycle.indexOf(current) + 1) % cycle.length];
+    APP_STATE.statuses[path] = next;
+    saveState();
+    renderAll();
+  }
+
+  function clearTasks() {
+    APP_STATE.tasks = [];
+    saveState();
+    renderAll();
+  }
+
+  function exportTasksCSV() {
+    const head = ["Time", "Path", "Action", "Details"];
+    const rows = APP_STATE.tasks.map(t => [t.time, t.path, t.type, t.details]);
+    const csvContent = "data:text/csv;charset=utf-8," + [head, ...rows].map(e => e.join(",")).join("\n");
+    const link = document.createElement("a");
+    link.href = encodeURI(csvContent);
+    link.download = `seo_workflow_tasks_${new Date().toISOString().split('T')[0]}.csv`;
+    link.click();
+  }
+
+  // --- Rendering Helpers ---
+  function getStatusBadge(path) {
+    const s = APP_STATE.statuses[path] || 'not_started';
+    return `<span class="badge status-badge status-${s}" onclick="event.stopPropagation(); onStatusCycle('${path}')">${t('status.' + s)}</span>`;
+  }
+
+  function getActionButtons(path, context = 'default') {
+    return `
+      <div class="action-group">
+        <button class="btn-action primary" onclick="onActionClick('${path}', 'request')" title="${t('actions.request')}">⚡</button>
+        <button class="btn-action" onclick="onActionClick('${path}', 'rewrite')" title="${t('actions.rewrite')}">✍️</button>
+        <button class="btn-action" onclick="onActionClick('${path}', 'expand')" title="${t('actions.expand')}">➕</button>
+        <button class="btn-action" onclick="onActionClick('${path}', 'none')" title="${t('actions.none')}">✅</button>
+      </div>
+    `;
+  }
+
+  const formatNum = (num, decimals = 0) => (num == null || isNaN(num)) ? '-' : Number(num).toLocaleString(APP_STATE.lang === 'ru' ? 'ru-RU' : 'en-US', { minimumFractionDigits: decimals, maximumFractionDigits: decimals });
+  const formatPct = (num) => (num == null || isNaN(num)) ? '-' : (Number(num) * 100).toFixed(2) + '%';
+  const getVerdictBadge = (val) => {
+    if (!val) return '-';
+    const v = val.toUpperCase();
+    if (v === 'PASS') return `<span class="badge badge-success">${v}</span>`;
+    return `<span class="badge badge-error">${v}</span>`;
+  };
+
+  // --- Main Logic ---
+  let rawData = { qw: [], uni: [], gaps: [], gsc: [], ga4: [] };
+  const tableState = {};
+
+  async function loadData() {
+    const fetchCSV = (url) => new Promise(res => Papa.parse(url, { download: true, header: true, dynamicTyping: true, skipEmptyLines: true, complete: r => res(r.data), error: () => res([]) }));
+    
+    rawData.qw = await fetchCSV(DATA_SOURCES.quickWins);
+    rawData.uni = await fetchCSV(DATA_SOURCES.unified);
+    rawData.gaps = await fetchCSV(DATA_SOURCES.sitemapGaps);
+    rawData.gsc = await fetchCSV(DATA_SOURCES.gscTotals);
+    rawData.ga4 = await fetchCSV(DATA_SOURCES.ga4Totals);
+    
+    if (window.location.protocol === 'file:' && rawData.uni.length === 0) {
+      document.getElementById('error-overlay').style.display = 'block';
+    }
+    
+    renderAll();
+    populateFilters();
+  }
+
+  function renderAll() {
+    updateI18N();
+    renderKPIs();
+    renderHighlights();
+    renderMyTasks();
+    
+    // Refresh tables with current filtering/sorting
+    ['qw', 'insp', 'uni', 'gap'].forEach(p => {
+      if(!tableState[p]) initTableData(p);
+      renderTableBody(p);
+    });
+    
+    document.getElementById('last-updated').textContent = new Date().toLocaleString(APP_STATE.lang === 'ru' ? 'ru' : 'en');
+  }
+
+  function renderKPIs() {
+    let clicks = 0, impressions = 0, sess = 0, conv = 0, posSum = 0;
+    rawData.gsc.forEach(r => { clicks += (r.clicks || 0); impressions += (r.impressions || 0); posSum += ((r.position || 0) * (r.impressions || 0)); });
+    rawData.ga4.forEach(r => { sess += (r.sessions || 0); conv += (r.conversions || 0); });
+    
+    document.getElementById('kpi-clicks').textContent = formatNum(clicks);
+    document.getElementById('kpi-impressions').textContent = formatNum(impressions);
+    document.getElementById('kpi-ctr').textContent = formatPct(impressions ? clicks/impressions : 0);
+    document.getElementById('kpi-position').textContent = formatNum(impressions ? posSum/impressions : 0, 1);
+    document.getElementById('kpi-sessions').textContent = formatNum(sess);
+    document.getElementById('kpi-conversions').textContent = formatNum(conv);
+  }
+
+  function renderHighlights() {
+    let hiImpLowCtr = 0, sessNoConv = 0, issues = 0, strongQW = 0;
+    rawData.uni.forEach(r => {
+      if ((r.gsc_impressions || 0) > 500 && (r.gsc_ctr || 0) < 0.012) hiImpLowCtr++;
+      if ((r.ga4_sessions || 0) > 10 && (r.ga4_conversions || 0) === 0) sessNoConv++;
+      if ((r.inspection_verdict && r.inspection_verdict !== 'PASS') || (r.inspection_google_canonical && r.inspection_user_canonical && r.inspection_google_canonical !== r.inspection_user_canonical)) issues++;
+      if ((r.quick_win_score || 0) > 1000) strongQW++;
+    });
+    document.getElementById('opp-hi-low').textContent = formatNum(hiImpLowCtr);
+    document.getElementById('opp-session-no-conv').textContent = formatNum(sessNoConv);
+    document.getElementById('opp-issues').textContent = formatNum(issues);
+    document.getElementById('opp-quick-wins').textContent = formatNum(strongQW);
+  }
+
+  function renderMyTasks() {
+    const body = document.getElementById('tasks-body');
+    body.innerHTML = APP_STATE.tasks.length ? APP_STATE.tasks.map(t => `
+      <tr>
+        <td><span class="task-time">${t.time}</span></td>
+        <td class="path-cell">${t.path}</td>
+        <td><span class="badge badge-neutral">${TRANSLATIONS[APP_STATE.lang].actions[t.type] || t.type}</span></td>
+        <td><a href="${SITE_URL}${t.path}" target="_blank">View Page</a></td>
+      </tr>
+    `).join('') : `<tr><td colspan="4" style="text-align:center; padding: 2rem;">${t('misc.noTasks')}</td></tr>`;
+  }
+
+  // --- Table Framework ---
+  function initTableData(prefix) {
+    let data = [];
+    if(prefix === 'qw') data = rawData.qw;
+    if(prefix === 'uni') data = rawData.uni;
+    if(prefix === 'gap') data = rawData.gaps;
+    if(prefix === 'insp') data = rawData.uni.filter(r => r.inspection_verdict);
+    
+    tableState[prefix] = { data: data, filtered: [...data], sortKey: null, sortDir: 1 };
+  }
+
+  function renderTableBody(p) {
+    const st = tableState[p];
+    const tbody = document.querySelector(`#${p}-table tbody`);
+    if(!tbody) return;
+    
+    // Apply Filters before slicing for display
+    let filtered = [...st.data];
+    const search = document.getElementById(`${p}-search`)?.value.toLowerCase();
+    if(search) filtered = filtered.filter(r => (r.normalized_page_path || '').toLowerCase().includes(search));
+    
+    if(p === 'insp') {
+      const v = document.getElementById('insp-verdict-filter').value;
+      if(v === '!PASS') filtered = filtered.filter(r => r.inspection_verdict !== 'PASS' || (r.inspection_google_canonical && r.inspection_google_canonical !== r.inspection_user_canonical));
+      else if(v) filtered = filtered.filter(r => r.inspection_verdict === v);
+    }
+    
+    st.filtered = filtered;
+    document.getElementById(`${p}-count`).textContent = `${filtered.length} items`;
+    
+    tbody.innerHTML = filtered.slice(0, 200).map(r => {
+      const path = r.normalized_page_path || r.path || '/';
+      if(p === 'qw') return `<tr><td class="path-cell">${path}</td><td>${getStatusBadge(path)}</td><td><strong>${formatNum(r.quick_win_score)}</strong></td><td>${r.recommended_action}</td><td>${getActionButtons(path)}</td><td>${formatNum(r.gsc_impressions)}</td><td>${formatNum(r.gsc_position, 1)}</td><td>${formatNum(r.ga4_sessions)}</td></tr>`;
+      if(p === 'gap') return `<tr><td class="path-cell">${path}</td><td>${getActionButtons(path)}</td></tr>`;
+      if(p === 'insp') return `<tr><td class="path-cell">${path}</td><td>${getStatusBadge(path)}</td><td>${getVerdictBadge(r.inspection_verdict)}</td><td>${r.inspection_robots_txt_state || '-'}</td><td class="path-cell" title="${r.inspection_google_canonical}">${r.inspection_google_canonical ? r.inspection_google_canonical.split('/').slice(-2).join('/') : '-'}</td><td class="path-cell" title="${r.inspection_user_canonical}">${r.inspection_user_canonical ? r.inspection_user_canonical.split('/').slice(-2).join('/') : '-'}</td><td>${getActionButtons(path)}</td></tr>`;
+      if(p === 'uni') return `<tr><td class="path-cell">${path}</td><td>${getStatusBadge(path)}</td><td>${formatNum(r.gsc_clicks)}</td><td>${formatNum(r.gsc_impressions)}</td><td>${formatPct(r.gsc_ctr)}</td><td>${formatNum(r.ga4_sessions)}</td><td>${formatNum(r.ga4_conversions)}</td><td>${getActionButtons(path)}</td></tr>`;
+      return '';
+    }).join('');
+  }
+
+  function populateFilters() {
+    const qwReasons = [...new Set(rawData.qw.map(r => r.reason_code))].filter(Boolean);
+    const qwFilter = document.getElementById('qw-reason-filter');
+    qwReasons.forEach(res => { const op = document.createElement('option'); op.value = res; op.textContent = res; qwFilter.appendChild(op); });
+  }
+
+  // Events
+  document.getElementById('lang-toggle-btn').onclick = () => { APP_STATE.lang = APP_STATE.lang === 'ru' ? 'en' : 'ru'; saveState(); renderAll(); };
+  document.getElementById('theme-toggle-btn').onclick = () => {
+    document.body.dataset.theme = document.body.dataset.theme === 'light' ? 'dark' : 'light';
+    localStorage.setItem('seo_theme', document.body.dataset.theme);
+  };
+  
+  ['qw', 'insp', 'uni'].forEach(p => {
+    document.getElementById(`${p}-search`)?.oninput = () => renderTableBody(p);
+  });
+  document.getElementById('qw-reason-filter').onchange = () => renderTableBody('qw');
+  document.getElementById('insp-verdict-filter').onchange = () => renderTableBody('insp');
+
+  window.onload = loadData;
+</script>
+
+</body>
+</html>
