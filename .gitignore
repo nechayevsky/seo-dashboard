@@ -46,3 +46,4 @@ data/raw/*.json
 
 # Canonical generated dashboard contract
 output/data.json
+scripts/
