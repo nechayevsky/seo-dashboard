@@ -613,3 +613,129 @@ class IndexingReviewRow:
             "recommended_action_text": self.recommended_action_text,
             "source_type": self.source_type,
         }
+
+
+@dataclass(slots=True)
+class SitemapInventoryRow:
+    url: str
+    normalized_page_url: str
+    normalized_page_path: str
+    sitemap_source_urls: list[str] = field(default_factory=list)
+    sitemap_lastmod: str = ""
+    title: str = ""
+    title_source: str = ""
+    basic_fetch_status: str = ""
+    basic_fetch_state: str = ""
+    fetch_error: str = ""
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "url": self.url,
+            "normalized_page_url": self.normalized_page_url,
+            "normalized_page_path": self.normalized_page_path,
+            "sitemap_source_urls": self.sitemap_source_urls,
+            "sitemap_lastmod": self.sitemap_lastmod,
+            "title": self.title,
+            "title_source": self.title_source,
+            "basic_fetch_status": self.basic_fetch_status,
+            "basic_fetch_state": self.basic_fetch_state,
+            "fetch_error": self.fetch_error,
+        }
+
+
+@dataclass(slots=True)
+class SitemapOpportunityReviewRow:
+    url: str
+    normalized_page_url: str
+    normalized_page_path: str
+    source_in_sitemap: str
+    source_in_gsc: str
+    source_in_ga4: str
+    source_in_inspection: str
+    page_segment: str
+    page_directory_group: str
+    title: str = ""
+    title_source: str = ""
+    basic_fetch_status: str = ""
+    basic_fetch_state: str = ""
+    sitemap_lastmod: str = ""
+    gsc_clicks: float = 0.0
+    gsc_impressions: float = 0.0
+    gsc_position: float = 0.0
+    ga4_sessions: float = 0.0
+    ga4_conversions: float = 0.0
+    inspection_verdict: str = ""
+    inspection_coverage_state: str = ""
+    inspection_indexing_state: str = ""
+    inspection_page_fetch_state: str = ""
+    inspection_robots_txt_state: str = ""
+    inspection_google_canonical: str = ""
+    inspection_user_canonical: str = ""
+    indexed_status: str = ""
+    crawlable_not_indexed: bool = False
+    canonical_mismatch: bool = False
+    robots_issue: bool = False
+    visibility_status: str = ""
+    session_status: str = ""
+    thin_content_risk: str = ""
+    thin_content_signals: list[str] = field(default_factory=list)
+    duplicate_slug_cluster_size: int = 0
+    slug_potential_score: float = 0.0
+    merge_candidate_url: str = ""
+    merge_candidate_path: str = ""
+    merge_candidate_similarity: float = 0.0
+    merge_candidate_confidence: str = ""
+    stronger_candidate_reason: str = ""
+    opportunity_score: float = 0.0
+    opportunity_bucket: str = ""
+    recommended_action: str = ""
+    recommended_action_text: str = ""
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "url": self.url,
+            "normalized_page_url": self.normalized_page_url,
+            "normalized_page_path": self.normalized_page_path,
+            "source_in_sitemap": self.source_in_sitemap,
+            "source_in_gsc": self.source_in_gsc,
+            "source_in_ga4": self.source_in_ga4,
+            "source_in_inspection": self.source_in_inspection,
+            "page_segment": self.page_segment,
+            "page_directory_group": self.page_directory_group,
+            "title": self.title,
+            "title_source": self.title_source,
+            "basic_fetch_status": self.basic_fetch_status,
+            "basic_fetch_state": self.basic_fetch_state,
+            "sitemap_lastmod": self.sitemap_lastmod,
+            "gsc_clicks": self.gsc_clicks,
+            "gsc_impressions": self.gsc_impressions,
+            "gsc_position": self.gsc_position,
+            "ga4_sessions": self.ga4_sessions,
+            "ga4_conversions": self.ga4_conversions,
+            "inspection_verdict": self.inspection_verdict,
+            "inspection_coverage_state": self.inspection_coverage_state,
+            "inspection_indexing_state": self.inspection_indexing_state,
+            "inspection_page_fetch_state": self.inspection_page_fetch_state,
+            "inspection_robots_txt_state": self.inspection_robots_txt_state,
+            "inspection_google_canonical": self.inspection_google_canonical,
+            "inspection_user_canonical": self.inspection_user_canonical,
+            "indexed_status": self.indexed_status,
+            "crawlable_not_indexed": self.crawlable_not_indexed,
+            "canonical_mismatch": self.canonical_mismatch,
+            "robots_issue": self.robots_issue,
+            "visibility_status": self.visibility_status,
+            "session_status": self.session_status,
+            "thin_content_risk": self.thin_content_risk,
+            "thin_content_signals": self.thin_content_signals,
+            "duplicate_slug_cluster_size": self.duplicate_slug_cluster_size,
+            "slug_potential_score": self.slug_potential_score,
+            "merge_candidate_url": self.merge_candidate_url,
+            "merge_candidate_path": self.merge_candidate_path,
+            "merge_candidate_similarity": self.merge_candidate_similarity,
+            "merge_candidate_confidence": self.merge_candidate_confidence,
+            "stronger_candidate_reason": self.stronger_candidate_reason,
+            "opportunity_score": self.opportunity_score,
+            "opportunity_bucket": self.opportunity_bucket,
+            "recommended_action": self.recommended_action,
+            "recommended_action_text": self.recommended_action_text,
+        }

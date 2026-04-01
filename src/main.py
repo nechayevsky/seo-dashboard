@@ -653,11 +653,25 @@ def run_enrich_with_sitemap(config_path: Path, project_paths: ProjectPaths) -> i
         from .services.sitemap_service import SitemapService
 
         sitemap_service = SitemapService(config, project_paths, app_logger)
-        output_path = sitemap_service.enrich_data()
-        if output_path.startswith("Error:"):
-            print(output_path)
-            return 1
-        print(f"Sitemap enrichment completed: {output_path}")
+        summary = sitemap_service.enrich_data()
+        print("Sitemap opportunity review")
+        print(f"status: {summary.get('status', 'ok')}")
+        print(f"inventory rows: {summary.get('inventory_rows', 0)}")
+        review_counts = summary.get("review_counts", {})
+        if review_counts:
+            print("review rows by window:")
+            for window_name, count in review_counts.items():
+                print(f"- {window_name}: {count}")
+        warnings = summary.get("warnings", [])
+        if warnings:
+            print("warnings:")
+            for warning in warnings:
+                print(f"- {warning}")
+        output_files = summary.get("output_files", [])
+        if output_files:
+            print("output files:")
+            for output_path in output_files:
+                print(f"- {output_path}")
         return 0
     except Exception as exc:
         error_logger.error("Sitemap enrichment failed: %s", exc)

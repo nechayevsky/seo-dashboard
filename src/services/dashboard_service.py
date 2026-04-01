@@ -17,6 +17,7 @@ from .inspection_service import enrich_unified_dataset_with_inspection
 from .interpretation_service import InterpretationService, RULES_FILENAME
 from .merge_service import MergeService, WINDOW_TO_SUFFIX
 from .scoring_service import ScoringService, score_page_row
+from .sitemap_service import SITEMAP_REVIEW_FIELDNAMES, SitemapService
 from .workflow_service import WORKFLOW_STATUSES, WorkflowService
 
 TOP_MOVERS_FIELDNAMES = [
@@ -75,6 +76,22 @@ INDEXING_REVIEW_FIELDNAMES = [
     "recommended_action",
     "recommended_action_text",
     "source_type",
+    "workflow_scope",
+    "workflow_page_key",
+    "workflow_issue_key",
+    "workflow_record_key",
+    "workflow_status",
+    "workflow_status_explicit",
+    "workflow_status_source",
+    "workflow_status_updated_at",
+    "workflow_note",
+    "workflow_note_present",
+    "workflow_note_source",
+    "workflow_note_updated_at",
+]
+
+SITEMAP_REVIEW_OUTPUT_FIELDNAMES = [
+    *SITEMAP_REVIEW_FIELDNAMES,
     "workflow_scope",
     "workflow_page_key",
     "workflow_issue_key",
@@ -390,6 +407,57 @@ class DashboardService:
         ]
         return [row.to_dict() for row in enrich_unified_dataset_with_inspection(unified_rows, inspection_results)]
 
+    def _load_or_build_sitemap_review(
+        self,
+        overwrite: bool,
+    ) -> tuple[dict[str, list[dict[str, Any]]], list[str], dict[str, Any]]:
+        review_payload = _read_json_if_exists(self.paths.data_processed_dir / "sitemap_opportunity_review.json")
+        if review_payload and isinstance(review_payload.get("windows"), dict) and not overwrite:
+            return (
+                {
+                    window_name: rows
+                    for window_name, rows in review_payload["windows"].items()
+                    if isinstance(rows, list)
+                },
+                [],
+                {
+                    "status": "ok",
+                    "warnings": review_payload.get("warnings", []),
+                },
+            )
+
+        sitemap_service = SitemapService(self.config, self.paths, _default_logger(self.logger))
+        inventory_exists = sitemap_service.inventory_json_path.exists()
+        review_exists = sitemap_service.review_json_path.exists()
+
+        if inventory_exists:
+            return sitemap_service.build_opportunity_review(overwrite=overwrite, allow_network=False)
+
+        if review_exists and review_payload and isinstance(review_payload.get("windows"), dict):
+            return (
+                {
+                    window_name: rows
+                    for window_name, rows in review_payload["windows"].items()
+                    if isinstance(rows, list)
+                },
+                [],
+                {
+                    "status": "stale_review_only",
+                    "warnings": [
+                        "Sitemap review is present, but raw sitemap inventory is missing. Re-run enrich-with-sitemap to refresh inventory-backed review data."
+                    ],
+                },
+            )
+
+        return (
+            {},
+            [],
+            {
+                "status": "missing_inventory",
+                "warnings": ["Run enrich-with-sitemap to create sitemap inventory and opportunity review data."],
+            },
+        )
+
     def _build_kpis(
         self,
         sitewide_trends: dict[str, list[dict[str, Any]]],
@@ -434,12 +502,18 @@ class DashboardService:
         pages_by_window: dict[str, list[dict[str, Any]]],
         top_page_movers: list[PageMoverRow],
         indexing_review: list[IndexingReviewRow],
+        sitemap_review_by_window: dict[str, list[dict[str, Any]]],
+        sitemap_review_meta: dict[str, Any],
     ) -> dict[str, Any]:
         missing_sections: list[str] = []
         warnings: list[str] = []
         missing_files: list[str] = []
 
-        for relative_path in ("data/raw/gsc_bundle.json", "data/raw/ga4_bundle.json"):
+        for relative_path in (
+            "data/raw/gsc_bundle.json",
+            "data/raw/ga4_bundle.json",
+            "data/raw/sitemap_inventory.json",
+        ):
             if not self.paths.resolve(relative_path).exists():
                 missing_files.append(relative_path)
 
@@ -457,6 +531,17 @@ class DashboardService:
         if not indexing_review:
             missing_sections.append("indexing_review")
             warnings.append("Indexing review is empty. Run inspect-top-pages after generating queue and unified datasets.")
+        if not any(sitemap_review_by_window.values()):
+            missing_sections.append("sitemap_opportunity_review")
+            warnings.append(
+                "Sitemap opportunity review is missing. Run enrich-with-sitemap to fetch sitemap inventory and generate opportunity rows."
+            )
+
+        warnings.extend(
+            _string(value)
+            for value in sitemap_review_meta.get("warnings", [])
+            if _string(value)
+        )
 
         return {
             "missing_files": missing_files,
@@ -482,6 +567,9 @@ class DashboardService:
         }
         quick_wins = self._load_or_build_queue_rows(overwrite=overwrite)
         inspected_rows = self._load_or_build_inspected_rows(overwrite=overwrite)
+        sitemap_review_by_window, sitemap_output_files, sitemap_review_meta = self._load_or_build_sitemap_review(
+            overwrite=overwrite,
+        )
         if inspected_rows:
             pages_by_window["last_28_days"] = inspected_rows
 
@@ -527,13 +615,20 @@ class DashboardService:
         quick_wins = workflow_service.apply_to_rows(quick_wins, scope="page")
         top_page_mover_rows = workflow_service.apply_to_rows(top_page_mover_rows, scope="page")
         indexing_review_rows = workflow_service.apply_to_rows(indexing_review_rows, scope="issue")
+        sitemap_review_by_window = {
+            window_name: workflow_service.apply_to_rows(rows, scope="page")
+            for window_name, rows in sitemap_review_by_window.items()
+        }
 
         top_movers_csv = self.paths.data_processed_dir / "top_page_movers_last_28_vs_previous_28.csv"
         top_movers_json = self.paths.data_processed_dir / "top_page_movers_last_28_vs_previous_28.json"
         indexing_csv = self.paths.data_processed_dir / "indexing_review_last_28_days.csv"
         indexing_json = self.paths.data_processed_dir / "indexing_review_last_28_days.json"
+        sitemap_review_csv = self.paths.data_processed_dir / "sitemap_opportunity_review.csv"
+        sitemap_review_json = self.paths.data_processed_dir / "sitemap_opportunity_review.json"
 
         output_files: list[str] = workflow_service.ensure_state_files()
+        output_files.extend(sitemap_output_files)
         written = write_csv_file(top_movers_csv, top_page_mover_rows, TOP_MOVERS_FIELDNAMES, overwrite=overwrite)
         if written:
             output_files.append(str(written))
@@ -546,6 +641,26 @@ class DashboardService:
         written = write_json_file(indexing_json, {"rows": indexing_review_rows}, overwrite=overwrite)
         if written:
             output_files.append(str(written))
+        if sitemap_review_by_window.get("last_28_days"):
+            written = write_csv_file(
+                sitemap_review_csv,
+                sitemap_review_by_window["last_28_days"],
+                SITEMAP_REVIEW_OUTPUT_FIELDNAMES,
+                overwrite=overwrite,
+            )
+            if written:
+                output_files.append(str(written))
+            written = write_json_file(
+                sitemap_review_json,
+                {
+                    "generated_at": datetime.now(timezone.utc).isoformat(),
+                    "windows": sitemap_review_by_window,
+                    "warnings": sitemap_review_meta.get("warnings", []),
+                },
+                overwrite=overwrite,
+            )
+            if written:
+                output_files.append(str(written))
 
         sitewide_trends = (gsc_bundle or {}).get("sitewide_trends", {})
         raw_queries = (gsc_bundle or {}).get("query_reports") or {
@@ -565,7 +680,7 @@ class DashboardService:
                 "project_name": self.config.project_name,
                 "site_url": self.config.site_url,
                 "generated_at": datetime.now(timezone.utc).isoformat(),
-                "contract_version": "1.3",
+                "contract_version": "1.4",
                 "default_language": self.config.default_language,
                 "default_window": "last_28_days",
                 "official_dashboard_path": self.config.output_html,
@@ -581,6 +696,11 @@ class DashboardService:
                 },
                 "history_snapshot_dir": str(self.paths.data_history_snapshots_dir),
                 "history_latest_dir": str(self.paths.data_history_latest_dir),
+                "sitemap_review_paths": {
+                    "inventory": "data/raw/sitemap_inventory.json",
+                    "review_csv": "data/processed/sitemap_opportunity_review.csv",
+                    "review_json": "data/processed/sitemap_opportunity_review.json",
+                },
             },
             "windows": date_windows,
             "kpis": kpis,
@@ -594,6 +714,7 @@ class DashboardService:
                 "indexing_review": {
                     "last_28_days": indexing_review_rows,
                 },
+                "sitemap_opportunity_review": sitemap_review_by_window,
                 "quick_wins": {
                     "last_28_days": quick_wins,
                 },
@@ -604,6 +725,9 @@ class DashboardService:
                         "pages_last_28_days": workflow_service.summary_for_rows(pages_by_window.get("last_28_days", [])),
                         "quick_wins_last_28_days": workflow_service.summary_for_rows(quick_wins),
                         "indexing_review_last_28_days": workflow_service.summary_for_rows(indexing_review_rows),
+                        "sitemap_opportunity_review_last_28_days": workflow_service.summary_for_rows(
+                            sitemap_review_by_window.get("last_28_days", [])
+                        ),
                     },
                 },
             },
@@ -613,6 +737,8 @@ class DashboardService:
                 pages_by_window,
                 top_page_movers,
                 indexing_review,
+                sitemap_review_by_window,
+                sitemap_review_meta,
             ),
         }
 
@@ -625,7 +751,7 @@ class DashboardService:
         written_data_json = write_json_file(data_json_path, payload, overwrite=overwrite)
         if written_data_json:
             output_files.append(str(written_data_json))
-        return payload, output_files
+        return payload, list(dict.fromkeys(output_files))
 
     def generate(self, overwrite: bool = True) -> dict[str, Any]:
         active_logger = _default_logger(self.logger)

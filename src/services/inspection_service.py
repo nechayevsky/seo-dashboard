@@ -281,11 +281,17 @@ def enrich_unified_dataset_with_inspection(
 
 
 def _load_sitemap_urls(app_config: AppConfig, project_paths: ProjectPaths, logger: Any) -> set[str]:
-    if not getattr(app_config, "sitemap_url", "").strip():
+    configured_sitemaps = [url for url in getattr(app_config, "sitemap_urls", ()) if str(url).strip()]
+    if not configured_sitemaps and getattr(app_config, "sitemap_url", "").strip():
+        configured_sitemaps = [app_config.sitemap_url]
+
+    if not configured_sitemaps:
         return set()
     try:
         sitemap_service = SitemapService(app_config, project_paths, logger)
-        sitemap_urls = sitemap_service.fetch_all_urls(app_config.sitemap_url)
+        sitemap_urls: set[str] = set()
+        for sitemap_url in configured_sitemaps:
+            sitemap_urls.update(sitemap_service.fetch_all_urls(sitemap_url))
         return {url.rstrip("/") for url in sitemap_urls if _is_in_scope(url, app_config.site_url, app_config.inspection_scope_prefix)}
     except Exception as exc:
         logger.warning("Sitemap URL prioritization could not be loaded: %s", exc)

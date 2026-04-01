@@ -40,6 +40,7 @@ class AppConfig:
     project_name: str
     site_url: str
     sitemap_url: str
+    sitemap_urls: tuple[str, ...]
     ga4_property_id: str
     default_language: str
     default_period_days: int
@@ -78,7 +79,8 @@ class AppConfig:
         return cls(
             project_name=str(data["project_name"]).strip(),
             site_url=str(data["site_url"]).strip(),
-            sitemap_url=str(data["sitemap_url"]).strip(),
+            sitemap_url=_primary_sitemap_url(data),
+            sitemap_urls=_configured_sitemap_urls(data),
             ga4_property_id=str(data["ga4_property_id"]).strip(),
             default_language=str(data["default_language"]).strip(),
             default_period_days=int(data["default_period_days"]),
@@ -111,6 +113,38 @@ class AppConfig:
         )
 
 
+def _configured_sitemap_urls(data: dict[str, Any]) -> tuple[str, ...]:
+    configured: list[str] = []
+
+    sitemap_url = str(data.get("sitemap_url", "") or "").strip()
+    if sitemap_url:
+        configured.append(sitemap_url)
+
+    raw_sitemap_urls = data.get("sitemap_urls")
+    if isinstance(raw_sitemap_urls, list):
+        for item in raw_sitemap_urls:
+            candidate = str(item or "").strip()
+            if candidate:
+                configured.append(candidate)
+
+    deduped: list[str] = []
+    seen: set[str] = set()
+    for candidate in configured:
+        if candidate in seen:
+            continue
+        deduped.append(candidate)
+        seen.add(candidate)
+
+    return tuple(deduped)
+
+
+def _primary_sitemap_url(data: dict[str, Any]) -> str:
+    configured = _configured_sitemap_urls(data)
+    if configured:
+        return configured[0]
+    return str(data.get("sitemap_url", "") or "").strip()
+
+
 def read_config_data(config_path: str | Path) -> dict[str, Any]:
     resolved_path = Path(config_path).expanduser()
 
@@ -133,6 +167,7 @@ def validate_config_data(data: dict[str, Any]) -> ValidationResult:
 
     site_url = data.get("site_url")
     sitemap_url = data.get("sitemap_url")
+    sitemap_urls = data.get("sitemap_urls")
     if not isinstance(site_url, str) or not site_url.strip():
         errors.append("site_url: must be a non-empty string")
     elif not (site_url.startswith("http://") or site_url.startswith("https://")):
@@ -140,10 +175,21 @@ def validate_config_data(data: dict[str, Any]) -> ValidationResult:
     elif not site_url.endswith("/"):
         errors.append("site_url: must end with /")
 
-    if not isinstance(sitemap_url, str) or not sitemap_url.strip():
-        errors.append("sitemap_url: must be a non-empty string")
-    elif not (sitemap_url.startswith("http://") or sitemap_url.startswith("https://")):
-        errors.append("sitemap_url: must start with http:// or https://")
+    configured_sitemaps = _configured_sitemap_urls(data)
+    if not configured_sitemaps:
+        errors.append("sitemap_url or sitemap_urls: must provide at least one sitemap URL")
+    else:
+        for sitemap_candidate in configured_sitemaps:
+            if not (
+                sitemap_candidate.startswith("http://")
+                or sitemap_candidate.startswith("https://")
+            ):
+                errors.append(
+                    f"sitemap URL must start with http:// or https://: {sitemap_candidate}"
+                )
+
+    if sitemap_urls is not None and not isinstance(sitemap_urls, list):
+        errors.append("sitemap_urls: must be a list of sitemap URLs when provided")
 
     ga4_property_id = data.get("ga4_property_id")
     if not isinstance(ga4_property_id, str) or not ga4_property_id.strip():

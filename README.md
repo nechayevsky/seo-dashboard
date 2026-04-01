@@ -14,13 +14,13 @@ Current scope:
 - unified page dataset merge between GSC pages and GA4 landing pages
 - quick-win scoring and page queue export
 - URL Inspection enrichment for top quick-win pages
+- sitemap ingestion and sitemap opportunity review
 - weekly historical snapshots and weekly delta tracking
 - read-only local HTML dashboard for artifact visualization
 - canonical dashboard data contract at `output/data.json`
 - local workflow layer for statuses, notes, and filtered task export
 
 Not included yet:
-- sitemap or crawl queue
 - website content editing from the dashboard
 - `launchd` scheduling
 - deep semantic gap analysis
@@ -176,6 +176,12 @@ Inspect top queue pages with Search Console URL Inspection API and enrich the un
 python -m src.main --config settings.json --command inspect-top-pages
 ```
 
+Fetch sitemap inventory and build the sitemap opportunity review layer:
+
+```bash
+python -m src.main --config settings.json --command enrich-with-sitemap
+```
+
 Generate the canonical dashboard contract used by the official local dashboard:
 
 ```bash
@@ -200,6 +206,7 @@ That canonical contract is generated from backend artifacts and currently includ
 - `pages`
 - `top_page_movers`
 - `indexing_review`
+- `sitemap_opportunity_review`
 - `weekly_delta`
 
 The official dashboard now also includes:
@@ -211,6 +218,7 @@ The official dashboard now also includes:
   - `pages` (shown as the unified pages explorer)
   - `top_page_movers`
   - `indexing_review`
+  - `sitemap_opportunity_review`
   - `weekly_delta`
 - localized validation and empty states that distinguish:
   - no data generated yet
@@ -226,9 +234,30 @@ The official dashboard now also includes:
 The backend artifacts that feed the contract include:
 - `data/raw/gsc_bundle.json`
 - `data/raw/ga4_bundle.json`
+- `data/raw/sitemap_inventory.json`
 - `data/processed/unified_pages_last_28_days.csv`
 - `data/processed/page_queue_top_100.csv`
 - `data/raw/gsc_inspection_top_500.json`
+- `data/processed/sitemap_opportunity_review.csv`
+- `data/processed/sitemap_opportunity_review.json`
+
+Sitemap configuration:
+- `sitemap_url` still works as a single primary sitemap value
+- `sitemap_urls` can be used to configure one or more sitemap or sitemap-index URLs
+- the project uses local/raw sitemap inventory as the source of truth for the inventory review layer; `generate-dashboard` will not silently refetch sitemap XML
+
+Sitemap review outputs:
+- `data/raw/sitemap_inventory.json`
+  - raw canonical sitemap inventory collected from the configured sitemap URLs
+- `data/processed/sitemap_opportunity_review.csv`
+  - `last_28_days` review export for spreadsheet-style triage
+- `data/processed/sitemap_opportunity_review.json`
+  - review rows by window (`last_28_days`, `last_90_days`, `last_365_days`)
+
+Sitemap opportunity review logic is heuristic and local-only:
+- source flags are derived from sitemap inventory, merged page datasets, and inspection results
+- thin-content signals are transparent rule-based proxies, not ML judgments
+- merge / redirect suggestions are heuristic and should be treated as review candidates, not automatic truth
 
 Historical weekly state is persisted locally under:
 - `data/history/snapshots/` - immutable timestamped weekly snapshot files

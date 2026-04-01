@@ -1,7 +1,7 @@
 {
   "history": {
-    "snapshot_count": 7,
-    "current_snapshot_id": "2026-04-01T05-42-22.952592Z00-00",
+    "snapshot_count": 11,
+    "current_snapshot_id": "2026-04-01T06-36-47.550470Z00-00",
     "current_week_key": "2026-W14",
     "previous_snapshot_id": "",
     "previous_week_key": ""
@@ -11,8 +11,8 @@
       "available": false,
       "message_key": "messages.noPriorSnapshot",
       "current_snapshot": {
-        "snapshot_id": "2026-04-01T05-42-22.952592Z00-00",
-        "generated_at": "2026-04-01T05:42:22.952592+00:00",
+        "snapshot_id": "2026-04-01T06-36-47.550470Z00-00",
+        "generated_at": "2026-04-01T06:36:47.550470+00:00",
         "week_key": "2026-W14"
       },
       "previous_snapshot": null,
@@ -76,8 +76,8 @@
       "available": false,
       "message_key": "messages.noPriorSnapshot",
       "current_snapshot": {
-        "snapshot_id": "2026-04-01T05-42-22.952592Z00-00",
-        "generated_at": "2026-04-01T05:42:22.952592+00:00",
+        "snapshot_id": "2026-04-01T06-36-47.550470Z00-00",
+        "generated_at": "2026-04-01T06:36:47.550470+00:00",
         "week_key": "2026-W14"
       },
       "previous_snapshot": null,
@@ -141,8 +141,8 @@
       "available": false,
       "message_key": "messages.noPriorSnapshot",
       "current_snapshot": {
-        "snapshot_id": "2026-04-01T05-42-22.952592Z00-00",
-        "generated_at": "2026-04-01T05:42:22.952592+00:00",
+        "snapshot_id": "2026-04-01T06-36-47.550470Z00-00",
+        "generated_at": "2026-04-01T06:36:47.550470+00:00",
         "week_key": "2026-W14"
       },
       "previous_snapshot": null,

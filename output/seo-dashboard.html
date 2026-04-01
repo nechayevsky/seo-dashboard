@@ -856,6 +856,21 @@
         min-width: 1480px;
       }
 
+      .sitemap-review-controls {
+        grid-template-columns: minmax(0, 240px);
+      }
+
+      .sitemap-review-wrap {
+        max-width: 100%;
+        max-height: min(62vh, 640px);
+        overflow: auto;
+        overscroll-behavior: contain;
+      }
+
+      #sitemapReviewTable table {
+        min-width: 1640px;
+      }
+
       .cell-break {
         overflow-wrap: anywhere;
         word-break: break-word;
@@ -1117,6 +1132,7 @@
         <a href="#top-page-movers" data-nav-item="top-page-movers" data-i18n="sideNav.topMovers">Движение страниц</a>
         <a href="#weekly-delta" data-nav-item="weekly-delta" data-i18n="sideNav.weeklyDelta">Weekly Delta</a>
         <a href="#indexing-review" data-nav-item="indexing-review" data-i18n="sideNav.indexingReview">Indexing review</a>
+        <a href="#sitemap-review" data-nav-item="sitemap-review" data-i18n="sideNav.sitemapReview">Sitemap review</a>
       </aside>
 
       <header class="hero">
@@ -1179,6 +1195,7 @@
           <a href="#top-page-movers" data-i18n="nav.topMovers">Движение страниц</a>
           <a href="#weekly-delta" data-i18n="nav.weeklyDelta">Weekly Delta</a>
           <a href="#indexing-review" data-i18n="nav.indexingReview">Indexing review</a>
+          <a href="#sitemap-review" data-i18n="nav.sitemapReview">Sitemap review</a>
           <a href="#pages" data-i18n="nav.pages">Страницы</a>
         </nav>
         <div id="loadGuidance"></div>
@@ -1547,6 +1564,33 @@
           </div>
         </section>
 
+        <section class="panel section-anchor" id="sitemap-review">
+          <div class="panel-header">
+            <div>
+              <h2 class="panel-title" data-i18n="sitemapReview.title">Sitemap Opportunity Review</h2>
+              <p class="panel-copy" id="sitemapReviewCopy"></p>
+            </div>
+          </div>
+          <div class="panel-body">
+            <div class="table-shell">
+              <div class="queries-toolbar">
+                <div class="queries-controls sitemap-review-controls">
+                  <div class="filter-field">
+                    <label for="sitemapIndexedFilter" data-i18n="sitemapReview.indexedFilterLabel">Indexed status</label>
+                    <select id="sitemapIndexedFilter">
+                      <option value=""></option>
+                    </select>
+                  </div>
+                </div>
+                <div class="queries-filter-note" id="sitemapReviewFilterNote"></div>
+              </div>
+              <div id="sitemapReviewNotice"></div>
+              <div class="table-meta" id="sitemapReviewMeta"></div>
+              <div id="sitemapReviewTable"></div>
+            </div>
+          </div>
+        </section>
+
         <section class="panel section-anchor" id="pages">
           <div class="panel-header">
             <div>
@@ -1632,6 +1676,7 @@
             topMovers: "Движение страниц",
             weeklyDelta: "Weekly Delta",
             indexingReview: "Indexing review",
+            sitemapReview: "Sitemap review",
             pages: "Страницы",
           },
           sideNav: {
@@ -1644,6 +1689,7 @@
             topMovers: "Движение страниц",
             weeklyDelta: "Weekly Delta",
             indexingReview: "Indexing review",
+            sitemapReview: "Sitemap review",
           },
           overview: {
             title: "Обзор",
@@ -1658,9 +1704,9 @@
           filters: {
             title: "Фильтры страниц и индексации",
             copy:
-              "Эти фильтры применяются к quick wins, indexing review и unified pages. Для queries работает только выбранный период.",
+              "Эти фильтры применяются к quick wins, indexing review, sitemap review и unified pages. Для queries работает только выбранный период.",
             scopeNote:
-              "Глобальные фильтры применяются к quick wins, indexing review и unified pages. Для top page movers работает только поиск по пути.",
+              "Глобальные фильтры применяются к quick wins, indexing review, sitemap review и unified pages. Для top page movers работает только поиск по пути.",
             reasonCode: "Reason code",
             recommendedAction: "Recommended action",
             dataSourceMatch: "Источник совпадения",
@@ -1720,6 +1766,7 @@
             datasets: {
               quick_wins: "Quick wins",
               indexing_review: "Indexing review",
+              sitemap_opportunity_review: "Sitemap review",
               pages: "Pages",
               top_page_movers: "Top page movers",
               queries: "Queries",
@@ -1760,6 +1807,14 @@
           indexingReview: {
             title: "Indexing Review",
             copy: "Формальный review layer по verdict, canonical, robots и indexing signals.",
+          },
+          sitemapReview: {
+            title: "Sitemap Opportunity Review",
+            copy:
+              "Inventory-based review layer для sitemap и слабых URL: potential score, thin-content risk и вероятные expand / merge / redirect сценарии.",
+            indexedFilterLabel: "Статус индексации",
+            filterNote:
+              "Этот локальный фильтр влияет только на Sitemap Opportunity Review. Segment / directory / action filters сверху тоже применяются.",
           },
           pages: {
             title: "Pages (Unified Explorer)",
@@ -1805,6 +1860,7 @@
             pages: "Pages",
             movers: "Top page movers",
             indexing: "Indexing review",
+            sitemapReview: "Sitemap review",
           },
           messages: {
             localServerTitle: "Если браузер блокирует чтение локального JSON, откройте dashboard через локальный сервер.",
@@ -1826,6 +1882,10 @@
             unsupportedMoversRange:
               "Top page movers сейчас рассчитываются как last_28_days vs previous_28_days.",
             unsupportedTrendRange: "Sitewide trend недоступен для выбранного периода.",
+            noSitemapReview: "Нет строк sitemap opportunity review для выбранного периода.",
+            noSitemapReviewFiltered: "Нет строк sitemap opportunity review под текущие фильтры.",
+            sitemapReviewMissing:
+              "Sitemap inventory ещё не собран. Запустите enrich-with-sitemap, чтобы получить inventory-based review.",
             noIssuesDetected: "Технических проблем по текущему indexing review не обнаружено.",
             sparseInspection: "Inspection-данных пока мало, поэтому review может быть частично заполнен.",
             queryDateOnly: "Для раздела queries работает только выбор периода; page-фильтры не применяются.",
@@ -1872,6 +1932,14 @@
             coverage: "Coverage",
             indexing: "Indexing",
             fetchState: "Fetch state",
+            indexedStatus: "Indexed status",
+            sourceFlags: "Источники",
+            visibility: "Видимость",
+            sessionStatus: "Сессии",
+            thinRisk: "Риск thin content",
+            potential: "Потенциал",
+            opportunityScore: "Opportunity score",
+            mergeCandidate: "Сильная страница",
             robots: "Robots",
             canonical: "Canonical",
             issues: "Проблемы",
@@ -1920,7 +1988,39 @@
               expand: "расширить",
               merge: "объединить",
               request_indexing: "запросить индексацию",
+              expand_content: "расширить контент",
+              merge_into_stronger_page: "объединить с сильной страницей",
+              redirect_301: "301 redirect",
+              keep_and_monitor: "оставить и наблюдать",
+              manual_review: "ручной review",
               no_action: "без действия",
+            },
+            indexed_status: {
+              indexed: "проиндексировано",
+              not_indexed: "не проиндексировано",
+              excluded: "исключено",
+              unknown: "неизвестно",
+            },
+            visibility_status: {
+              zero_visibility: "нулевая видимость",
+              low_visibility: "низкая видимость",
+              visible: "есть видимость",
+            },
+            session_status: {
+              zero_sessions: "нулевые сессии",
+              low_sessions: "мало сессий",
+              active_sessions: "есть сессии",
+            },
+            thin_risk: {
+              high: "высокий риск",
+              medium: "средний риск",
+              low: "низкий риск",
+            },
+            source_flag: {
+              sitemap: "sitemap",
+              gsc: "GSC",
+              ga4: "GA4",
+              inspection: "inspection",
             },
             verdict: {
               PASS: "PASS",
@@ -1981,6 +2081,7 @@
             topMovers: "Top Page Movers",
             weeklyDelta: "Weekly Delta",
             indexingReview: "Indexing Review",
+            sitemapReview: "Sitemap Review",
             pages: "Pages",
           },
           sideNav: {
@@ -1993,6 +2094,7 @@
             topMovers: "Top Page Movers",
             weeklyDelta: "Weekly Delta",
             indexingReview: "Indexing Review",
+            sitemapReview: "Sitemap Review",
           },
           overview: {
             title: "Overview",
@@ -2007,9 +2109,9 @@
           filters: {
             title: "Page and indexing filters",
             copy:
-              "These filters apply to quick wins, indexing review, and unified pages. The queries section follows the selected date range only.",
+              "These filters apply to quick wins, indexing review, sitemap review, and unified pages. The queries section follows the selected date range only.",
             scopeNote:
-              "Global filters apply to quick wins, indexing review, and unified pages. Top page movers only follows path search.",
+              "Global filters apply to quick wins, indexing review, sitemap review, and unified pages. Top page movers only follows path search.",
             reasonCode: "Reason code",
             recommendedAction: "Recommended action",
             dataSourceMatch: "Data source match",
@@ -2069,6 +2171,7 @@
             datasets: {
               quick_wins: "Quick wins",
               indexing_review: "Indexing review",
+              sitemap_opportunity_review: "Sitemap review",
               pages: "Pages",
               top_page_movers: "Top page movers",
               queries: "Queries",
@@ -2109,6 +2212,14 @@
           indexingReview: {
             title: "Indexing Review",
             copy: "Formal review layer for verdict, canonical, robots, and indexing signals.",
+          },
+          sitemapReview: {
+            title: "Sitemap Opportunity Review",
+            copy:
+              "Inventory-based review layer for sitemap and weak URLs: potential scoring, thin-content risk, and likely expand / merge / redirect scenarios.",
+            indexedFilterLabel: "Indexed status",
+            filterNote:
+              "This local filter only affects Sitemap Opportunity Review. Global segment / directory / action filters still apply.",
           },
           pages: {
             title: "Pages (Unified Explorer)",
@@ -2154,6 +2265,7 @@
             pages: "Pages",
             movers: "Top page movers",
             indexing: "Indexing review",
+            sitemapReview: "Sitemap review",
           },
           messages: {
             localServerTitle: "Open this dashboard through a simple local server if your browser blocks local JSON fetch.",
@@ -2175,6 +2287,10 @@
             unsupportedMoversRange:
               "Top page movers is currently calculated as last_28_days vs previous_28_days.",
             unsupportedTrendRange: "Sitewide trend is unavailable for the selected range.",
+            noSitemapReview: "No sitemap opportunity review rows are available for the selected range.",
+            noSitemapReviewFiltered: "No sitemap opportunity review rows matched the current filters.",
+            sitemapReviewMissing:
+              "Sitemap inventory has not been generated yet. Run enrich-with-sitemap to build the inventory-based review.",
             noIssuesDetected: "No technical issues were detected in the current indexing review.",
             sparseInspection: "Inspection coverage is still sparse, so the review may be partially populated.",
             queryDateOnly: "The queries section follows the date selector only; page filters do not apply here.",
@@ -2221,6 +2337,14 @@
             coverage: "Coverage",
             indexing: "Indexing",
             fetchState: "Fetch state",
+            indexedStatus: "Indexed status",
+            sourceFlags: "Sources",
+            visibility: "Visibility",
+            sessionStatus: "Session status",
+            thinRisk: "Thin risk",
+            potential: "Potential",
+            opportunityScore: "Opportunity score",
+            mergeCandidate: "Stronger page",
             robots: "Robots",
             canonical: "Canonical",
             issues: "Issues",
@@ -2269,7 +2393,39 @@
               expand: "expand",
               merge: "merge",
               request_indexing: "request indexing",
+              expand_content: "expand content",
+              merge_into_stronger_page: "merge into stronger page",
+              redirect_301: "301 redirect",
+              keep_and_monitor: "keep and monitor",
+              manual_review: "manual review",
               no_action: "no action",
+            },
+            indexed_status: {
+              indexed: "indexed",
+              not_indexed: "not indexed",
+              excluded: "excluded",
+              unknown: "unknown",
+            },
+            visibility_status: {
+              zero_visibility: "zero visibility",
+              low_visibility: "low visibility",
+              visible: "visible",
+            },
+            session_status: {
+              zero_sessions: "zero sessions",
+              low_sessions: "low sessions",
+              active_sessions: "active sessions",
+            },
+            thin_risk: {
+              high: "high risk",
+              medium: "medium risk",
+              low: "low risk",
+            },
+            source_flag: {
+              sitemap: "sitemap",
+              gsc: "GSC",
+              ga4: "GA4",
+              inspection: "inspection",
             },
             verdict: {
               PASS: "PASS",
@@ -2317,6 +2473,7 @@
         querySearch: "",
         queryBrandClassification: "",
         queryIntent: "",
+        sitemapIndexedStatus: "",
         filters: {
           reasonCode: "",
           recommendedAction: "",
@@ -2340,6 +2497,7 @@
           weeklyPositiveMovers: { key: "delta_score", direction: "desc" },
           weeklyNegativeMovers: { key: "delta_score", direction: "asc" },
           indexingReview: { key: "has_issue_rank", direction: "desc" },
+          sitemapOpportunityReview: { key: "opportunity_score", direction: "desc" },
           pages: { key: "quick_win_score", direction: "desc" },
         },
         data: {
@@ -2384,6 +2542,7 @@
           pages: { kind: "missing", rows: [] },
           quickWins: { kind: "missing", rows: [] },
           topPageMovers: { kind: "missing", rows: [] },
+          sitemapOpportunityReview: { kind: "missing", rows: [] },
           weeklyDelta: {
             available: false,
             message_key: "messages.noDataGenerated",
@@ -2739,8 +2898,20 @@
           current_gsc_position: parseNumber(row.current_gsc_position),
           previous_gsc_position: parseNumber(row.previous_gsc_position),
           position_gain: parseNumber(row.position_gain),
+          slug_potential_score: parseNumber(row.slug_potential_score),
+          opportunity_score: parseNumber(row.opportunity_score),
+          merge_candidate_similarity: parseNumber(row.merge_candidate_similarity),
+          duplicate_slug_cluster_size: parseNumber(row.duplicate_slug_cluster_size),
           has_issue: parseBoolean(row.has_issue),
           has_issue_rank: parseBoolean(row.has_issue) ? 1 : 0,
+          crawlable_not_indexed: parseBoolean(row.crawlable_not_indexed),
+          canonical_mismatch: parseBoolean(row.canonical_mismatch),
+          robots_issue: parseBoolean(row.robots_issue),
+          source_signal_count:
+            (String(row.source_in_sitemap || "").trim() === "yes" ? 1 : 0) +
+            (String(row.source_in_gsc || "").trim() === "yes" ? 1 : 0) +
+            (String(row.source_in_ga4 || "").trim() === "yes" ? 1 : 0) +
+            (String(row.source_in_inspection || "").trim() === "yes" ? 1 : 0),
         };
       }
 
@@ -2810,6 +2981,26 @@
 
       function displayAction(action) {
         return t(`enums.recommended_action.${String(action || "no_action")}`);
+      }
+
+      function displayIndexedStatus(value) {
+        return t(`enums.indexed_status.${String(value || "unknown")}`);
+      }
+
+      function displayVisibilityStatus(value) {
+        return t(`enums.visibility_status.${String(value || "zero_visibility")}`);
+      }
+
+      function displaySessionStatus(value) {
+        return t(`enums.session_status.${String(value || "zero_sessions")}`);
+      }
+
+      function displayThinRisk(value) {
+        return t(`enums.thin_risk.${String(value || "low")}`);
+      }
+
+      function displaySourceFlag(value) {
+        return t(`enums.source_flag.${String(value || "").trim()}`);
       }
 
       function displayVerdict(verdict) {
@@ -2914,9 +3105,59 @@
             expand: "success",
             merge: "neutral",
             request_indexing: "danger",
+            expand_content: "success",
+            merge_into_stronger_page: "neutral",
+            redirect_301: "danger",
+            keep_and_monitor: "ghost",
+            manual_review: "warning",
             no_action: "ghost",
           }[normalized] || "ghost";
         return badge(displayAction(normalized), tone, title);
+      }
+
+      function badgeForIndexedStatus(value) {
+        const normalized = String(value || "unknown");
+        const tone =
+          {
+            indexed: "success",
+            not_indexed: "warning",
+            excluded: "danger",
+            unknown: "ghost",
+          }[normalized] || "ghost";
+        return badge(displayIndexedStatus(normalized), tone);
+      }
+
+      function badgeForVisibilityStatus(value) {
+        const normalized = String(value || "zero_visibility");
+        const tone =
+          {
+            zero_visibility: "danger",
+            low_visibility: "warning",
+            visible: "success",
+          }[normalized] || "ghost";
+        return badge(displayVisibilityStatus(normalized), tone);
+      }
+
+      function badgeForSessionStatus(value) {
+        const normalized = String(value || "zero_sessions");
+        const tone =
+          {
+            zero_sessions: "danger",
+            low_sessions: "warning",
+            active_sessions: "success",
+          }[normalized] || "ghost";
+        return badge(displaySessionStatus(normalized), tone);
+      }
+
+      function badgeForThinRisk(value) {
+        const normalized = String(value || "low");
+        const tone =
+          {
+            high: "danger",
+            medium: "warning",
+            low: "ghost",
+          }[normalized] || "ghost";
+        return badge(displayThinRisk(normalized), tone);
       }
 
       function badgeForVerdict(verdict) {
@@ -3010,6 +3251,44 @@
         `;
       }
 
+      function renderSourceFlagsCell(row) {
+        const flags = [
+          row.source_in_sitemap === "yes" ? badge(displaySourceFlag("sitemap"), "neutral") : "",
+          row.source_in_gsc === "yes" ? badge(displaySourceFlag("gsc"), "success") : "",
+          row.source_in_ga4 === "yes" ? badge(displaySourceFlag("ga4"), "warning") : "",
+          row.source_in_inspection === "yes" ? badge(displaySourceFlag("inspection"), "ghost") : "",
+        ].filter(Boolean);
+
+        return flags.length
+          ? `<div class="badge-group">${flags.join("")}</div>`
+          : badge(state.language === "ru" ? "нет" : "none", "ghost");
+      }
+
+      function renderMergeCandidateCell(row) {
+        const candidatePath = String(row.merge_candidate_path || "").trim();
+        if (!candidatePath) {
+          return badge(state.language === "ru" ? "нет кандидата" : "no candidate", "ghost");
+        }
+
+        const candidateUrl = buildPageUrl({
+          normalized_page_path: candidatePath,
+          normalized_page_url: row.merge_candidate_url,
+        });
+        const similarity = Number.isFinite(row.merge_candidate_similarity)
+          ? formatDecimal(row.merge_candidate_similarity, 2)
+          : "—";
+        const confidence = String(row.merge_candidate_confidence || "").trim();
+        const label = escapeHtml(candidatePath);
+        const meta = `${similarity}${confidence ? ` · ${escapeHtml(confidence)}` : ""}`;
+
+        return `
+          ${candidateUrl
+            ? `<a class="page-link path-cell" href="${escapeHtml(candidateUrl)}" target="_blank" rel="noopener noreferrer"><span>${label}</span><span class="page-link-icon" aria-hidden="true">↗</span></a>`
+            : `<div class="path-cell">${label}</div>`}
+          <div class="subtle-note">${meta}</div>
+        `;
+      }
+
       function statusCard(status, label, details, path = CANONICAL_DATA_PATH) {
         const className = status === "ok" ? "ok" : status === "missing" ? "missing" : "error";
         const statusClass = status === "ok" ? "status-ok" : status === "missing" ? "status-missing" : "status-error";
@@ -3064,6 +3343,7 @@
             ["pages", "page"],
             ["quick_wins", "page"],
             ["indexing_review", "issue"],
+            ["sitemap_opportunity_review", "page"],
           ]);
           const rows = section[state.windowName].map((row) => {
             const normalized = normalizeRow(row);
@@ -3119,6 +3399,7 @@
         state.current.pages = resolveStandardSection("pages");
         state.current.quickWins = resolveStandardSection("quick_wins");
         state.current.indexingReview = resolveStandardSection("indexing_review");
+        state.current.sitemapOpportunityReview = resolveStandardSection("sitemap_opportunity_review");
         state.current.topPageMovers = resolveTopMoversSection();
         state.current.weeklyDelta = resolveWeeklyDeltaSection();
         state.data.kpis = state.data.contract?.kpis?.[state.windowName] || {};
@@ -3129,6 +3410,7 @@
           ...state.current.pages.rows,
           ...state.current.quickWins.rows,
           ...state.current.indexingReview.rows,
+          ...state.current.sitemapOpportunityReview.rows,
         ];
       }
 
@@ -3216,6 +3498,17 @@
         return reviewBaseRows.filter(filterPageRow);
       }
 
+      function sitemapReviewRows() {
+        return state.current.sitemapOpportunityReview.rows
+          .filter((row) => {
+            if (state.sitemapIndexedStatus && row.indexed_status !== state.sitemapIndexedStatus) {
+              return false;
+            }
+            return true;
+          })
+          .filter(filterPageRow);
+      }
+
       function queryRows() {
         const needle = String(state.querySearch || "").trim().toLowerCase();
         return state.current.queries.rows.filter((row) => {
@@ -3247,6 +3540,8 @@
             return topMoverRows();
           case "queries":
             return queryRows();
+          case "sitemap_opportunity_review":
+            return sitemapReviewRows();
           default:
             return [];
         }
@@ -3300,8 +3595,10 @@
           state.windowName === "last_28_days" ? t("topMovers.copy") : t("messages.unsupportedMoversRange");
         document.getElementById("indexingReviewCopy").textContent =
           state.windowName === "last_28_days" ? t("indexingReview.copy") : t("messages.unsupportedIndexingRange");
+        document.getElementById("sitemapReviewCopy").textContent = t("sitemapReview.copy");
         document.getElementById("pagesCopy").textContent = t("pages.copy");
         document.getElementById("filtersNote").textContent = t("filters.scopeNote");
+        document.getElementById("sitemapReviewFilterNote").textContent = t("sitemapReview.filterNote");
         document.getElementById("heroMeta").innerHTML = deriveHeroMeta();
       }
 
@@ -3400,6 +3697,7 @@
           sectionStatusCard(state.current.pages, t("statusCards.pages")),
           sectionStatusCard(state.current.topPageMovers, t("statusCards.movers")),
           sectionStatusCard(state.current.indexingReview, t("statusCards.indexing")),
+          sectionStatusCard(state.current.sitemapOpportunityReview, t("statusCards.sitemapReview")),
         ];
 
         document.getElementById("sourceStatus").innerHTML = cards.join("");
@@ -3643,6 +3941,7 @@
         const datasetIds = [
           "quick_wins",
           "indexing_review",
+          "sitemap_opportunity_review",
           "pages",
           "top_page_movers",
           "queries",
@@ -3896,6 +4195,7 @@
         state.querySearch = "";
         state.queryBrandClassification = "";
         state.queryIntent = "";
+        state.sitemapIndexedStatus = "";
 
         [
           "reasonCodeFilter",
@@ -3910,6 +4210,7 @@
           "workflowStatusFilter",
           "queryBrandFilter",
           "queryIntentFilter",
+          "sitemapIndexedFilter",
         ].forEach((id) => {
           const element = document.getElementById(id);
           if (element) {
@@ -4628,6 +4929,92 @@
         });
       }
 
+      function renderSitemapReviewSection() {
+        const sectionState = state.current.sitemapOpportunityReview;
+        const baseRows = state.current.sitemapOpportunityReview.rows;
+        const rows = sitemapReviewRows();
+        const hasActiveFilter =
+          Object.values(state.filters).some((value) => String(value || "").trim() !== "") ||
+          Boolean(String(state.sitemapIndexedStatus || "").trim());
+
+        updateQuerySelectOptions(
+          "sitemapIndexedFilter",
+          sectionState.kind === "ready" ? baseRows.map((row) => row.indexed_status) : [],
+          displayIndexedStatus,
+          "sitemapIndexedStatus",
+        );
+
+        if (sectionState.kind === "missing_data" || sectionState.kind === "missing") {
+          renderSectionNotice(
+            "sitemapReviewNotice",
+            "warning",
+            t("sitemapReview.title"),
+            t("messages.sitemapReviewMissing"),
+          );
+        } else if (!rows.length && hasActiveFilter) {
+          renderSectionNotice(
+            "sitemapReviewNotice",
+            "info",
+            t("sitemapReview.title"),
+            t("messages.noSitemapReviewFiltered"),
+          );
+        } else if (!rows.length) {
+          renderSectionNotice(
+            "sitemapReviewNotice",
+            "warning",
+            t("sitemapReview.title"),
+            t("messages.noSitemapReview"),
+          );
+        } else {
+          renderSectionNotice(
+            "sitemapReviewNotice",
+            "info",
+            "",
+            `${t("labels.rowsShown", { count: formatInteger(rows.length) })}. ${t("sitemapReview.copy")}`,
+          );
+        }
+
+        renderTable({
+          containerId: "sitemapReviewTable",
+          metaId: "sitemapReviewMeta",
+          rows,
+          tableKey: "sitemapOpportunityReview",
+          wrapClassName: "sitemap-review-wrap",
+          emptyMessage: hasActiveFilter ? t("messages.noSitemapReviewFiltered") : t("messages.noSitemapReview"),
+          columns: [
+            { key: "normalized_page_path", label: t("columns.page"), className: "path-cell", render: renderPathCell },
+            { key: "page_segment", label: t("columns.segment"), render: (row) => badgeForSegment(row.page_segment) },
+            { key: "page_directory_group", label: t("columns.directoryGroup"), render: (row) => escapeHtml(displayDirectoryGroup(row.page_directory_group)) },
+            { key: "source_signal_count", label: t("columns.sourceFlags"), className: "cell-medium", render: renderSourceFlagsCell },
+            { key: "indexed_status", label: t("columns.indexedStatus"), render: (row) => badgeForIndexedStatus(row.indexed_status) },
+            { key: "visibility_status", label: t("columns.visibility"), render: (row) => badgeForVisibilityStatus(row.visibility_status) },
+            { key: "session_status", label: t("columns.sessionStatus"), render: (row) => badgeForSessionStatus(row.session_status) },
+            { key: "thin_content_risk", label: t("columns.thinRisk"), render: (row) => badgeForThinRisk(row.thin_content_risk) },
+            {
+              key: "thin_content_signals",
+              label: t("columns.issues"),
+              className: "cell-issues cell-break",
+              render: (row) => {
+                const signals = Array.isArray(row.thin_content_signals) ? row.thin_content_signals : [];
+                return signals.length
+                  ? `<div class="badge-group">${signals.map((signal) => badge(signal.replaceAll("_", " "), "ghost")).join("")}</div>`
+                  : badge(state.language === "ru" ? "нет сигналов" : "no signals", "ghost");
+              },
+            },
+            { key: "slug_potential_score", label: t("columns.potential"), className: "num", render: (row) => formatDecimal(row.slug_potential_score) },
+            { key: "opportunity_score", label: t("columns.opportunityScore"), className: "num", render: (row) => formatDecimal(row.opportunity_score) },
+            {
+              key: "recommended_action",
+              label: t("columns.action"),
+              className: "cell-medium cell-break",
+              render: (row) => badgeForAction(row.recommended_action, row.recommended_action_text || ""),
+            },
+            { key: "merge_candidate_path", label: t("columns.mergeCandidate"), className: "cell-wide cell-break", render: renderMergeCandidateCell },
+            { key: "workflow_status", label: t("columns.workflow"), render: renderWorkflowCell },
+          ],
+        });
+      }
+
       function renderPagesSection() {
         const sectionState = state.current.pages;
         const rows = pagesRows();
@@ -4685,6 +5072,7 @@
         renderTopMoversSection();
         renderWeeklyDeltaSection();
         renderIndexingReviewSection();
+        renderSitemapReviewSection();
         renderPagesSection();
         renderSpotlight();
         renderWorkflowToolbar();
@@ -4797,6 +5185,17 @@
         });
       }
 
+      function bindSitemapReviewFilter() {
+        const element = document.getElementById("sitemapIndexedFilter");
+        element.addEventListener("change", (event) => {
+          state.savedView = "";
+          state.sitemapIndexedStatus = event.target.value;
+          renderSavedViews();
+          renderSitemapReviewSection();
+          renderWorkflowToolbar();
+        });
+      }
+
       function bindSavedViews() {
         document.querySelectorAll("#savedViewsBar [data-saved-view]").forEach((button) => {
           button.addEventListener("click", () => {
@@ -4851,7 +5250,7 @@
           });
         });
 
-        const targets = ["overview", "sitewide-trend", "quick-wins", "queries", "pages", "top-page-movers", "weekly-delta", "indexing-review"]
+        const targets = ["overview", "sitewide-trend", "quick-wins", "queries", "pages", "top-page-movers", "weekly-delta", "indexing-review", "sitemap-review"]
           .map((id) => document.getElementById(id))
           .filter(Boolean);
 
@@ -4887,6 +5286,7 @@
         bindLanguageToggle();
         bindFilters();
         bindQueriesFilter();
+        bindSitemapReviewFilter();
         bindSavedViews();
         bindWorkflowControls();
         bindFloatingSideNav();

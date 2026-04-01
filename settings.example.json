@@ -2,6 +2,9 @@
   "project_name": "seo-dashboard",
   "site_url": "https://international-surrogacy.com/",
   "sitemap_url": "https://international-surrogacy.com/sitemap.xml",
+  "sitemap_urls": [
+    "https://international-surrogacy.com/sitemap.xml"
+  ],
   "ga4_property_id": "350621663",
   "default_language": "ru",
   "default_period_days": 28,
