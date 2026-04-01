@@ -17,10 +17,11 @@ Current scope:
 - weekly historical snapshots and weekly delta tracking
 - read-only local HTML dashboard for artifact visualization
 - canonical dashboard data contract at `output/data.json`
+- local workflow layer for statuses, notes, and filtered task export
 
 Not included yet:
 - sitemap or crawl queue
-- HTML editing workflow or status updates from the dashboard
+- website content editing from the dashboard
 - `launchd` scheduling
 - deep semantic gap analysis
 
@@ -216,6 +217,11 @@ The official dashboard now also includes:
   - unsupported date range for a section
   - partial data available
   - no issues found
+- a lightweight local workflow layer with:
+  - statuses: `new`, `planned`, `in_progress`, `done`, `ignored`, `recheck_later`
+  - page and issue notes
+  - filtered dataset export
+  - saved working views including planned and done
 
 The backend artifacts that feed the contract include:
 - `data/raw/gsc_bundle.json`
@@ -228,6 +234,31 @@ Historical weekly state is persisted locally under:
 - `data/history/snapshots/` - immutable timestamped weekly snapshot files
 - `data/history/latest/latest_snapshot.json` - convenience copy of the newest snapshot
 - `data/history/latest/latest_weekly_delta.json` - most recent computed weekly delta
+
+Workflow state is persisted locally under:
+- `data/state/workflow_statuses.json`
+- `data/state/notes.json`
+
+Workflow file shape:
+- `workflow_statuses.json`
+  - `version`
+  - `updated_at`
+  - `records`
+- `notes.json`
+  - `version`
+  - `updated_at`
+  - `records`
+
+Stable identity strategy:
+- page records use `page::<normalized_page_path>`
+- issue records use `issue::<normalized_page_path>::<issue_type_signature>`
+- dashboard regeneration and fresh GSC/GA4 fetches do not overwrite these local state files
+
+Workflow editing notes:
+- the dashboard reads workflow state from `data/state/*.json` automatically
+- to write changes back from the browser, open the dashboard through `localhost` and use a Chromium browser with File System Access API support
+- click `Connect data/state`, choose the project's `data/state` folder, then statuses and notes will be written back locally
+- if write access is not available, the dashboard keeps changes only in memory for the current session and tells you explicitly
 
 `generate-dashboard` now also:
 - captures a new historical snapshot of the canonical datasets

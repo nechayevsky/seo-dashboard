@@ -651,6 +651,130 @@
         color: var(--muted);
       }
 
+      .workflow-toolbar {
+        display: grid;
+        gap: 12px;
+        margin-top: 18px;
+        padding-top: 18px;
+        border-top: 1px solid var(--line);
+      }
+
+      .workflow-actions-grid {
+        display: grid;
+        gap: 14px;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .workflow-button-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+
+      .workflow-cell {
+        display: grid;
+        gap: 8px;
+        min-width: 210px;
+      }
+
+      .workflow-note-preview {
+        color: var(--muted);
+        font-size: 0.84rem;
+        line-height: 1.45;
+        max-width: 32ch;
+        overflow-wrap: anywhere;
+      }
+
+      .workflow-meta {
+        color: var(--muted);
+        font-size: 0.76rem;
+      }
+
+      .workflow-inline-button {
+        appearance: none;
+        border: 1px solid var(--line);
+        background: var(--panel-strong);
+        color: var(--text);
+        border-radius: 999px;
+        padding: 8px 12px;
+        cursor: pointer;
+        width: fit-content;
+      }
+
+      .workflow-inline-button:hover {
+        border-color: rgba(13, 139, 135, 0.35);
+      }
+
+      .workflow-dialog {
+        width: min(720px, calc(100vw - 24px));
+        border: 1px solid var(--line);
+        border-radius: 20px;
+        background: var(--panel);
+        color: var(--text);
+        box-shadow: var(--shadow);
+        padding: 0;
+      }
+
+      .workflow-dialog::backdrop {
+        background: rgba(11, 20, 23, 0.56);
+      }
+
+      .workflow-dialog-body {
+        display: grid;
+        gap: 16px;
+        padding: 22px;
+      }
+
+      .workflow-dialog-head {
+        display: grid;
+        gap: 8px;
+      }
+
+      .workflow-dialog-copy {
+        color: var(--muted);
+      }
+
+      .workflow-dialog-grid {
+        display: grid;
+        gap: 14px;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .workflow-dialog textarea {
+        width: 100%;
+        min-height: 140px;
+        resize: vertical;
+        border-radius: 14px;
+        border: 1px solid var(--line);
+        background: var(--panel-strong);
+        color: var(--text);
+        padding: 12px;
+        font: inherit;
+      }
+
+      .workflow-dialog-meta {
+        display: grid;
+        gap: 8px;
+        color: var(--muted);
+        font-size: 0.88rem;
+      }
+
+      .workflow-dialog-meta code {
+        display: inline-block;
+        padding: 2px 6px;
+        border-radius: 8px;
+        background: var(--bg-elevated);
+        border: 1px solid var(--line);
+        overflow-wrap: anywhere;
+      }
+
+      .workflow-dialog-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+
       .saved-views-shell {
         display: grid;
         gap: 12px;
@@ -917,6 +1041,10 @@
           grid-template-columns: repeat(2, minmax(0, 1fr));
         }
 
+        .workflow-actions-grid {
+          grid-template-columns: 1fr;
+        }
+
         .queries-controls {
           grid-template-columns: 1fr;
         }
@@ -956,6 +1084,10 @@
         }
 
         .filters-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .workflow-dialog-grid {
           grid-template-columns: 1fr;
         }
 
@@ -1131,6 +1263,12 @@
                 <button class="saved-view-button" type="button" data-saved-view="quickWins" data-i18n="savedViews.quickWins">
                   Quick wins
                 </button>
+                <button class="saved-view-button" type="button" data-saved-view="planned" data-i18n="savedViews.planned">
+                  Planned
+                </button>
+                <button class="saved-view-button" type="button" data-saved-view="done" data-i18n="savedViews.done">
+                  Done
+                </button>
               </div>
             </div>
             <div class="filters-grid">
@@ -1189,6 +1327,12 @@
                 </select>
               </div>
               <div class="filter-field">
+                <label for="workflowStatusFilter" data-i18n="filters.workflowStatus">Workflow status</label>
+                <select id="workflowStatusFilter">
+                  <option value=""></option>
+                </select>
+              </div>
+              <div class="filter-field">
                 <label for="pathSearch" data-i18n="filters.pathSearch">Поиск по пути</label>
                 <input
                   id="pathSearch"
@@ -1197,6 +1341,33 @@
                   placeholder="Search by normalized_page_path"
                 />
               </div>
+            </div>
+            <div class="workflow-toolbar">
+              <div class="workflow-actions-grid">
+                <div class="filter-field">
+                  <label for="exportDatasetSelect" data-i18n="workflow.exportDatasetLabel">Export dataset</label>
+                  <select id="exportDatasetSelect"></select>
+                </div>
+                <div class="filter-field">
+                  <label for="exportFormatSelect" data-i18n="workflow.exportFormatLabel">Export format</label>
+                  <select id="exportFormatSelect">
+                    <option value="csv">CSV</option>
+                    <option value="json">JSON</option>
+                  </select>
+                </div>
+                <div class="filter-field">
+                  <label data-i18n="workflow.storageLabel">Workflow storage</label>
+                  <div class="workflow-button-row">
+                    <button class="outline-button" id="connectWorkflowState" type="button" data-i18n="workflow.connect">
+                      Connect data/state
+                    </button>
+                    <button class="outline-button" id="exportFilteredSet" type="button" data-i18n="workflow.export">
+                      Export filtered set
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div class="filters-note" id="workflowStatusNote"></div>
             </div>
             <div class="filters-note" id="filtersNote"></div>
           </div>
@@ -1398,6 +1569,41 @@
       </main>
     </div>
 
+    <dialog class="workflow-dialog" id="workflowDialog">
+      <form class="workflow-dialog-body" id="workflowDialogForm" method="dialog">
+        <div class="workflow-dialog-head">
+          <h3 class="panel-title" id="workflowDialogTitle">Workflow</h3>
+          <p class="workflow-dialog-copy" id="workflowDialogCopy"></p>
+        </div>
+        <div class="workflow-dialog-grid">
+          <div class="filter-field">
+            <label for="workflowDialogStatus" data-i18n="workflow.statusLabel">Workflow status</label>
+            <select id="workflowDialogStatus"></select>
+          </div>
+          <div class="workflow-dialog-meta">
+            <div><strong data-i18n="workflow.scopeLabel">Scope</strong>: <span id="workflowDialogScope"></span></div>
+            <div><strong data-i18n="workflow.keyLabel">Record key</strong>: <code id="workflowDialogKey"></code></div>
+          </div>
+        </div>
+        <div class="filter-field">
+          <label for="workflowDialogNote" data-i18n="workflow.noteLabel">Notes</label>
+          <textarea
+            id="workflowDialogNote"
+            data-i18n-placeholder="workflow.notePlaceholder"
+            placeholder="Add a local note for this page or issue."
+          ></textarea>
+        </div>
+        <div class="workflow-dialog-actions">
+          <button class="outline-button" id="workflowDialogCancel" type="button" data-i18n="workflow.cancel">
+            Cancel
+          </button>
+          <button class="outline-button" id="workflowDialogSave" type="submit" data-i18n="workflow.save">
+            Save workflow
+          </button>
+        </div>
+      </form>
+    </dialog>
+
     <script>
       const CANONICAL_DATA_PATH = "./data.json";
       const WINDOW_OPTIONS = ["last_28_days", "last_90_days", "last_365_days"];
@@ -1464,6 +1670,7 @@
             robots: "Robots state",
             pageSegment: "Сегмент страницы",
             directoryGroup: "Группа директории",
+            workflowStatus: "Workflow status",
             pathSearch: "Поиск по пути",
             pathPlaceholder: "Искать по normalized_page_path",
             all: "Все",
@@ -1477,6 +1684,51 @@
             commercialOnly: "Только commercial pages",
             indexingIssues: "Indexing issues",
             quickWins: "Quick wins",
+            planned: "Запланировано",
+            done: "Готово",
+          },
+          workflow: {
+            exportDatasetLabel: "Датасет для экспорта",
+            exportFormatLabel: "Формат экспорта",
+            storageLabel: "Workflow storage",
+            connect: "Подключить data/state",
+            connectReady: "data/state подключён",
+            export: "Экспортировать filtered set",
+            statusLabel: "Workflow status",
+            noteLabel: "Заметка",
+            notePlaceholder: "Локальная заметка по странице или issue.",
+            scopeLabel: "Scope",
+            keyLabel: "Record key",
+            save: "Сохранить workflow",
+            cancel: "Отмена",
+            edit: "Изменить",
+            noNote: "Без заметки",
+            readOnlyLoaded: "Workflow state загружен из файлов проекта в режиме чтения.",
+            connectHint:
+              "Чтобы сохранять статусы и заметки в data/state, откройте dashboard через localhost и подключите папку data/state.",
+            connected:
+              "Workflow storage подключён. Изменения будут записываться в data/state автоматически.",
+            inMemoryOnly:
+              "Изменения пока только в памяти. Нажмите «Подключить data/state», чтобы сохранить их локально.",
+            saved:
+              "Workflow state сохранён в data/state. Перегенерация dashboard не удалит эти записи.",
+            saveFailed: "Не удалось сохранить workflow state в data/state.",
+            unsupported:
+              "Этот браузер не поддерживает локальную запись через File System Access API. Используйте Chromium-браузер через localhost.",
+            dialogPageTitle: "Workflow для страницы",
+            dialogIssueTitle: "Workflow для issue",
+            datasets: {
+              quick_wins: "Quick wins",
+              indexing_review: "Indexing review",
+              pages: "Pages",
+              top_page_movers: "Top page movers",
+              queries: "Queries",
+            },
+            scopes: {
+              page: "page",
+              issue: "issue",
+            },
+            exported: "Экспорт завершён: {filename}",
           },
           quickWins: {
             title: "Top Quick Wins",
@@ -1611,6 +1863,7 @@
             quickWin: "Quick win",
             reason: "Причина",
             action: "Действие",
+            workflow: "Workflow",
             brand: "Brand split",
             intent: "Intent",
             segment: "Сегмент",
@@ -1695,6 +1948,14 @@
               noindex_detected: "обнаружен noindex",
               inspection_error: "ошибка inspection",
             },
+            workflow_status: {
+              new: "new",
+              planned: "planned",
+              in_progress: "in progress",
+              done: "done",
+              ignored: "ignored",
+              recheck_later: "recheck later",
+            },
           },
         },
         en: {
@@ -1758,6 +2019,7 @@
             robots: "Robots state",
             pageSegment: "Page segment",
             directoryGroup: "Directory group",
+            workflowStatus: "Workflow status",
             pathSearch: "Path search",
             pathPlaceholder: "Search by normalized_page_path",
             all: "All",
@@ -1771,6 +2033,51 @@
             commercialOnly: "Commercial pages only",
             indexingIssues: "Indexing issues",
             quickWins: "Quick wins",
+            planned: "Planned",
+            done: "Done",
+          },
+          workflow: {
+            exportDatasetLabel: "Export dataset",
+            exportFormatLabel: "Export format",
+            storageLabel: "Workflow storage",
+            connect: "Connect data/state",
+            connectReady: "data/state connected",
+            export: "Export filtered set",
+            statusLabel: "Workflow status",
+            noteLabel: "Note",
+            notePlaceholder: "Local note for this page or issue.",
+            scopeLabel: "Scope",
+            keyLabel: "Record key",
+            save: "Save workflow",
+            cancel: "Cancel",
+            edit: "Edit",
+            noNote: "No note",
+            readOnlyLoaded: "Workflow state loaded from project files in read-only mode.",
+            connectHint:
+              "To persist statuses and notes in data/state, open the dashboard through localhost and connect the data/state folder.",
+            connected:
+              "Workflow storage is connected. Changes will be written back to data/state automatically.",
+            inMemoryOnly:
+              "Changes are only in memory for now. Click Connect data/state to persist them locally.",
+            saved:
+              "Workflow state saved to data/state. Dashboard regeneration will keep these records.",
+            saveFailed: "Failed to save workflow state to data/state.",
+            unsupported:
+              "This browser does not support local writes through the File System Access API. Use a Chromium browser via localhost.",
+            dialogPageTitle: "Page workflow",
+            dialogIssueTitle: "Issue workflow",
+            datasets: {
+              quick_wins: "Quick wins",
+              indexing_review: "Indexing review",
+              pages: "Pages",
+              top_page_movers: "Top page movers",
+              queries: "Queries",
+            },
+            scopes: {
+              page: "page",
+              issue: "issue",
+            },
+            exported: "Export complete: {filename}",
           },
           quickWins: {
             title: "Top Quick Wins",
@@ -1905,6 +2212,7 @@
             quickWin: "Quick win",
             reason: "Reason",
             action: "Action",
+            workflow: "Workflow",
             brand: "Brand split",
             intent: "Intent",
             segment: "Segment",
@@ -1989,6 +2297,14 @@
               noindex_detected: "noindex detected",
               inspection_error: "inspection error",
             },
+            workflow_status: {
+              new: "new",
+              planned: "planned",
+              in_progress: "in progress",
+              done: "done",
+              ignored: "ignored",
+              recheck_later: "recheck later",
+            },
           },
         },
       };
@@ -2011,6 +2327,7 @@
           inspectionRobotsTxtState: "",
           pageSegment: "",
           pageDirectoryGroup: "",
+          workflowStatus: "",
           pathSearch: "",
         },
         sort: {
@@ -2043,6 +2360,23 @@
               details: "Dashboard contract has not been loaded yet.",
             },
           },
+        },
+        workflow: {
+          statuses: { version: 1, updated_at: "", records: {} },
+          notes: { version: 1, updated_at: "", records: {} },
+          canWrite: typeof window.showDirectoryPicker === "function",
+          handles: {
+            directory: null,
+            statuses: null,
+            notes: null,
+          },
+          loaded: false,
+          dirty: false,
+        },
+        renderRegistry: {},
+        dialog: {
+          row: null,
+          tableKey: "",
         },
         current: {
           sitewideTrends: { kind: "missing", rows: [] },
@@ -2184,6 +2518,185 @@
         } catch (error) {
           return null;
         }
+      }
+
+      function contractPathToFetch(path) {
+        const normalized = String(path || "").replace(/^\.?\//, "");
+        if (!normalized) {
+          return null;
+        }
+        if (normalized.startsWith("output/")) {
+          return `./${normalized.slice("output/".length)}`;
+        }
+        return `../${normalized}`;
+      }
+
+      function emptyWorkflowPayload() {
+        return {
+          version: 1,
+          updated_at: "",
+          records: {},
+        };
+      }
+
+      function normalizeWorkflowPayload(payload) {
+        const source = payload && typeof payload === "object" ? payload : {};
+        return {
+          version: Number.parseInt(source.version, 10) || 1,
+          updated_at: String(source.updated_at || "").trim(),
+          records: source.records && typeof source.records === "object" ? source.records : {},
+        };
+      }
+
+      function workflowStatePath(kind) {
+        const path =
+          state.data.metadata?.workflow_state_paths?.[kind] ||
+          (kind === "statuses" ? "data/state/workflow_statuses.json" : "data/state/notes.json");
+        return contractPathToFetch(path);
+      }
+
+      function workflowStatusOptions() {
+        return Array.isArray(state.data.metadata?.workflow_statuses)
+          ? state.data.metadata.workflow_statuses
+          : ["new", "planned", "in_progress", "done", "ignored", "recheck_later"];
+      }
+
+      function displayWorkflowStatus(value) {
+        return t(`enums.workflow_status.${String(value || "new")}`);
+      }
+
+      function badgeForWorkflowStatus(value) {
+        const normalized = String(value || "new");
+        const tone =
+          {
+            new: "ghost",
+            planned: "neutral",
+            in_progress: "warning",
+            done: "success",
+            ignored: "ghost",
+            recheck_later: "warning",
+          }[normalized] || "ghost";
+        return badge(displayWorkflowStatus(normalized), tone);
+      }
+
+      function shortenText(value, maxLength = 110) {
+        const text = String(value || "").trim();
+        if (!text) {
+          return "";
+        }
+        if (text.length <= maxLength) {
+          return text;
+        }
+        return `${text.slice(0, maxLength - 1).trimEnd()}…`;
+      }
+
+      function workflowEntryForRow(row) {
+        const statusRecords = state.workflow.statuses?.records || {};
+        const noteRecords = state.workflow.notes?.records || {};
+        const pageKey = String(row.workflow_page_key || row.workflow_record_key || "").trim();
+        const issueKey = String(row.workflow_issue_key || "").trim();
+        const recordKey = String(row.workflow_record_key || issueKey || pageKey).trim();
+        const statusEntry = statusRecords[recordKey] || statusRecords[pageKey] || null;
+        const noteEntry = noteRecords[recordKey] || noteRecords[pageKey] || null;
+        const status = workflowStatusOptions().includes(String(statusEntry?.status || "").trim())
+          ? String(statusEntry.status).trim()
+          : String(row.workflow_status || "new").trim() || "new";
+        const note = String(noteEntry?.note || row.workflow_note || "").trim();
+        return {
+          pageKey,
+          issueKey,
+          recordKey,
+          status,
+          note,
+          statusEntry,
+          noteEntry,
+          scope: issueKey ? "issue" : "page",
+        };
+      }
+
+      function applyWorkflowOverlay(row) {
+        const workflow = workflowEntryForRow(row);
+        return {
+          ...row,
+          workflow_scope: workflow.scope,
+          workflow_page_key: workflow.pageKey,
+          workflow_issue_key: workflow.issueKey,
+          workflow_record_key: workflow.recordKey,
+          workflow_status: workflow.status,
+          workflow_status_explicit: Boolean(workflow.statusEntry),
+          workflow_status_source:
+            workflow.issueKey && workflow.statusEntry && state.workflow.statuses.records?.[workflow.issueKey]
+              ? "issue"
+              : workflow.statusEntry && state.workflow.statuses.records?.[workflow.pageKey]
+                ? "page"
+                : "default",
+          workflow_status_updated_at: String(workflow.statusEntry?.updated_at || row.workflow_status_updated_at || "").trim(),
+          workflow_note: workflow.note,
+          workflow_note_present: Boolean(workflow.note),
+          workflow_note_source:
+            workflow.issueKey && workflow.noteEntry && state.workflow.notes.records?.[workflow.issueKey]
+              ? "issue"
+              : workflow.noteEntry && state.workflow.notes.records?.[workflow.pageKey]
+                ? "page"
+                : "default",
+          workflow_note_updated_at: String(workflow.noteEntry?.updated_at || row.workflow_note_updated_at || "").trim(),
+        };
+      }
+
+      async function loadWorkflowState() {
+        const [statusesResult, notesResult] = await Promise.all([
+          loadJson(workflowStatePath("statuses")),
+          loadJson(workflowStatePath("notes")),
+        ]);
+
+        state.workflow.statuses =
+          statusesResult.status === "ok" && statusesResult.data
+            ? normalizeWorkflowPayload(statusesResult.data)
+            : emptyWorkflowPayload();
+        state.workflow.notes =
+          notesResult.status === "ok" && notesResult.data
+            ? normalizeWorkflowPayload(notesResult.data)
+            : emptyWorkflowPayload();
+        state.workflow.loaded = true;
+      }
+
+      function setWorkflowStatusNote(messageKeyOrText, vars = {}, { raw = false } = {}) {
+        const note = document.getElementById("workflowStatusNote");
+        if (!note) {
+          return;
+        }
+        note.textContent = raw ? String(messageKeyOrText || "") : t(messageKeyOrText, vars);
+      }
+
+      function workflowRowMeta(row) {
+        const scopeLabel = t(`workflow.scopes.${String(row.workflow_scope || "page")}`);
+        const statusLabel = displayWorkflowStatus(row.workflow_status);
+        if (row.workflow_note_present) {
+          return `${scopeLabel} · ${statusLabel}`;
+        }
+        return `${scopeLabel} · ${statusLabel} · ${t("workflow.noNote")}`;
+      }
+
+      function renderWorkflowCell(row, index, tableKey) {
+        const notePreview = row.workflow_note_present
+          ? `<div class="workflow-note-preview">${escapeHtml(shortenText(row.workflow_note, 120))}</div>`
+          : `<div class="workflow-note-preview">${escapeHtml(t("workflow.noNote"))}</div>`;
+
+        return `
+          <div class="workflow-cell">
+            <div class="badge-group">${badgeForWorkflowStatus(row.workflow_status)}</div>
+            ${notePreview}
+            <div class="workflow-meta">${escapeHtml(workflowRowMeta(row))}</div>
+            <button
+              class="workflow-inline-button workflow-edit-button"
+              type="button"
+              data-table="${escapeHtml(tableKey)}"
+              data-row-index="${index}"
+            >
+              ${escapeHtml(t("workflow.edit"))}
+            </button>
+          </div>
+        `;
       }
 
       function normalizeRow(row) {
@@ -2547,7 +3060,15 @@
         const availableWindows = Object.keys(section).filter((key) => Array.isArray(section[key]));
 
         if (Array.isArray(section[state.windowName])) {
-          const rows = section[state.windowName].map(normalizeRow);
+          const workflowScopedSections = new Map([
+            ["pages", "page"],
+            ["quick_wins", "page"],
+            ["indexing_review", "issue"],
+          ]);
+          const rows = section[state.windowName].map((row) => {
+            const normalized = normalizeRow(row);
+            return workflowScopedSections.has(sectionName) ? applyWorkflowOverlay(normalized) : normalized;
+          });
           if (!rows.length && validationMissing.has(sectionName)) {
             return { kind: "missing_data", rows };
           }
@@ -2564,7 +3085,7 @@
       function resolveTopMoversSection() {
         const section = state.data.contract?.sections?.top_page_movers || {};
         const rows = Array.isArray(section.last_28_vs_previous_28)
-          ? section.last_28_vs_previous_28.map(normalizeRow)
+          ? section.last_28_vs_previous_28.map((row) => applyWorkflowOverlay(normalizeRow(row)))
           : [];
 
         if (state.windowName !== "last_28_days") {
@@ -2659,6 +3180,9 @@
         ) {
           return false;
         }
+        if (state.filters.workflowStatus && row.workflow_status !== state.filters.workflowStatus) {
+          return false;
+        }
         return matchesPathSearch(row);
       }
 
@@ -2679,6 +3203,19 @@
         return state.current.topPageMovers.rows.filter(matchesPathSearch);
       }
 
+      function indexingReviewRows() {
+        const baseRows = state.current.indexingReview.rows.map((row) => ({
+          ...row,
+          issue_tokens: inspectionIssueTokens(row),
+          has_issue_rank: inspectionIssueTokens(row).length ? 1 : 0,
+        }));
+        const reviewBaseRows =
+          state.savedView === "indexingIssues"
+            ? baseRows.filter((row) => row.issue_tokens.length > 0)
+            : baseRows;
+        return reviewBaseRows.filter(filterPageRow);
+      }
+
       function queryRows() {
         const needle = String(state.querySearch || "").trim().toLowerCase();
         return state.current.queries.rows.filter((row) => {
@@ -2696,6 +3233,23 @@
           }
           return String(row.query || "").toLowerCase().includes(needle);
         });
+      }
+
+      function exportableDatasetRows(datasetId) {
+        switch (datasetId) {
+          case "quick_wins":
+            return quickWinRows();
+          case "indexing_review":
+            return indexingReviewRows();
+          case "pages":
+            return pagesRows();
+          case "top_page_movers":
+            return topMoverRows();
+          case "queries":
+            return queryRows();
+          default:
+            return [];
+        }
       }
 
       function hasKpiData() {
@@ -3083,6 +3637,258 @@
         });
       }
 
+      function renderWorkflowToolbar() {
+        const datasetSelect = document.getElementById("exportDatasetSelect");
+        const currentValue = datasetSelect.value;
+        const datasetIds = [
+          "quick_wins",
+          "indexing_review",
+          "pages",
+          "top_page_movers",
+          "queries",
+        ];
+        const options = datasetIds.map(
+          (datasetId) =>
+            `<option value="${escapeHtml(datasetId)}">${escapeHtml(t(`workflow.datasets.${datasetId}`))}</option>`,
+        );
+        datasetSelect.innerHTML = options.join("");
+        datasetSelect.value = datasetIds.includes(currentValue) ? currentValue : "quick_wins";
+
+        const connectButton = document.getElementById("connectWorkflowState");
+        connectButton.textContent = state.workflow.handles.directory
+          ? t("workflow.connectReady")
+          : t("workflow.connect");
+        connectButton.disabled = !state.workflow.canWrite;
+
+        const exportButton = document.getElementById("exportFilteredSet");
+        exportButton.disabled = exportableDatasetRows(datasetSelect.value || "quick_wins").length === 0;
+
+        if (state.workflow.handles.directory) {
+          setWorkflowStatusNote("workflow.connected");
+        } else if (!state.workflow.canWrite) {
+          setWorkflowStatusNote("workflow.unsupported");
+        } else if (state.workflow.dirty) {
+          setWorkflowStatusNote("workflow.inMemoryOnly");
+        } else if (state.workflow.loaded) {
+          setWorkflowStatusNote("workflow.readOnlyLoaded");
+        } else {
+          setWorkflowStatusNote("workflow.connectHint");
+        }
+      }
+
+      function populateWorkflowDialogStatusOptions() {
+        const select = document.getElementById("workflowDialogStatus");
+        select.innerHTML = workflowStatusOptions()
+          .map(
+            (status) =>
+              `<option value="${escapeHtml(status)}">${escapeHtml(displayWorkflowStatus(status))}</option>`,
+          )
+          .join("");
+      }
+
+      function openWorkflowDialog(row, tableKey) {
+        const dialog = document.getElementById("workflowDialog");
+        const workflow = workflowEntryForRow(row);
+        state.dialog = { row, tableKey };
+        document.getElementById("workflowDialogTitle").textContent = t(
+          workflow.scope === "issue" ? "workflow.dialogIssueTitle" : "workflow.dialogPageTitle",
+        );
+        document.getElementById("workflowDialogCopy").textContent =
+          row.normalized_page_path || row.normalized_page_url || row.query || "—";
+        populateWorkflowDialogStatusOptions();
+        document.getElementById("workflowDialogStatus").value = workflow.status;
+        document.getElementById("workflowDialogNote").value = workflow.note;
+        document.getElementById("workflowDialogScope").textContent = t(`workflow.scopes.${workflow.scope}`);
+        document.getElementById("workflowDialogKey").textContent = workflow.recordKey || "—";
+        if (typeof dialog.showModal === "function") {
+          dialog.showModal();
+        } else {
+          dialog.setAttribute("open", "open");
+        }
+      }
+
+      function closeWorkflowDialog() {
+        const dialog = document.getElementById("workflowDialog");
+        if (typeof dialog.close === "function") {
+          dialog.close();
+        } else {
+          dialog.removeAttribute("open");
+        }
+        state.dialog = { row: null, tableKey: "" };
+      }
+
+      function nowIso() {
+        return new Date().toISOString();
+      }
+
+      function workflowMetadataForRow(row) {
+        return {
+          scope: row.workflow_scope || "page",
+          normalized_page_path: row.normalized_page_path || "",
+          normalized_page_url: row.normalized_page_url || "",
+          issue_types: Array.isArray(row.issue_types)
+            ? row.issue_types
+            : String(row.workflow_issue_signature || "")
+                .split("|")
+                .map((token) => token.trim())
+                .filter(Boolean),
+          issue_signature: row.workflow_issue_signature || "",
+          page_key: row.workflow_page_key || "",
+          issue_key: row.workflow_issue_key || "",
+        };
+      }
+
+      async function writeWorkflowFile(handle, payload) {
+        const writable = await handle.createWritable();
+        await writable.write(`${JSON.stringify(payload, null, 2)}\n`);
+        await writable.close();
+      }
+
+      async function persistWorkflowState() {
+        if (!state.workflow.handles.statuses || !state.workflow.handles.notes) {
+          state.workflow.dirty = true;
+          renderWorkflowToolbar();
+          return false;
+        }
+        try {
+          await writeWorkflowFile(state.workflow.handles.statuses, state.workflow.statuses);
+          await writeWorkflowFile(state.workflow.handles.notes, state.workflow.notes);
+          state.workflow.dirty = false;
+          renderWorkflowToolbar();
+          setWorkflowStatusNote("workflow.saved");
+          return true;
+        } catch (error) {
+          console.error(error);
+          setWorkflowStatusNote("workflow.saveFailed");
+          return false;
+        }
+      }
+
+      async function saveWorkflowDialog() {
+        const row = state.dialog.row;
+        if (!row) {
+          closeWorkflowDialog();
+          return;
+        }
+
+        const workflow = workflowEntryForRow(row);
+        const status = document.getElementById("workflowDialogStatus").value || "new";
+        const note = document.getElementById("workflowDialogNote").value.trim();
+        const timestamp = nowIso();
+        const metadata = workflowMetadataForRow(row);
+
+        state.workflow.statuses.updated_at = timestamp;
+        state.workflow.notes.updated_at = timestamp;
+
+        if (status === "new") {
+          delete state.workflow.statuses.records[workflow.recordKey];
+        } else {
+          state.workflow.statuses.records[workflow.recordKey] = {
+            status,
+            updated_at: timestamp,
+            ...metadata,
+          };
+        }
+
+        if (!note) {
+          delete state.workflow.notes.records[workflow.recordKey];
+        } else {
+          state.workflow.notes.records[workflow.recordKey] = {
+            note,
+            updated_at: timestamp,
+            ...metadata,
+          };
+        }
+
+        const persisted = await persistWorkflowState();
+        syncCurrentSections();
+        applyStaticTranslations();
+        renderFilterControls();
+        renderSavedViews();
+        renderSections();
+        closeWorkflowDialog();
+        setWorkflowStatusNote(
+          persisted
+            ? "workflow.saved"
+            : state.workflow.handles.directory
+              ? "workflow.saveFailed"
+              : "workflow.inMemoryOnly",
+        );
+      }
+
+      function rowsToCsv(rows) {
+        if (!rows.length) {
+          return "";
+        }
+        const columns = [...new Set(rows.flatMap((row) => Object.keys(row)))];
+        const escapeCsv = (value) => {
+          const text = Array.isArray(value) ? value.join("|") : String(value ?? "");
+          if (/[",\n]/.test(text)) {
+            return `"${text.replaceAll('"', '""')}"`;
+          }
+          return text;
+        };
+        return [
+          columns.join(","),
+          ...rows.map((row) => columns.map((column) => escapeCsv(row[column])).join(",")),
+        ].join("\n");
+      }
+
+      function downloadText(filename, content, mimeType) {
+        const blob = new Blob([content], { type: mimeType });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = filename;
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        URL.revokeObjectURL(url);
+      }
+
+      function exportFilteredDataset() {
+        const datasetId = document.getElementById("exportDatasetSelect").value || "quick_wins";
+        const format = document.getElementById("exportFormatSelect").value || "csv";
+        const rows = exportableDatasetRows(datasetId);
+        if (!rows.length) {
+          renderWorkflowToolbar();
+          return;
+        }
+
+        const safeWindow = state.windowName.replaceAll("_", "-");
+        const filename = `${datasetId}-${safeWindow}.${format}`;
+        if (format === "json") {
+          downloadText(filename, JSON.stringify(rows, null, 2), "application/json");
+        } else {
+          downloadText(filename, rowsToCsv(rows), "text/csv;charset=utf-8");
+        }
+        setWorkflowStatusNote("workflow.exported", { filename });
+      }
+
+      async function connectWorkflowStateDirectory() {
+        if (!state.workflow.canWrite) {
+          setWorkflowStatusNote("workflow.unsupported");
+          return;
+        }
+        try {
+          const directoryHandle = await window.showDirectoryPicker({ mode: "readwrite" });
+          const statusesHandle = await directoryHandle.getFileHandle("workflow_statuses.json", { create: true });
+          const notesHandle = await directoryHandle.getFileHandle("notes.json", { create: true });
+          state.workflow.handles = {
+            directory: directoryHandle,
+            statuses: statusesHandle,
+            notes: notesHandle,
+          };
+          renderWorkflowToolbar();
+          setWorkflowStatusNote("workflow.connected");
+        } catch (error) {
+          if (error?.name !== "AbortError") {
+            console.error(error);
+            setWorkflowStatusNote("workflow.saveFailed");
+          }
+        }
+      }
+
       function clearAllFilters({ clearSavedView = true } = {}) {
         Object.keys(state.filters).forEach((key) => {
           state.filters[key] = "";
@@ -3101,6 +3907,7 @@
           "robotsFilter",
           "pageSegmentFilter",
           "directoryGroupFilter",
+          "workflowStatusFilter",
           "queryBrandFilter",
           "queryIntentFilter",
         ].forEach((id) => {
@@ -3148,6 +3955,14 @@
           case "quickWins":
             state.windowName = "last_28_days";
             targetId = "quick-wins";
+            break;
+          case "planned":
+            state.filters.workflowStatus = "planned";
+            targetId = "pages";
+            break;
+          case "done":
+            state.filters.workflowStatus = "done";
+            targetId = "pages";
             break;
           default:
             state.savedView = "";
@@ -3224,6 +4039,12 @@
           displayDirectoryGroup,
           "pageDirectoryGroup",
         );
+        updateSelectOptions(
+          "workflowStatusFilter",
+          pageScopedCatalog().length ? workflowStatusOptions() : [],
+          displayWorkflowStatus,
+          "workflowStatus",
+        );
 
         const pathSearch = document.getElementById("pathSearch");
         const hasPathData =
@@ -3233,6 +4054,8 @@
           state.filters.pathSearch = "";
           pathSearch.value = "";
         }
+
+        renderWorkflowToolbar();
       }
 
       function tableMetaText(count, extra = "") {
@@ -3282,13 +4105,17 @@
           .map((row, index) => {
             const cells = columns
               .map((column) => {
-                const rendered = column.render ? column.render(row) : escapeHtml(row[column.key] ?? "");
+                const rendered = column.render
+                  ? column.render(row, index, tableKey)
+                  : escapeHtml(row[column.key] ?? "");
                 return `<td class="${column.className || ""}">${rendered}</td>`;
               })
               .join("");
             return `<tr class="${highlightTop && index < 3 ? "highlight-row" : ""}">${cells}</tr>`;
           })
           .join("");
+
+        state.renderRegistry[tableKey] = sortedRows;
 
         container.innerHTML = `
           <div class="table-wrap ${wrapClassName}">
@@ -3308,6 +4135,16 @@
               direction: current.key === nextKey && current.direction === "desc" ? "asc" : "desc",
             };
             renderSections();
+          });
+        });
+
+        container.querySelectorAll(".workflow-edit-button").forEach((button) => {
+          button.addEventListener("click", () => {
+            const rowIndex = Number.parseInt(button.dataset.rowIndex || "", 10);
+            const row = state.renderRegistry[tableKey]?.[rowIndex];
+            if (row) {
+              openWorkflowDialog(row, tableKey);
+            }
           });
         });
       }
@@ -3372,6 +4209,7 @@
             { key: "gsc_position", label: t("columns.position"), className: "num", render: (row) => formatDecimal(row.gsc_position) },
             { key: "ga4_sessions", label: t("columns.sessions"), className: "num", render: (row) => formatInteger(row.ga4_sessions) },
             { key: "ga4_conversions", label: t("columns.conversions"), className: "num", render: (row) => formatInteger(row.ga4_conversions) },
+            { key: "workflow_status", label: t("columns.workflow"), render: renderWorkflowCell },
           ],
         });
       }
@@ -3701,11 +4539,7 @@
           issue_tokens: inspectionIssueTokens(row),
           has_issue_rank: inspectionIssueTokens(row).length ? 1 : 0,
         }));
-        const reviewBaseRows =
-          state.savedView === "indexingIssues"
-            ? baseRows.filter((row) => row.issue_tokens.length > 0)
-            : baseRows;
-        const rows = reviewBaseRows.filter(filterPageRow);
+        const rows = indexingReviewRows();
         const issueCount = rows.filter((row) => row.issue_tokens.length > 0).length;
         const totalIssueCount = baseRows.filter((row) => row.issue_tokens.length > 0).length;
         const hasActiveFilter = Object.values(state.filters).some((value) => String(value || "").trim() !== "");
@@ -3789,6 +4623,7 @@
               className: "cell-medium cell-break",
               render: (row) => badgeForAction(row.recommended_action, row.recommended_action_text || ""),
             },
+            { key: "workflow_status", label: t("columns.workflow"), render: renderWorkflowCell },
           ],
         });
       }
@@ -3839,6 +4674,7 @@
                   ? badgeForAction(row.recommended_action, row.recommended_action_text || "")
                   : badge(displayAction("no_action"), "ghost"),
             },
+            { key: "workflow_status", label: t("columns.workflow"), render: renderWorkflowCell },
           ],
         });
       }
@@ -3851,6 +4687,7 @@
         renderIndexingReviewSection();
         renderPagesSection();
         renderSpotlight();
+        renderWorkflowToolbar();
       }
 
       function bindThemeToggle() {
@@ -3909,6 +4746,7 @@
           robotsFilter: "inspectionRobotsTxtState",
           pageSegmentFilter: "pageSegment",
           directoryGroupFilter: "pageDirectoryGroup",
+          workflowStatusFilter: "workflowStatus",
           pathSearch: "pathSearch",
         };
 
@@ -3939,6 +4777,7 @@
           state.querySearch = event.target.value;
           renderSavedViews();
           renderQueriesSection();
+          renderWorkflowToolbar();
         });
 
         const queryFilterMap = {
@@ -3953,6 +4792,7 @@
             state[stateKey] = event.target.value;
             renderSavedViews();
             renderQueriesSection();
+            renderWorkflowToolbar();
           });
         });
       }
@@ -3962,6 +4802,33 @@
           button.addEventListener("click", () => {
             applySavedView(button.dataset.savedView);
           });
+        });
+      }
+
+      function bindWorkflowControls() {
+        document.getElementById("exportDatasetSelect").addEventListener("change", () => {
+          renderWorkflowToolbar();
+        });
+
+        document.getElementById("connectWorkflowState").addEventListener("click", async () => {
+          await connectWorkflowStateDirectory();
+        });
+
+        document.getElementById("exportFilteredSet").addEventListener("click", () => {
+          exportFilteredDataset();
+        });
+
+        document.getElementById("workflowDialogCancel").addEventListener("click", () => {
+          closeWorkflowDialog();
+        });
+
+        document.getElementById("workflowDialogForm").addEventListener("submit", async (event) => {
+          event.preventDefault();
+          await saveWorkflowDialog();
+        });
+
+        document.getElementById("workflowDialog").addEventListener("close", () => {
+          state.dialog = { row: null, tableKey: "" };
         });
       }
 
@@ -4021,6 +4888,7 @@
         bindFilters();
         bindQueriesFilter();
         bindSavedViews();
+        bindWorkflowControls();
         bindFloatingSideNav();
 
         const contractResult = await loadJson(CANONICAL_DATA_PATH);
@@ -4033,6 +4901,7 @@
           state.data.windows = contractResult.data.windows || {};
           state.language = state.data.metadata.default_language || "ru";
           state.windowName = state.data.metadata.default_window || "last_28_days";
+          await loadWorkflowState();
           syncCurrentSections();
         }
 

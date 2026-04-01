@@ -11,6 +11,7 @@ from .merge_service import MergeService
 from .oauth_service import OAuthService
 from .scoring_service import ScoringService
 from .sitemap_service import SitemapService
+from .workflow_service import WorkflowService
 
 __all__ = [
     "CrawlService",
@@ -24,4 +25,5 @@ __all__ = [
     "OAuthService",
     "ScoringService",
     "SitemapService",
+    "WorkflowService",
 ]

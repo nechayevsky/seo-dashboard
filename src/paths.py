@@ -15,6 +15,7 @@ class ProjectPaths:
     data_history_dir: Path
     data_history_snapshots_dir: Path
     data_history_latest_dir: Path
+    data_state_dir: Path
     logs_dir: Path
     output_dir: Path
 
@@ -30,6 +31,7 @@ class ProjectPaths:
             data_history_dir=project_root / "data" / "history",
             data_history_snapshots_dir=project_root / "data" / "history" / "snapshots",
             data_history_latest_dir=project_root / "data" / "history" / "latest",
+            data_state_dir=project_root / "data" / "state",
             logs_dir=project_root / "logs",
             output_dir=project_root / "output",
         )
@@ -43,6 +45,7 @@ class ProjectPaths:
             self.data_history_dir,
             self.data_history_snapshots_dir,
             self.data_history_latest_dir,
+            self.data_state_dir,
             self.logs_dir,
             self.output_dir,
         )
@@ -93,6 +96,7 @@ class ProjectPaths:
             "data_history_dir": str(self.data_history_dir),
             "data_history_snapshots_dir": str(self.data_history_snapshots_dir),
             "data_history_latest_dir": str(self.data_history_latest_dir),
+            "data_state_dir": str(self.data_state_dir),
             "logs_dir": str(self.logs_dir),
             "output_dir": str(self.output_dir),
         }

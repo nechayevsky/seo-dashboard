@@ -17,6 +17,7 @@ from .inspection_service import enrich_unified_dataset_with_inspection
 from .interpretation_service import InterpretationService, RULES_FILENAME
 from .merge_service import MergeService, WINDOW_TO_SUFFIX
 from .scoring_service import ScoringService, score_page_row
+from .workflow_service import WORKFLOW_STATUSES, WorkflowService
 
 TOP_MOVERS_FIELDNAMES = [
     "normalized_page_path",
@@ -39,6 +40,18 @@ TOP_MOVERS_FIELDNAMES = [
     "conversions_delta",
     "mover_score",
     "movement_direction",
+    "workflow_scope",
+    "workflow_page_key",
+    "workflow_issue_key",
+    "workflow_record_key",
+    "workflow_status",
+    "workflow_status_explicit",
+    "workflow_status_source",
+    "workflow_status_updated_at",
+    "workflow_note",
+    "workflow_note_present",
+    "workflow_note_source",
+    "workflow_note_updated_at",
 ]
 
 INDEXING_REVIEW_FIELDNAMES = [
@@ -62,6 +75,18 @@ INDEXING_REVIEW_FIELDNAMES = [
     "recommended_action",
     "recommended_action_text",
     "source_type",
+    "workflow_scope",
+    "workflow_page_key",
+    "workflow_issue_key",
+    "workflow_record_key",
+    "workflow_status",
+    "workflow_status_explicit",
+    "workflow_status_source",
+    "workflow_status_updated_at",
+    "workflow_note",
+    "workflow_note_present",
+    "workflow_note_source",
+    "workflow_note_updated_at",
 ]
 
 
@@ -450,6 +475,7 @@ class DashboardService:
         gsc_bundle = self._load_gsc_bundle()
         ga4_bundle = self._load_ga4_bundle()
         interpretation_service = InterpretationService(self.config, self.paths, active_logger)
+        workflow_service = WorkflowService(self.config, self.paths, active_logger)
         pages_by_window = {
             window_name: self._load_unified_rows(window_name, overwrite=overwrite)
             for window_name in ("last_28_days", "previous_28_days", "last_90_days", "last_365_days")
@@ -494,12 +520,20 @@ class DashboardService:
             last_28_page_attributes,
         )
 
+        pages_by_window = {
+            window_name: workflow_service.apply_to_rows(rows, scope="page")
+            for window_name, rows in pages_by_window.items()
+        }
+        quick_wins = workflow_service.apply_to_rows(quick_wins, scope="page")
+        top_page_mover_rows = workflow_service.apply_to_rows(top_page_mover_rows, scope="page")
+        indexing_review_rows = workflow_service.apply_to_rows(indexing_review_rows, scope="issue")
+
         top_movers_csv = self.paths.data_processed_dir / "top_page_movers_last_28_vs_previous_28.csv"
         top_movers_json = self.paths.data_processed_dir / "top_page_movers_last_28_vs_previous_28.json"
         indexing_csv = self.paths.data_processed_dir / "indexing_review_last_28_days.csv"
         indexing_json = self.paths.data_processed_dir / "indexing_review_last_28_days.json"
 
-        output_files: list[str] = []
+        output_files: list[str] = workflow_service.ensure_state_files()
         written = write_csv_file(top_movers_csv, top_page_mover_rows, TOP_MOVERS_FIELDNAMES, overwrite=overwrite)
         if written:
             output_files.append(str(written))
@@ -531,7 +565,7 @@ class DashboardService:
                 "project_name": self.config.project_name,
                 "site_url": self.config.site_url,
                 "generated_at": datetime.now(timezone.utc).isoformat(),
-                "contract_version": "1.2",
+                "contract_version": "1.3",
                 "default_language": self.config.default_language,
                 "default_window": "last_28_days",
                 "official_dashboard_path": self.config.output_html,
@@ -540,6 +574,11 @@ class DashboardService:
                 "page_windows_with_inspection": ["last_28_days"],
                 "interpretation_rules_path": str(self.paths.config_dir / RULES_FILENAME),
                 "interpretation_layers": ["brand_split", "query_intent", "page_segment"],
+                "workflow_statuses": list(WORKFLOW_STATUSES),
+                "workflow_state_paths": {
+                    "statuses": "data/state/workflow_statuses.json",
+                    "notes": "data/state/notes.json",
+                },
                 "history_snapshot_dir": str(self.paths.data_history_snapshots_dir),
                 "history_latest_dir": str(self.paths.data_history_latest_dir),
             },
@@ -560,6 +599,13 @@ class DashboardService:
                 },
                 "countries": countries,
                 "devices": devices,
+                "workflow": {
+                    "summary": {
+                        "pages_last_28_days": workflow_service.summary_for_rows(pages_by_window.get("last_28_days", [])),
+                        "quick_wins_last_28_days": workflow_service.summary_for_rows(quick_wins),
+                        "indexing_review_last_28_days": workflow_service.summary_for_rows(indexing_review_rows),
+                    },
+                },
             },
             "validation": self._build_validation(
                 gsc_bundle,
