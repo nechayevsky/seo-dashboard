@@ -1164,11 +1164,17 @@
         min-width: 0;
       }
 
+      .table-shell > * {
+        min-width: 0;
+        max-width: 100%;
+      }
+
       .table-meta {
         color: var(--muted);
       }
 
       .table-scroll-shell {
+        display: block;
         width: 100%;
         max-width: 100%;
         min-width: 0;
@@ -5372,7 +5378,6 @@
           tableKey: "quickWins",
           highlightTop: true,
           wideTable: true,
-          stickyFirstColumn: true,
           emptyMessage: t("messages.noQuickWins"),
           columns: [
             { key: "normalized_page_path", label: t("columns.page"), className: "path-cell", render: renderPathCell },
@@ -5489,7 +5494,6 @@
           rows: topMoverRows(),
           tableKey: "topMovers",
           wideTable: true,
-          stickyFirstColumn: true,
           emptyMessage:
             sectionState.kind === "unsupported"
               ? t("messages.unsupportedMoversRange")
@@ -5752,7 +5756,6 @@
           tableKey: "indexingReview",
           wrapClassName: "indexing-review-wrap",
           wideTable: true,
-          stickyFirstColumn: true,
           metaText: tableMetaText(
             rows.length,
             t("labels.issueSummary", {
@@ -5865,7 +5868,6 @@
           tableKey: "sitemapOpportunityReview",
           wrapClassName: "sitemap-review-wrap",
           wideTable: true,
-          stickyFirstColumn: true,
           emptyMessage: hasActiveFilter ? t("messages.noSitemapReviewFiltered") : t("messages.noSitemapReview"),
           columns: [
             { key: "normalized_page_path", label: t("columns.page"), className: "path-cell", render: renderPathCell },
@@ -5928,7 +5930,6 @@
           rows,
           tableKey: "pages",
           wideTable: true,
-          stickyFirstColumn: true,
           emptyMessage: t("messages.noPages"),
           columns: [
             { key: "normalized_page_path", label: t("columns.page"), className: "path-cell", render: renderPathCell },
