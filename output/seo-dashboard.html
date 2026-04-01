@@ -339,12 +339,20 @@
         margin-top: 18px;
       }
 
+      .content-grid > *,
+      .overview-layout > *,
+      .delta-grid > *,
+      .workflow-guide-grid > * {
+        min-width: 0;
+      }
+
       .panel {
         background: var(--panel);
         border: 1px solid var(--line);
         border-radius: var(--radius-lg);
         box-shadow: var(--shadow);
         overflow: hidden;
+        min-width: 0;
       }
 
       .panel-header {
@@ -369,6 +377,7 @@
 
       .panel-body {
         padding: 22px 24px 24px;
+        min-width: 0;
       }
 
       .source-grid,
@@ -483,6 +492,49 @@
         font-size: 0.85rem;
       }
 
+      .kpi-trend {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin-top: 12px;
+        padding: 7px 10px;
+        border-radius: 999px;
+        border: 1px solid transparent;
+        font-size: 0.78rem;
+        font-weight: 700;
+        width: fit-content;
+      }
+
+      .kpi-trend.up {
+        background: var(--success-soft);
+        color: var(--success);
+        border-color: rgba(47, 123, 74, 0.2);
+      }
+
+      .kpi-trend.down {
+        background: var(--danger-soft);
+        color: var(--danger);
+        border-color: rgba(187, 81, 71, 0.2);
+      }
+
+      .kpi-trend.flat {
+        background: var(--warm-soft);
+        color: var(--warning);
+        border-color: rgba(195, 138, 26, 0.2);
+      }
+
+      .kpi-trend.neutral {
+        background: rgba(128, 128, 128, 0.08);
+        color: var(--muted);
+        border-color: var(--line);
+      }
+
+      .kpi-meta-secondary {
+        margin-top: 8px;
+        color: var(--muted);
+        font-size: 0.8rem;
+      }
+
       .overview-layout {
         display: grid;
         grid-template-columns: minmax(0, 1.7fr) minmax(300px, 0.9fr);
@@ -499,6 +551,115 @@
 
       .spotlight-grid {
         grid-template-columns: 1fr;
+      }
+
+      .spotlight-footer {
+        margin-top: 12px;
+        padding-top: 12px;
+        border-top: 1px solid var(--line);
+        color: var(--muted);
+        font-size: 0.86rem;
+      }
+
+      .spotlight-footer a {
+        color: var(--accent-strong);
+        text-decoration: none;
+        font-weight: 600;
+      }
+
+      .spotlight-footer a:hover {
+        text-decoration: underline;
+      }
+
+      .section-band {
+        display: grid;
+        gap: 6px;
+        padding: 4px 4px 0;
+      }
+
+      .section-band__eyebrow {
+        font-size: 0.72rem;
+        text-transform: uppercase;
+        letter-spacing: 0.09em;
+        color: var(--muted);
+      }
+
+      .section-band__title {
+        margin: 0;
+        font-size: 1.1rem;
+        letter-spacing: -0.03em;
+      }
+
+      .section-band__copy {
+        margin: 0;
+        color: var(--muted);
+        max-width: 760px;
+      }
+
+      .section-band-actions .section-band__title {
+        color: var(--accent-strong);
+      }
+
+      .panel-emphasis {
+        border-color: rgba(13, 139, 135, 0.2);
+        box-shadow: 0 20px 44px rgba(17, 41, 45, 0.1);
+      }
+
+      .panel-secondary {
+        box-shadow: 0 10px 24px rgba(17, 41, 45, 0.06);
+      }
+
+      .workflow-guide-grid {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 14px;
+      }
+
+      .workflow-step {
+        display: grid;
+        gap: 10px;
+        border-radius: var(--radius-md);
+        border: 1px solid var(--line);
+        background: var(--panel-strong);
+        padding: 16px;
+      }
+
+      .workflow-step-index {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: var(--accent-soft);
+        color: var(--accent-strong);
+        font-weight: 700;
+      }
+
+      .workflow-step-title {
+        font-weight: 700;
+      }
+
+      .workflow-step-copy {
+        color: var(--muted);
+        font-size: 0.92rem;
+        line-height: 1.5;
+      }
+
+      .workflow-step-link {
+        color: var(--accent-strong);
+        text-decoration: none;
+        font-weight: 600;
+      }
+
+      .workflow-step-link:hover {
+        text-decoration: underline;
+      }
+
+      .workflow-guide-meta {
+        margin-top: 16px;
+        color: var(--muted);
+        font-size: 0.88rem;
       }
 
       .spotlight-rank {
@@ -565,6 +726,113 @@
 
       .filters-grid {
         grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+
+      .quick-filters-shell {
+        display: grid;
+        gap: 14px;
+        margin-bottom: 16px;
+      }
+
+      .quick-filters-grid {
+        display: grid;
+        gap: 14px;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+
+      .active-filters-shell {
+        display: grid;
+        gap: 10px;
+        padding: 14px 16px;
+        border-radius: 16px;
+        border: 1px solid var(--line);
+        background: var(--panel-strong);
+      }
+
+      .active-filters-head {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 8px 14px;
+        flex-wrap: wrap;
+      }
+
+      .active-filters-copy {
+        color: var(--muted);
+        font-size: 0.88rem;
+      }
+
+      .active-filters-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+
+      .active-filter-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 12px;
+        border-radius: 999px;
+        border: 1px solid var(--line);
+        background: var(--bg-elevated);
+        color: var(--text);
+      }
+
+      .active-filter-chip button {
+        appearance: none;
+        border: 0;
+        background: transparent;
+        color: var(--muted);
+        cursor: pointer;
+        padding: 0;
+        line-height: 1;
+        font-size: 1rem;
+      }
+
+      .active-filter-chip button:hover {
+        color: var(--accent-strong);
+      }
+
+      .active-filters-empty {
+        color: var(--muted);
+        font-size: 0.9rem;
+      }
+
+      .advanced-filters {
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        background: var(--panel-strong);
+        overflow: hidden;
+      }
+
+      .advanced-filters summary {
+        list-style: none;
+        cursor: pointer;
+        padding: 16px 18px;
+        font-weight: 700;
+      }
+
+      .advanced-filters summary::-webkit-details-marker {
+        display: none;
+      }
+
+      .advanced-filters summary::after {
+        content: "▾";
+        float: right;
+        color: var(--muted);
+      }
+
+      .advanced-filters[open] summary::after {
+        content: "▴";
+      }
+
+      .advanced-filters-body {
+        padding: 0 18px 18px;
+      }
+
+      .advanced-filters-grid {
+        padding-top: 4px;
       }
 
       .delta-summary-grid {
@@ -846,14 +1114,15 @@
       }
 
       .indexing-review-wrap {
+        width: 100%;
         max-width: 100%;
+        min-width: 0;
         max-height: min(62vh, 620px);
-        overflow: auto;
         overscroll-behavior: contain;
       }
 
       #indexingReviewTable table {
-        min-width: 1480px;
+        min-width: max(100%, 1480px);
       }
 
       .sitemap-review-controls {
@@ -861,14 +1130,15 @@
       }
 
       .sitemap-review-wrap {
+        width: 100%;
         max-width: 100%;
+        min-width: 0;
         max-height: min(62vh, 640px);
-        overflow: auto;
         overscroll-behavior: contain;
       }
 
       #sitemapReviewTable table {
-        min-width: 1640px;
+        min-width: max(100%, 1640px);
       }
 
       .cell-break {
@@ -891,22 +1161,43 @@
       .table-shell {
         display: grid;
         gap: 12px;
+        min-width: 0;
       }
 
       .table-meta {
         color: var(--muted);
       }
 
+      .table-scroll-shell {
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+        overflow: hidden;
+      }
+
       .table-wrap {
+        position: relative;
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
         overflow: auto;
         border: 1px solid var(--line);
         border-radius: 16px;
         background: var(--panel-strong);
+        scrollbar-gutter: stable both-edges;
+      }
+
+      .table-wrap.is-wide {
+        overflow-x: auto;
+        overflow-y: auto;
+        overscroll-behavior: contain;
+        -webkit-overflow-scrolling: touch;
       }
 
       table {
-        width: 100%;
-        min-width: 860px;
+        width: max-content;
+        min-width: max(100%, 860px);
+        max-width: none;
         border-collapse: collapse;
       }
 
@@ -948,23 +1239,57 @@
 
       .path-cell {
         font-weight: 600;
-        word-break: break-word;
+        min-width: 320px;
+        max-width: 420px;
+        word-break: normal;
+        overflow-wrap: break-word;
+        hyphens: auto;
       }
 
       .page-link {
         display: inline-flex;
-        align-items: center;
+        align-items: flex-start;
         gap: 6px;
         text-decoration: none;
         color: var(--accent-strong);
+        max-width: 100%;
       }
 
       .page-link:hover {
         text-decoration: underline;
       }
 
+      .page-link-label {
+        overflow-wrap: break-word;
+        word-break: normal;
+      }
+
       .page-link-icon {
         font-size: 0.9rem;
+        flex: 0 0 auto;
+      }
+
+      .table-wrap.has-sticky-first-col th.is-sticky-col,
+      .table-wrap.has-sticky-first-col td.is-sticky-col {
+        position: sticky;
+        left: 0;
+        background: var(--panel-strong);
+      }
+
+      .table-wrap.has-sticky-first-col th.is-sticky-col {
+        z-index: 4;
+        box-shadow: 1px 0 0 var(--line);
+      }
+
+      .table-wrap.has-sticky-first-col td.is-sticky-col {
+        z-index: 2;
+        box-shadow:
+          1px 0 0 var(--line),
+          16px 0 24px rgba(17, 41, 45, 0.05);
+      }
+
+      .table-wrap.has-sticky-first-col tbody tr:hover td.is-sticky-col {
+        background: var(--panel);
       }
 
       .subtle-note {
@@ -1041,6 +1366,58 @@
         scroll-margin-top: 120px;
       }
 
+      #overview {
+        order: 1;
+      }
+
+      #weekly-workflow-guide {
+        order: 2;
+      }
+
+      .filters-panel {
+        order: 3;
+      }
+
+      #hierarchy-insights {
+        order: 4;
+      }
+
+      #weekly-delta {
+        order: 5;
+      }
+
+      #top-page-movers {
+        order: 6;
+      }
+
+      #hierarchy-actions {
+        order: 7;
+      }
+
+      #quick-wins {
+        order: 8;
+      }
+
+      #indexing-review {
+        order: 9;
+      }
+
+      #sitemap-review {
+        order: 10;
+      }
+
+      #hierarchy-explore {
+        order: 11;
+      }
+
+      #queries {
+        order: 12;
+      }
+
+      #pages {
+        order: 13;
+      }
+
       .footnote {
         margin-top: 18px;
         color: var(--muted);
@@ -1050,6 +1427,11 @@
       @media (max-width: 1180px) {
         .overview-layout {
           grid-template-columns: 1fr;
+        }
+
+        .workflow-guide-grid,
+        .quick-filters-grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
         }
 
         .filters-grid {
@@ -1098,6 +1480,11 @@
           padding-right: 16px;
         }
 
+        .workflow-guide-grid,
+        .quick-filters-grid {
+          grid-template-columns: 1fr;
+        }
+
         .filters-grid {
           grid-template-columns: 1fr;
         }
@@ -1114,6 +1501,12 @@
           min-width: 720px;
         }
 
+        .table-wrap.has-sticky-first-col th.is-sticky-col,
+        .table-wrap.has-sticky-first-col td.is-sticky-col {
+          position: static;
+          box-shadow: none;
+        }
+
         .saved-views-grid {
           gap: 8px;
         }
@@ -1126,13 +1519,13 @@
         <span class="floating-side-nav__title" data-i18n="sideNav.title">Навигация</span>
         <a href="#overview" data-nav-item="overview" data-i18n="sideNav.overviewKpi">Обзор / KPI</a>
         <a href="#sitewide-trend" data-nav-item="sitewide-trend" data-i18n="sideNav.sitewideTrend">Sitewide Trend</a>
+        <a href="#weekly-delta" data-nav-item="weekly-delta" data-i18n="sideNav.weeklyDelta">Weekly Delta</a>
         <a href="#quick-wins" data-nav-item="quick-wins" data-i18n="sideNav.quickWins">Quick wins</a>
+        <a href="#indexing-review" data-nav-item="indexing-review" data-i18n="sideNav.indexingReview">Indexing review</a>
+        <a href="#sitemap-review" data-nav-item="sitemap-review" data-i18n="sideNav.sitemapReview">Sitemap review</a>
         <a href="#queries" data-nav-item="queries" data-i18n="sideNav.queries">Запросы</a>
         <a href="#pages" data-nav-item="pages" data-i18n="sideNav.pages">Страницы</a>
         <a href="#top-page-movers" data-nav-item="top-page-movers" data-i18n="sideNav.topMovers">Движение страниц</a>
-        <a href="#weekly-delta" data-nav-item="weekly-delta" data-i18n="sideNav.weeklyDelta">Weekly Delta</a>
-        <a href="#indexing-review" data-nav-item="indexing-review" data-i18n="sideNav.indexingReview">Indexing review</a>
-        <a href="#sitemap-review" data-nav-item="sitemap-review" data-i18n="sideNav.sitemapReview">Sitemap review</a>
       </aside>
 
       <header class="hero">
@@ -1190,13 +1583,13 @@
         <div class="hero-meta" id="heroMeta"></div>
         <nav class="top-nav" aria-label="Dashboard sections">
           <a href="#overview" data-i18n="nav.overview">Обзор</a>
-          <a href="#quick-wins" data-i18n="nav.quickWins">Quick wins</a>
-          <a href="#queries" data-i18n="nav.queries">Запросы</a>
-          <a href="#top-page-movers" data-i18n="nav.topMovers">Движение страниц</a>
           <a href="#weekly-delta" data-i18n="nav.weeklyDelta">Weekly Delta</a>
+          <a href="#quick-wins" data-i18n="nav.quickWins">Quick wins</a>
           <a href="#indexing-review" data-i18n="nav.indexingReview">Indexing review</a>
           <a href="#sitemap-review" data-i18n="nav.sitemapReview">Sitemap review</a>
+          <a href="#queries" data-i18n="nav.queries">Запросы</a>
           <a href="#pages" data-i18n="nav.pages">Страницы</a>
+          <a href="#top-page-movers" data-i18n="nav.topMovers">Движение страниц</a>
         </nav>
         <div id="loadGuidance"></div>
       </header>
@@ -1240,6 +1633,54 @@
                 </div>
               </aside>
             </div>
+          </div>
+        </section>
+
+        <section class="panel panel-secondary section-anchor" id="weekly-workflow-guide">
+          <div class="panel-header">
+            <div>
+              <h2 class="panel-title" data-i18n="workflowGuide.title">Weekly workflow</h2>
+              <p class="panel-copy" data-i18n="workflowGuide.copy">
+                Короткий weekly-ритм, чтобы использовать dashboard как рабочий cockpit, а не просто как витрину данных.
+              </p>
+            </div>
+          </div>
+          <div class="panel-body">
+            <div class="workflow-guide-grid">
+              <article class="workflow-step">
+                <span class="workflow-step-index">1</span>
+                <div class="workflow-step-title" data-i18n="workflowGuide.step1Title">Review KPI</div>
+                <div class="workflow-step-copy" data-i18n="workflowGuide.step1Copy">
+                  Начните с KPI и общего состояния, чтобы понять, был ли рост, просадка или нейтральная неделя.
+                </div>
+                <a class="workflow-step-link" href="#overview" data-i18n="workflowGuide.step1Link">Перейти к обзору</a>
+              </article>
+              <article class="workflow-step">
+                <span class="workflow-step-index">2</span>
+                <div class="workflow-step-title" data-i18n="workflowGuide.step2Title">Review key shift</div>
+                <div class="workflow-step-copy" data-i18n="workflowGuide.step2Copy">
+                  Посмотрите spotlight и weekly delta, чтобы быстро увидеть главный новый риск или возможность.
+                </div>
+                <a class="workflow-step-link" href="#weekly-delta" data-i18n="workflowGuide.step2Link">Открыть weekly delta</a>
+              </article>
+              <article class="workflow-step">
+                <span class="workflow-step-index">3</span>
+                <div class="workflow-step-title" data-i18n="workflowGuide.step3Title">Review highest-priority pages</div>
+                <div class="workflow-step-copy" data-i18n="workflowGuide.step3Copy">
+                  Затем перейдите в primary action tables: quick wins, indexing review и sitemap review.
+                </div>
+                <a class="workflow-step-link" href="#quick-wins" data-i18n="workflowGuide.step3Link">Открыть action tables</a>
+              </article>
+              <article class="workflow-step">
+                <span class="workflow-step-index">4</span>
+                <div class="workflow-step-title" data-i18n="workflowGuide.step4Title">Choose action</div>
+                <div class="workflow-step-copy" data-i18n="workflowGuide.step4Copy">
+                  Зафиксируйте статус, заметку или экспортируйте текущий filtered set как рабочий список на неделю.
+                </div>
+                <a class="workflow-step-link" href="#indexing-review" data-i18n="workflowGuide.step4Link">Обновить workflow</a>
+              </article>
+            </div>
+            <div class="workflow-guide-meta" id="workflowGuideMeta"></div>
           </div>
         </section>
 
@@ -1288,77 +1729,96 @@
                 </button>
               </div>
             </div>
-            <div class="filters-grid">
-              <div class="filter-field">
-                <label for="reasonCodeFilter" data-i18n="filters.reasonCode">Reason code</label>
-                <select id="reasonCodeFilter">
-                  <option value=""></option>
-                </select>
+            <div class="quick-filters-shell">
+              <div class="quick-filters-grid">
+                <div class="filter-field">
+                  <label for="actionFilter" data-i18n="filters.recommendedAction">Recommended action</label>
+                  <select id="actionFilter">
+                    <option value=""></option>
+                  </select>
+                </div>
+                <div class="filter-field">
+                  <label for="pageSegmentFilter" data-i18n="filters.pageSegment">Page segment</label>
+                  <select id="pageSegmentFilter">
+                    <option value=""></option>
+                  </select>
+                </div>
+                <div class="filter-field">
+                  <label for="workflowStatusFilter" data-i18n="filters.workflowStatus">Workflow status</label>
+                  <select id="workflowStatusFilter">
+                    <option value=""></option>
+                  </select>
+                </div>
+                <div class="filter-field">
+                  <label for="pathSearch" data-i18n="filters.pathSearch">Поиск по пути</label>
+                  <input
+                    id="pathSearch"
+                    type="search"
+                    data-i18n-placeholder="filters.pathPlaceholder"
+                    placeholder="Search by normalized_page_path"
+                  />
+                </div>
               </div>
-              <div class="filter-field">
-                <label for="actionFilter" data-i18n="filters.recommendedAction">Recommended action</label>
-                <select id="actionFilter">
-                  <option value=""></option>
-                </select>
-              </div>
-              <div class="filter-field">
-                <label for="sourceMatchFilter" data-i18n="filters.dataSourceMatch">Data source match</label>
-                <select id="sourceMatchFilter">
-                  <option value=""></option>
-                </select>
-              </div>
-              <div class="filter-field">
-                <label for="verdictFilter" data-i18n="filters.verdict">Inspection verdict</label>
-                <select id="verdictFilter">
-                  <option value=""></option>
-                </select>
-              </div>
-              <div class="filter-field">
-                <label for="coverageFilter" data-i18n="filters.coverage">Coverage state</label>
-                <select id="coverageFilter">
-                  <option value=""></option>
-                </select>
-              </div>
-              <div class="filter-field">
-                <label for="indexingFilter" data-i18n="filters.indexingStatus">Indexing status</label>
-                <select id="indexingFilter">
-                  <option value=""></option>
-                </select>
-              </div>
-              <div class="filter-field">
-                <label for="robotsFilter" data-i18n="filters.robots">Robots state</label>
-                <select id="robotsFilter">
-                  <option value=""></option>
-                </select>
-              </div>
-              <div class="filter-field">
-                <label for="pageSegmentFilter" data-i18n="filters.pageSegment">Page segment</label>
-                <select id="pageSegmentFilter">
-                  <option value=""></option>
-                </select>
-              </div>
-              <div class="filter-field">
-                <label for="directoryGroupFilter" data-i18n="filters.directoryGroup">Directory group</label>
-                <select id="directoryGroupFilter">
-                  <option value=""></option>
-                </select>
-              </div>
-              <div class="filter-field">
-                <label for="workflowStatusFilter" data-i18n="filters.workflowStatus">Workflow status</label>
-                <select id="workflowStatusFilter">
-                  <option value=""></option>
-                </select>
-              </div>
-              <div class="filter-field">
-                <label for="pathSearch" data-i18n="filters.pathSearch">Поиск по пути</label>
-                <input
-                  id="pathSearch"
-                  type="search"
-                  data-i18n-placeholder="filters.pathPlaceholder"
-                  placeholder="Search by normalized_page_path"
-                />
+              <div class="active-filters-shell">
+                <div class="active-filters-head">
+                  <strong data-i18n="filters.activeTitle">Активные фильтры</strong>
+                  <div class="active-filters-copy" data-i18n="filters.activeCopy">
+                    Видно сразу, что сейчас влияет на action tables.
+                  </div>
+                </div>
+                <div class="active-filters-list" id="activeFilters"></div>
               </div>
             </div>
+            <details class="advanced-filters" id="advancedFilters">
+              <summary id="advancedFiltersSummary">Advanced filters</summary>
+              <div class="advanced-filters-body">
+                <div class="filters-grid advanced-filters-grid">
+                  <div class="filter-field">
+                    <label for="reasonCodeFilter" data-i18n="filters.reasonCode">Reason code</label>
+                    <select id="reasonCodeFilter">
+                      <option value=""></option>
+                    </select>
+                  </div>
+                  <div class="filter-field">
+                    <label for="sourceMatchFilter" data-i18n="filters.dataSourceMatch">Data source match</label>
+                    <select id="sourceMatchFilter">
+                      <option value=""></option>
+                    </select>
+                  </div>
+                  <div class="filter-field">
+                    <label for="verdictFilter" data-i18n="filters.verdict">Inspection verdict</label>
+                    <select id="verdictFilter">
+                      <option value=""></option>
+                    </select>
+                  </div>
+                  <div class="filter-field">
+                    <label for="coverageFilter" data-i18n="filters.coverage">Coverage state</label>
+                    <select id="coverageFilter">
+                      <option value=""></option>
+                    </select>
+                  </div>
+                  <div class="filter-field">
+                    <label for="indexingFilter" data-i18n="filters.indexingStatus">Indexing status</label>
+                    <select id="indexingFilter">
+                      <option value=""></option>
+                    </select>
+                  </div>
+                  <div class="filter-field">
+                    <label for="robotsFilter" data-i18n="filters.robots">Robots state</label>
+                    <select id="robotsFilter">
+                      <option value=""></option>
+                    </select>
+                  </div>
+                  <div class="filter-field">
+                    <label for="directoryGroupFilter" data-i18n="filters.directoryGroup">Directory group</label>
+                    <select id="directoryGroupFilter">
+                      <option value=""></option>
+                    </select>
+                  </div>
+                </div>
+                <div class="filters-note" id="filtersNote"></div>
+              </div>
+            </details>
             <div class="workflow-toolbar">
               <div class="workflow-actions-grid">
                 <div class="filter-field">
@@ -1386,11 +1846,42 @@
               </div>
               <div class="filters-note" id="workflowStatusNote"></div>
             </div>
-            <div class="filters-note" id="filtersNote"></div>
           </div>
         </section>
 
-        <section class="panel section-anchor" id="quick-wins">
+        <div class="section-band" id="hierarchy-insights">
+          <span class="section-band__eyebrow" data-i18n="hierarchy.insightsEyebrow">Insights</span>
+          <h2 class="section-band__title" data-i18n="hierarchy.insightsTitle">Understand what changed</h2>
+          <p class="section-band__copy" data-i18n="hierarchy.insightsCopy">
+            Сначала разберите движение, weekly delta и диагностические сигналы, прежде чем выбирать конкретные SEO-действия.
+          </p>
+        </div>
+
+        <section class="panel panel-secondary section-anchor" id="top-page-movers">
+          <div class="panel-header">
+            <div>
+              <h2 class="panel-title" data-i18n="topMovers.title">Top Page Movers</h2>
+              <p class="panel-copy" id="topMoversCopy"></p>
+            </div>
+          </div>
+          <div class="panel-body">
+            <div class="table-shell">
+              <div id="topMoversNotice"></div>
+              <div class="table-meta" id="topMoversMeta"></div>
+              <div id="topMoversTable"></div>
+            </div>
+          </div>
+        </section>
+
+        <div class="section-band section-band-actions" id="hierarchy-actions">
+          <span class="section-band__eyebrow" data-i18n="hierarchy.actionsEyebrow">Actions</span>
+          <h2 class="section-band__title" data-i18n="hierarchy.actionsTitle">Decide what to do next</h2>
+          <p class="section-band__copy" data-i18n="hierarchy.actionsCopy">
+            Эти блоки стоит просматривать как рабочий список: приоритет, действие, статус и заметки.
+          </p>
+        </div>
+
+        <section class="panel panel-emphasis section-anchor" id="quick-wins">
           <div class="panel-header">
             <div>
               <h2 class="panel-title" data-i18n="quickWins.title">Top Quick Wins</h2>
@@ -1406,7 +1897,58 @@
           </div>
         </section>
 
-        <section class="panel section-anchor" id="queries">
+        <section class="panel panel-emphasis section-anchor" id="indexing-review">
+          <div class="panel-header">
+            <div>
+              <h2 class="panel-title" data-i18n="indexingReview.title">Indexing Review</h2>
+              <p class="panel-copy" id="indexingReviewCopy"></p>
+            </div>
+          </div>
+          <div class="panel-body">
+            <div class="table-shell">
+              <div id="indexingReviewNotice"></div>
+              <div class="table-meta" id="indexingReviewMeta"></div>
+              <div id="indexingReviewTable"></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel panel-emphasis section-anchor" id="sitemap-review">
+          <div class="panel-header">
+            <div>
+              <h2 class="panel-title" data-i18n="sitemapReview.title">Sitemap Opportunity Review</h2>
+              <p class="panel-copy" id="sitemapReviewCopy"></p>
+            </div>
+          </div>
+          <div class="panel-body">
+            <div class="table-shell">
+              <div class="queries-toolbar">
+                <div class="queries-controls sitemap-review-controls">
+                  <div class="filter-field">
+                    <label for="sitemapIndexedFilter" data-i18n="sitemapReview.indexedFilterLabel">Indexed status</label>
+                    <select id="sitemapIndexedFilter">
+                      <option value=""></option>
+                    </select>
+                  </div>
+                </div>
+                <div class="queries-filter-note" id="sitemapReviewFilterNote"></div>
+              </div>
+              <div id="sitemapReviewNotice"></div>
+              <div class="table-meta" id="sitemapReviewMeta"></div>
+              <div id="sitemapReviewTable"></div>
+            </div>
+          </div>
+        </section>
+
+        <div class="section-band" id="hierarchy-explore">
+          <span class="section-band__eyebrow" data-i18n="hierarchy.exploreEyebrow">Explore</span>
+          <h2 class="section-band__title" data-i18n="hierarchy.exploreTitle">Explore supporting detail</h2>
+          <p class="section-band__copy" data-i18n="hierarchy.exploreCopy">
+            Здесь уже удобно копать глубже: query patterns, unified page explorer и дополнительные движения страниц.
+          </p>
+        </div>
+
+        <section class="panel panel-secondary section-anchor" id="queries">
           <div class="panel-header">
             <div>
               <h2 class="panel-title" data-i18n="queries.title">Queries</h2>
@@ -1444,22 +1986,6 @@
               <div id="queriesNotice"></div>
               <div class="table-meta" id="queriesMeta"></div>
               <div id="queriesTable"></div>
-            </div>
-          </div>
-        </section>
-
-        <section class="panel section-anchor" id="top-page-movers">
-          <div class="panel-header">
-            <div>
-              <h2 class="panel-title" data-i18n="topMovers.title">Top Page Movers</h2>
-              <p class="panel-copy" id="topMoversCopy"></p>
-            </div>
-          </div>
-          <div class="panel-body">
-            <div class="table-shell">
-              <div id="topMoversNotice"></div>
-              <div class="table-meta" id="topMoversMeta"></div>
-              <div id="topMoversTable"></div>
             </div>
           </div>
         </section>
@@ -1548,50 +2074,7 @@
           </div>
         </section>
 
-        <section class="panel section-anchor" id="indexing-review">
-          <div class="panel-header">
-            <div>
-              <h2 class="panel-title" data-i18n="indexingReview.title">Indexing Review</h2>
-              <p class="panel-copy" id="indexingReviewCopy"></p>
-            </div>
-          </div>
-          <div class="panel-body">
-            <div class="table-shell">
-              <div id="indexingReviewNotice"></div>
-              <div class="table-meta" id="indexingReviewMeta"></div>
-              <div id="indexingReviewTable"></div>
-            </div>
-          </div>
-        </section>
-
-        <section class="panel section-anchor" id="sitemap-review">
-          <div class="panel-header">
-            <div>
-              <h2 class="panel-title" data-i18n="sitemapReview.title">Sitemap Opportunity Review</h2>
-              <p class="panel-copy" id="sitemapReviewCopy"></p>
-            </div>
-          </div>
-          <div class="panel-body">
-            <div class="table-shell">
-              <div class="queries-toolbar">
-                <div class="queries-controls sitemap-review-controls">
-                  <div class="filter-field">
-                    <label for="sitemapIndexedFilter" data-i18n="sitemapReview.indexedFilterLabel">Indexed status</label>
-                    <select id="sitemapIndexedFilter">
-                      <option value=""></option>
-                    </select>
-                  </div>
-                </div>
-                <div class="queries-filter-note" id="sitemapReviewFilterNote"></div>
-              </div>
-              <div id="sitemapReviewNotice"></div>
-              <div class="table-meta" id="sitemapReviewMeta"></div>
-              <div id="sitemapReviewTable"></div>
-            </div>
-          </div>
-        </section>
-
-        <section class="panel section-anchor" id="pages">
+        <section class="panel panel-secondary section-anchor" id="pages">
           <div class="panel-header">
             <div>
               <h2 class="panel-title" data-i18n="pages.title">Pages (Unified Explorer)</h2>
@@ -1700,6 +2183,7 @@
           },
           spotlight: {
             title: "Opportunity Spotlight",
+            copy: "Один главный фокус на неделю. Полная action-очередь остаётся в Top Quick Wins ниже.",
           },
           filters: {
             title: "Фильтры страниц и индексации",
@@ -1721,6 +2205,43 @@
             pathPlaceholder: "Искать по normalized_page_path",
             all: "Все",
             unavailable: "Недоступно для выбранного периода",
+            activeTitle: "Активные фильтры",
+            activeCopy: "Сразу видно, что сейчас влияет на action tables.",
+            activeEmpty: "Сейчас применён только период. Остальные фильтры не активны.",
+            advancedTitle: "Расширенные фильтры",
+            advancedSummary: "Расширенные фильтры ({count} актив.)",
+          },
+          hierarchy: {
+            insightsEyebrow: "Insights",
+            insightsTitle: "Сначала поймите, что изменилось",
+            insightsCopy:
+              "Weekly delta и движение страниц помогают быстро увидеть, где появился риск, а где — новый рост.",
+            actionsEyebrow: "Actions",
+            actionsTitle: "Потом выберите рабочий список",
+            actionsCopy:
+              "Эти блоки лучше использовать как action queue: приоритет, следующее действие, статус и заметки.",
+            exploreEyebrow: "Explore",
+            exploreTitle: "Потом уже копайте в деталях",
+            exploreCopy:
+              "Запросы и unified pages полезны для исследования и уточнения решений, но не должны конкурировать с primary action blocks.",
+          },
+          workflowGuide: {
+            title: "Weekly workflow",
+            copy:
+              "Короткий weekly-ритм, чтобы использовать dashboard как рабочий cockpit, а не просто как витрину данных.",
+            step1Title: "Review KPI",
+            step1Copy: "Начните с KPI и общего состояния, чтобы понять, был ли рост, просадка или нейтральная неделя.",
+            step1Link: "Перейти к обзору",
+            step2Title: "Review key shift",
+            step2Copy: "Посмотрите spotlight и weekly delta, чтобы быстро увидеть главный новый риск или возможность.",
+            step2Link: "Открыть weekly delta",
+            step3Title: "Review highest-priority pages",
+            step3Copy: "Затем перейдите в primary action tables: quick wins, indexing review и sitemap review.",
+            step3Link: "Открыть action tables",
+            step4Title: "Choose action",
+            step4Copy: "Зафиксируйте статус, заметку или экспортируйте текущий filtered set как рабочий список на неделю.",
+            step4Link: "Обновить workflow",
+            meta: "На этой неделе: {quickWins} quick wins · {issues} проблемных страниц · {planned} planned items.",
           },
           savedViews: {
             title: "Сохранённые представления",
@@ -1852,6 +2373,11 @@
             readyNote: "Показатель рассчитан из canonical dashboard contract.",
             partialNote: "Показатель рассчитан частично: часть источников пока отсутствует.",
             unavailableNote: "Для выбранного периода KPI-данные пока не сгенерированы.",
+            noComparison: "Сравнение с предыдущим периодом пока недоступно.",
+            vsPrevious28: "vs предыдущие 28 дней",
+            improved: "{metric}: улучшение vs предыдущие 28 дней",
+            declined: "{metric}: снижение vs предыдущие 28 дней",
+            flat: "{metric}: без заметных изменений",
           },
           statusCards: {
             contract: "Canonical contract",
@@ -1923,6 +2449,7 @@
             quickWin: "Quick win",
             reason: "Причина",
             action: "Действие",
+            priority: "Приоритет",
             workflow: "Workflow",
             brand: "Brand split",
             intent: "Intent",
@@ -2056,6 +2583,11 @@
               ignored: "ignored",
               recheck_later: "recheck later",
             },
+            priority: {
+              high: "high",
+              medium: "medium",
+              low: "low",
+            },
           },
         },
         en: {
@@ -2105,6 +2637,7 @@
           },
           spotlight: {
             title: "Opportunity Spotlight",
+            copy: "One primary focus for the week. The full action queue stays below in Top Quick Wins.",
           },
           filters: {
             title: "Page and indexing filters",
@@ -2126,6 +2659,43 @@
             pathPlaceholder: "Search by normalized_page_path",
             all: "All",
             unavailable: "Unavailable for this date range",
+            activeTitle: "Active filters",
+            activeCopy: "You can immediately see what is shaping the action tables.",
+            activeEmpty: "Only the date range is active right now. No additional filters are applied.",
+            advancedTitle: "Advanced filters",
+            advancedSummary: "Advanced filters ({count} active)",
+          },
+          hierarchy: {
+            insightsEyebrow: "Insights",
+            insightsTitle: "First understand what changed",
+            insightsCopy:
+              "Weekly delta and page movement tell you where risk appeared and where new growth emerged.",
+            actionsEyebrow: "Actions",
+            actionsTitle: "Then choose the working queue",
+            actionsCopy:
+              "Treat these blocks as action lists: priority, next step, workflow status, and notes.",
+            exploreEyebrow: "Explore",
+            exploreTitle: "Then dig into supporting detail",
+            exploreCopy:
+              "Queries and unified pages are useful for investigation, but they should not compete with the primary action blocks.",
+          },
+          workflowGuide: {
+            title: "Weekly workflow",
+            copy:
+              "A short weekly rhythm so the dashboard works like an SEO cockpit, not just a data wall.",
+            step1Title: "Review KPI",
+            step1Copy: "Start with KPIs and the overview so you know whether this was a growth, decline, or flat week.",
+            step1Link: "Open overview",
+            step2Title: "Review key shift",
+            step2Copy: "Check the spotlight and weekly delta to spot the biggest new risk or opportunity quickly.",
+            step2Link: "Open weekly delta",
+            step3Title: "Review highest-priority pages",
+            step3Copy: "Then move into the primary action tables: quick wins, indexing review, and sitemap review.",
+            step3Link: "Open action tables",
+            step4Title: "Choose action",
+            step4Copy: "Set a workflow status, add a note, or export the current filtered set as the week’s working list.",
+            step4Link: "Update workflow",
+            meta: "This week: {quickWins} quick wins · {issues} issue pages · {planned} planned items.",
           },
           savedViews: {
             title: "Saved views",
@@ -2257,6 +2827,11 @@
             readyNote: "Metric calculated from the canonical dashboard contract.",
             partialNote: "Metric is partially available because some source artifacts are still missing.",
             unavailableNote: "KPI data has not been generated for the selected range yet.",
+            noComparison: "No comparable baseline is available yet.",
+            vsPrevious28: "vs previous 28 days",
+            improved: "{metric}: improved vs previous 28 days",
+            declined: "{metric}: declined vs previous 28 days",
+            flat: "{metric}: flat vs previous 28 days",
           },
           statusCards: {
             contract: "Canonical contract",
@@ -2328,6 +2903,7 @@
             quickWin: "Quick win",
             reason: "Reason",
             action: "Action",
+            priority: "Priority",
             workflow: "Workflow",
             brand: "Brand split",
             intent: "Intent",
@@ -2461,6 +3037,11 @@
               ignored: "ignored",
               recheck_later: "recheck later",
             },
+            priority: {
+              high: "High",
+              medium: "Medium",
+              low: "Low",
+            },
           },
         },
       };
@@ -2488,7 +3069,7 @@
           pathSearch: "",
         },
         sort: {
-          quickWins: { key: "quick_win_score", direction: "desc" },
+          quickWins: { key: "priority_rank", direction: "desc" },
           queries: { key: "clicks", direction: "desc" },
           topMovers: { key: "mover_score", direction: "desc" },
           weeklyNewIssues: { key: "normalized_page_path", direction: "asc" },
@@ -2496,9 +3077,9 @@
           weeklyNewQuickWins: { key: "quick_win_score", direction: "desc" },
           weeklyPositiveMovers: { key: "delta_score", direction: "desc" },
           weeklyNegativeMovers: { key: "delta_score", direction: "asc" },
-          indexingReview: { key: "has_issue_rank", direction: "desc" },
-          sitemapOpportunityReview: { key: "opportunity_score", direction: "desc" },
-          pages: { key: "quick_win_score", direction: "desc" },
+          indexingReview: { key: "priority_rank", direction: "desc" },
+          sitemapOpportunityReview: { key: "priority_rank", direction: "desc" },
+          pages: { key: "priority_rank", direction: "desc" },
         },
         data: {
           contract: null,
@@ -2957,7 +3538,9 @@
       }
 
       function inspectionIssueTokens(row) {
-        const tokens = [];
+        const tokens = Array.isArray(row.issue_types)
+          ? [...new Set(row.issue_types.map((token) => String(token || "").trim()).filter(Boolean))]
+          : [];
 
         if (verdictIssue(row)) {
           tokens.push("verdict_issue");
@@ -2972,7 +3555,7 @@
           tokens.push("indexing_state_issue");
         }
 
-        return tokens;
+        return [...new Set(tokens)];
       }
 
       function displayReason(reason) {
@@ -3028,6 +3611,10 @@
         return t(`enums.page_segment.${String(value || "other")}`);
       }
 
+      function displayPriority(value) {
+        return t(`enums.priority.${String(value || "low")}`);
+      }
+
       function displayDirectoryGroup(value) {
         const raw = String(value || "root").trim();
         if (!raw || raw === "root") {
@@ -3043,6 +3630,109 @@
       function displayIssueType(token) {
         const translated = t(`enums.issue_labels.${String(token || "").trim()}`);
         return translated.startsWith("enums.issue_labels.") ? String(token || "") : translated;
+      }
+
+      function badgeForPriority(value) {
+        const normalized = String(value || "low");
+        const tone =
+          {
+            high: "danger",
+            medium: "warning",
+            low: "ghost",
+          }[normalized] || "ghost";
+        return badge(displayPriority(normalized), tone);
+      }
+
+      function quantile(values, ratio) {
+        const numeric = values.filter((value) => Number.isFinite(value)).sort((a, b) => a - b);
+        if (!numeric.length) {
+          return 0;
+        }
+        const index = Math.min(numeric.length - 1, Math.max(0, Math.floor((numeric.length - 1) * ratio)));
+        return numeric[index];
+      }
+
+      function priorityLevelFromThresholds(value, mediumThreshold, highThreshold) {
+        if (!Number.isFinite(value) || value <= 0) {
+          return "low";
+        }
+        if (value >= highThreshold) {
+          return "high";
+        }
+        if (value >= mediumThreshold) {
+          return "medium";
+        }
+        return "low";
+      }
+
+      function elevatePriority(level) {
+        if (level === "low") {
+          return "medium";
+        }
+        if (level === "medium") {
+          return "high";
+        }
+        return "high";
+      }
+
+      function enrichRowsWithNumericPriority(rows, field, { highRatio = 0.75, mediumRatio = 0.4 } = {}) {
+        const values = rows.map((row) => parseNumber(row[field]));
+        const highThreshold = quantile(values, highRatio);
+        const mediumThreshold = quantile(values, mediumRatio);
+        return rows.map((row) => {
+          const level = priorityLevelFromThresholds(parseNumber(row[field]), mediumThreshold, highThreshold);
+          return {
+            ...row,
+            priority_level: level,
+            priority_rank: level === "high" ? 3 : level === "medium" ? 2 : 1,
+          };
+        });
+      }
+
+      function enrichIndexingPriority(rows) {
+        return rows.map((row) => {
+          const tokens = Array.isArray(row.issue_tokens) ? row.issue_tokens : [];
+          let level = "low";
+          if (
+            tokens.includes("robots_txt_blocked") ||
+            tokens.includes("verdict_issue") ||
+            tokens.includes("not_indexed")
+          ) {
+            level = "high";
+          } else if (
+            tokens.includes("canonical_mismatch") ||
+            tokens.includes("indexing_state_issue")
+          ) {
+            level = "medium";
+          } else if (tokens.length) {
+            level = "medium";
+          }
+          return {
+            ...row,
+            priority_level: level,
+            priority_rank: level === "high" ? 3 : level === "medium" ? 2 : 1,
+          };
+        });
+      }
+
+      function enrichSitemapPriority(rows) {
+        const enriched = enrichRowsWithNumericPriority(rows, "opportunity_score", { highRatio: 0.72, mediumRatio: 0.42 });
+        return enriched.map((row) => {
+          let level = row.priority_level;
+          if (
+            row.indexed_status === "not_indexed" ||
+            row.crawlable_not_indexed ||
+            row.canonical_mismatch ||
+            row.robots_issue
+          ) {
+            level = elevatePriority(level);
+          }
+          return {
+            ...row,
+            priority_level: level,
+            priority_rank: level === "high" ? 3 : level === "medium" ? 2 : 1,
+          };
+        });
       }
 
       function translateInspectionValue(value) {
@@ -3230,8 +3920,16 @@
         return badge(displayMovementDirection(normalized), tone);
       }
 
+      function softWrapPathLabel(value) {
+        return escapeHtml(String(value || "—"))
+          .replaceAll("/", "/<wbr>")
+          .replaceAll("-", "-<wbr>")
+          .replaceAll("_", "_<wbr>")
+          .replaceAll("?", "?<wbr>");
+      }
+
       function renderPathCell(row) {
-        const label = escapeHtml(
+        const label = softWrapPathLabel(
           row.normalized_page_path || row.normalized_page_url || row.page_original_gsc || row.page_original_ga4 || "—",
         );
         const url = buildPageUrl(row);
@@ -3245,7 +3943,7 @@
 
         return `
           <a class="page-link path-cell" href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer">
-            <span>${label}</span>
+            <span class="page-link-label">${label}</span>
             <span class="page-link-icon" aria-hidden="true">↗</span>
           </a>
         `;
@@ -3278,12 +3976,12 @@
           ? formatDecimal(row.merge_candidate_similarity, 2)
           : "—";
         const confidence = String(row.merge_candidate_confidence || "").trim();
-        const label = escapeHtml(candidatePath);
+        const label = softWrapPathLabel(candidatePath);
         const meta = `${similarity}${confidence ? ` · ${escapeHtml(confidence)}` : ""}`;
 
         return `
           ${candidateUrl
-            ? `<a class="page-link path-cell" href="${escapeHtml(candidateUrl)}" target="_blank" rel="noopener noreferrer"><span>${label}</span><span class="page-link-icon" aria-hidden="true">↗</span></a>`
+            ? `<a class="page-link path-cell" href="${escapeHtml(candidateUrl)}" target="_blank" rel="noopener noreferrer"><span class="page-link-label">${label}</span><span class="page-link-icon" aria-hidden="true">↗</span></a>`
             : `<div class="path-cell">${label}</div>`}
           <div class="subtle-note">${meta}</div>
         `;
@@ -3551,6 +4249,58 @@
         return Object.values(state.data.kpis || {}).some((value) => parseNumber(value) > 0);
       }
 
+      function formatSignedDelta(value, digits = 1) {
+        if (!Number.isFinite(value)) {
+          return "—";
+        }
+        const absolute = Math.abs(value);
+        const sign = value > 0 ? "+" : value < 0 ? "−" : "";
+        return `${sign}${formatDecimal(absolute, digits)}`;
+      }
+
+      function kpiComparison(metricKey, currentValue, previousValue) {
+        if (state.windowName !== "last_28_days" || !Number.isFinite(previousValue)) {
+          return {
+            tone: "neutral",
+            deltaLabel: t("kpi.noComparison"),
+            note: t("kpi.noComparison"),
+          };
+        }
+
+        const isPositionMetric = metricKey === "avgPosition";
+        const delta = currentValue - previousValue;
+        const significant = Math.abs(delta) > (isPositionMetric ? 0.15 : 0.001);
+        const improved = isPositionMetric ? delta < 0 : delta > 0;
+        const worsened = isPositionMetric ? delta > 0 : delta < 0;
+
+        if (!significant) {
+          return {
+            tone: "flat",
+            deltaLabel: `→ ${t("kpi.vsPrevious28")}`,
+            note: t("kpi.flat", { metric: t(`kpi.${metricKey}`) }),
+          };
+        }
+
+        let deltaText = "";
+        if (metricKey === "avgCtr") {
+          deltaText = `${formatSignedDelta((currentValue - previousValue) * 100, 2)} pp`;
+        } else if (metricKey === "avgPosition") {
+          deltaText = formatDecimal(Math.abs(currentValue - previousValue), 2);
+        } else if (previousValue > 0) {
+          deltaText = `${formatSignedDelta(((currentValue - previousValue) / previousValue) * 100, 1)}%`;
+        } else {
+          deltaText = formatSignedDelta(currentValue - previousValue, 1);
+        }
+
+        return {
+          tone: improved ? "up" : worsened ? "down" : "flat",
+          deltaLabel: `${improved ? "↑" : worsened ? "↓" : "→"} ${deltaText} ${t("kpi.vsPrevious28")}`,
+          note: improved
+            ? t("kpi.improved", { metric: t(`kpi.${metricKey}`) })
+            : t("kpi.declined", { metric: t(`kpi.${metricKey}`) }),
+        };
+      }
+
       function deriveHeroMeta() {
         const metadata = state.data.metadata || {};
         const projectName = metadata.project_name || "seo-dashboard";
@@ -3586,7 +4336,7 @@
         document.getElementById("trendCopy").textContent = `${t("trend.title")} · ${formatDateRange(state.windowName)}`;
         document.getElementById("spotlightCopy").textContent =
           state.windowName === "last_28_days"
-            ? t("quickWins.copy")
+            ? t("spotlight.copy")
             : t("messages.unsupportedQuickWinsRange");
         document.getElementById("quickWinsCopy").textContent =
           state.windowName === "last_28_days" ? t("quickWins.copy") : t("messages.unsupportedQuickWinsRange");
@@ -3713,15 +4463,28 @@
           : t("kpi.unavailableNote");
 
         const values = state.data.kpis || {};
+        const baseline = state.data.contract?.kpis?.previous_28_days || {};
+        const baselineValue = (key) =>
+          baseline[key] === undefined || baseline[key] === null || baseline[key] === ""
+            ? Number.NaN
+            : parseNumber(baseline[key]);
+        const comparisons = {
+          gscClicks: kpiComparison("gscClicks", parseNumber(values.gsc_clicks), baselineValue("gsc_clicks")),
+          gscImpressions: kpiComparison("gscImpressions", parseNumber(values.gsc_impressions), baselineValue("gsc_impressions")),
+          avgCtr: kpiComparison("avgCtr", parseNumber(values.avg_ctr), baselineValue("avg_ctr")),
+          avgPosition: kpiComparison("avgPosition", parseNumber(values.avg_position), baselineValue("avg_position")),
+          ga4Sessions: kpiComparison("ga4Sessions", parseNumber(values.ga4_sessions), baselineValue("ga4_sessions")),
+          ga4Conversions: kpiComparison("ga4Conversions", parseNumber(values.ga4_conversions), baselineValue("ga4_conversions")),
+        };
 
         return [
-          { label: t("kpi.gscClicks"), value: hasData ? formatInteger(values.gsc_clicks) : "—" },
-          { label: t("kpi.gscImpressions"), value: hasData ? formatInteger(values.gsc_impressions) : "—" },
-          { label: t("kpi.avgCtr"), value: hasData ? formatPercent(values.avg_ctr) : "—" },
-          { label: t("kpi.avgPosition"), value: hasData ? formatDecimal(values.avg_position) : "—" },
-          { label: t("kpi.ga4Sessions"), value: hasData ? formatInteger(values.ga4_sessions) : "—" },
-          { label: t("kpi.ga4Conversions"), value: hasData ? formatInteger(values.ga4_conversions) : "—" },
-        ].map((item) => ({ ...item, note }));
+          { key: "gscClicks", label: t("kpi.gscClicks"), value: hasData ? formatInteger(values.gsc_clicks) : "—" },
+          { key: "gscImpressions", label: t("kpi.gscImpressions"), value: hasData ? formatInteger(values.gsc_impressions) : "—" },
+          { key: "avgCtr", label: t("kpi.avgCtr"), value: hasData ? formatPercent(values.avg_ctr) : "—" },
+          { key: "avgPosition", label: t("kpi.avgPosition"), value: hasData ? formatDecimal(values.avg_position) : "—" },
+          { key: "ga4Sessions", label: t("kpi.ga4Sessions"), value: hasData ? formatInteger(values.ga4_sessions) : "—" },
+          { key: "ga4Conversions", label: t("kpi.ga4Conversions"), value: hasData ? formatInteger(values.ga4_conversions) : "—" },
+        ].map((item) => ({ ...item, note, comparison: comparisons[item.key] }));
       }
 
       function renderKpis() {
@@ -3731,7 +4494,9 @@
               <article class="kpi-card">
                 <div class="kpi-label">${escapeHtml(item.label)}</div>
                 <div class="kpi-value">${escapeHtml(item.value)}</div>
-                <div class="kpi-meta">${escapeHtml(item.note)}</div>
+                <div class="kpi-trend ${escapeHtml(item.comparison.tone)}">${escapeHtml(item.comparison.deltaLabel)}</div>
+                <div class="kpi-meta">${escapeHtml(item.comparison.note)}</div>
+                <div class="kpi-meta-secondary">${escapeHtml(item.note)}</div>
               </article>
             `,
           )
@@ -3822,7 +4587,7 @@
 
       function renderSpotlight() {
         const container = document.getElementById("spotlightGrid");
-        const rows = quickWinRows().slice(0, 3);
+        const rows = enrichRowsWithNumericPriority(quickWinRows(), "quick_win_score").slice(0, 1);
 
         if (state.current.quickWins.kind === "unsupported") {
           container.innerHTML = `<div class="empty-state">${escapeHtml(t("messages.unsupportedQuickWinsRange"))}</div>`;
@@ -3843,6 +4608,7 @@
                   <div>
                     <div class="spotlight-path">${renderPathCell(row)}</div>
                     <div class="badge-group" style="margin-top: 8px;">
+                      ${badgeForPriority(row.priority_level)}
                       ${badgeForReason(row.reason_code)}
                       ${badgeForAction(row.recommended_action, row.recommended_action_text || "")}
                     </div>
@@ -3866,10 +4632,31 @@
                     <strong>${formatInteger(row.ga4_conversions)}</strong>
                   </div>
                 </div>
+                <div class="spotlight-footer">
+                  <a href="#quick-wins">${escapeHtml(state.language === "ru" ? "Открыть полную очередь quick wins" : "Open the full quick wins queue")}</a>
+                </div>
               </article>
             `,
           )
           .join("");
+      }
+
+      function renderWorkflowGuide() {
+        const plannedCount = new Set(
+          pageScopedCatalog()
+            .filter((row) => row.workflow_status === "planned")
+            .map((row) => row.workflow_record_key || row.workflow_page_key || row.normalized_page_path || row.normalized_page_url),
+        ).size;
+        const issueCount = new Set(
+          indexingReviewRows()
+            .filter((row) => (row.issue_tokens || []).length > 0)
+            .map((row) => row.workflow_record_key || row.workflow_issue_key || row.normalized_page_path),
+        ).size;
+        document.getElementById("workflowGuideMeta").textContent = t("workflowGuide.meta", {
+          quickWins: formatInteger(quickWinRows().length),
+          issues: formatInteger(issueCount),
+          planned: formatInteger(plannedCount),
+        });
       }
 
       function updateSelectOptions(selectId, values, formatter, filterStateKey) {
@@ -3933,6 +4720,89 @@
         document.querySelectorAll("#savedViewsBar [data-saved-view]").forEach((button) => {
           button.classList.toggle("is-active", state.savedView === button.dataset.savedView);
         });
+      }
+
+      function activeFilterDescriptors() {
+        const descriptors = [];
+        if (state.savedView) {
+          descriptors.push({
+            key: "savedView",
+            label: state.language === "ru" ? "Пресет" : "Saved view",
+            value: t(`savedViews.${state.savedView}`),
+          });
+        }
+
+        const filterLabels = {
+          recommendedAction: t("filters.recommendedAction"),
+          pageSegment: t("filters.pageSegment"),
+          workflowStatus: t("filters.workflowStatus"),
+          reasonCode: t("filters.reasonCode"),
+          dataSourceMatchType: t("filters.dataSourceMatch"),
+          inspectionVerdict: t("filters.verdict"),
+          inspectionCoverageState: t("filters.coverage"),
+          inspectionIndexingState: t("filters.indexingStatus"),
+          inspectionRobotsTxtState: t("filters.robots"),
+          pageDirectoryGroup: t("filters.directoryGroup"),
+          pathSearch: t("filters.pathSearch"),
+        };
+
+        Object.entries(state.filters).forEach(([key, value]) => {
+          if (!String(value || "").trim()) {
+            return;
+          }
+          let displayValue = value;
+          if (key === "recommendedAction") displayValue = displayAction(value);
+          if (key === "pageSegment") displayValue = displayPageSegment(value);
+          if (key === "workflowStatus") displayValue = displayWorkflowStatus(value);
+          if (key === "reasonCode") displayValue = displayReason(value);
+          if (key === "dataSourceMatchType") displayValue = displayMatchType(value);
+          if (key === "inspectionVerdict") displayValue = displayVerdict(value);
+          if (key === "inspectionCoverageState") displayValue = translateInspectionValue(value);
+          if (key === "inspectionIndexingState") displayValue = translateInspectionValue(value);
+          if (key === "inspectionRobotsTxtState") displayValue = translateInspectionValue(value);
+          if (key === "pageDirectoryGroup") displayValue = displayDirectoryGroup(value);
+          descriptors.push({
+            key,
+            label: filterLabels[key] || key,
+            value: displayValue,
+          });
+        });
+
+        return descriptors;
+      }
+
+      function renderFilterMeta() {
+        const container = document.getElementById("activeFilters");
+        const descriptors = activeFilterDescriptors();
+        container.innerHTML = descriptors.length
+          ? descriptors
+              .map(
+                (item) => `
+                  <span class="active-filter-chip">
+                    <span>${escapeHtml(item.label)}: ${escapeHtml(item.value)}</span>
+                    <button type="button" data-clear-filter="${escapeHtml(item.key)}" aria-label="${escapeHtml(state.language === "ru" ? "Убрать фильтр" : "Remove filter")}">×</button>
+                  </span>
+                `,
+              )
+              .join("")
+          : `<span class="active-filters-empty">${escapeHtml(t("filters.activeEmpty"))}</span>`;
+
+        const advancedKeys = [
+          "reasonCode",
+          "dataSourceMatchType",
+          "inspectionVerdict",
+          "inspectionCoverageState",
+          "inspectionIndexingState",
+          "inspectionRobotsTxtState",
+          "pageDirectoryGroup",
+        ];
+        const advancedActiveCount = advancedKeys.filter((key) => String(state.filters[key] || "").trim()).length;
+        const details = document.getElementById("advancedFilters");
+        const summary = document.getElementById("advancedFiltersSummary");
+        summary.textContent = advancedActiveCount
+          ? t("filters.advancedSummary", { count: advancedActiveCount })
+          : t("filters.advancedTitle");
+        details.open = advancedActiveCount > 0;
       }
 
       function renderWorkflowToolbar() {
@@ -4356,6 +5226,7 @@
           pathSearch.value = "";
         }
 
+        renderFilterMeta();
         renderWorkflowToolbar();
       }
 
@@ -4374,6 +5245,8 @@
         highlightTop = false,
         metaText = "",
         wrapClassName = "",
+        stickyFirstColumn = false,
+        wideTable = false,
       }) {
         const container = document.getElementById(containerId);
         const meta = document.getElementById(metaId);
@@ -4391,8 +5264,8 @@
 
         const head = columns
           .map(
-            (column) => `
-              <th scope="col">
+            (column, index) => `
+              <th scope="col" class="${stickyFirstColumn && index === 0 ? "is-sticky-col" : ""}">
                 <button type="button" data-table="${tableKey}" data-key="${column.key}">
                   ${escapeHtml(column.label)}
                   ${sortState.key === column.key ? (sortState.direction === "asc" ? "↑" : "↓") : ""}
@@ -4405,11 +5278,12 @@
         const body = sortedRows
           .map((row, index) => {
             const cells = columns
-              .map((column) => {
+              .map((column, columnIndex) => {
                 const rendered = column.render
                   ? column.render(row, index, tableKey)
                   : escapeHtml(row[column.key] ?? "");
-                return `<td class="${column.className || ""}">${rendered}</td>`;
+                const stickyClass = stickyFirstColumn && columnIndex === 0 ? "is-sticky-col" : "";
+                return `<td class="${[column.className || "", stickyClass].filter(Boolean).join(" ")}">${rendered}</td>`;
               })
               .join("");
             return `<tr class="${highlightTop && index < 3 ? "highlight-row" : ""}">${cells}</tr>`;
@@ -4419,11 +5293,13 @@
         state.renderRegistry[tableKey] = sortedRows;
 
         container.innerHTML = `
-          <div class="table-wrap ${wrapClassName}">
-            <table>
-              <thead><tr>${head}</tr></thead>
-              <tbody>${body}</tbody>
-            </table>
+          <div class="table-scroll-shell ${wideTable ? "is-wide" : ""}">
+            <div class="table-wrap ${[wrapClassName, wideTable ? "is-wide" : "", stickyFirstColumn ? "has-sticky-first-col" : ""].filter(Boolean).join(" ")}">
+              <table>
+                <thead><tr>${head}</tr></thead>
+                <tbody>${body}</tbody>
+              </table>
+            </div>
           </div>
         `;
 
@@ -4466,7 +5342,7 @@
 
       function renderQuickWinsSection() {
         const sectionState = state.current.quickWins;
-        const rows = quickWinRows();
+        const rows = enrichRowsWithNumericPriority(quickWinRows(), "quick_win_score");
 
         if (sectionState.kind === "unsupported") {
           renderSectionNotice("quickWinsNotice", "warning", t("quickWins.title"), t("messages.unsupportedQuickWinsRange"));
@@ -4495,9 +5371,12 @@
           rows,
           tableKey: "quickWins",
           highlightTop: true,
+          wideTable: true,
+          stickyFirstColumn: true,
           emptyMessage: t("messages.noQuickWins"),
           columns: [
             { key: "normalized_page_path", label: t("columns.page"), className: "path-cell", render: renderPathCell },
+            { key: "priority_rank", label: t("columns.priority"), render: (row) => badgeForPriority(row.priority_level) },
             { key: "page_segment", label: t("columns.segment"), render: (row) => badgeForSegment(row.page_segment) },
             { key: "quick_win_score", label: t("columns.quickWin"), className: "num", render: (row) => formatDecimal(row.quick_win_score) },
             { key: "reason_code", label: t("columns.reason"), render: (row) => badgeForReason(row.reason_code) },
@@ -4609,6 +5488,8 @@
           metaId: "topMoversMeta",
           rows: topMoverRows(),
           tableKey: "topMovers",
+          wideTable: true,
+          stickyFirstColumn: true,
           emptyMessage:
             sectionState.kind === "unsupported"
               ? t("messages.unsupportedMoversRange")
@@ -4840,7 +5721,7 @@
           issue_tokens: inspectionIssueTokens(row),
           has_issue_rank: inspectionIssueTokens(row).length ? 1 : 0,
         }));
-        const rows = indexingReviewRows();
+        const rows = enrichIndexingPriority(indexingReviewRows());
         const issueCount = rows.filter((row) => row.issue_tokens.length > 0).length;
         const totalIssueCount = baseRows.filter((row) => row.issue_tokens.length > 0).length;
         const hasActiveFilter = Object.values(state.filters).some((value) => String(value || "").trim() !== "");
@@ -4870,6 +5751,8 @@
           rows,
           tableKey: "indexingReview",
           wrapClassName: "indexing-review-wrap",
+          wideTable: true,
+          stickyFirstColumn: true,
           metaText: tableMetaText(
             rows.length,
             t("labels.issueSummary", {
@@ -4885,6 +5768,7 @@
                 : t("messages.noIndexingRows"),
           columns: [
             { key: "normalized_page_path", label: t("columns.page"), className: "path-cell", render: renderPathCell },
+            { key: "priority_rank", label: t("columns.priority"), render: (row) => badgeForPriority(row.priority_level) },
             { key: "inspection_verdict", label: t("columns.verdict"), render: (row) => badgeForVerdict(row.inspection_verdict) },
             { key: "inspection_coverage_state", label: t("columns.coverage"), className: "cell-medium cell-break", render: (row) => escapeHtml(translateInspectionValue(row.inspection_coverage_state)) },
             { key: "inspection_indexing_state", label: t("columns.indexing"), className: "cell-medium cell-break", render: (row) => escapeHtml(translateInspectionValue(row.inspection_indexing_state)) },
@@ -4932,7 +5816,7 @@
       function renderSitemapReviewSection() {
         const sectionState = state.current.sitemapOpportunityReview;
         const baseRows = state.current.sitemapOpportunityReview.rows;
-        const rows = sitemapReviewRows();
+        const rows = enrichSitemapPriority(sitemapReviewRows());
         const hasActiveFilter =
           Object.values(state.filters).some((value) => String(value || "").trim() !== "") ||
           Boolean(String(state.sitemapIndexedStatus || "").trim());
@@ -4980,9 +5864,12 @@
           rows,
           tableKey: "sitemapOpportunityReview",
           wrapClassName: "sitemap-review-wrap",
+          wideTable: true,
+          stickyFirstColumn: true,
           emptyMessage: hasActiveFilter ? t("messages.noSitemapReviewFiltered") : t("messages.noSitemapReview"),
           columns: [
             { key: "normalized_page_path", label: t("columns.page"), className: "path-cell", render: renderPathCell },
+            { key: "priority_rank", label: t("columns.priority"), render: (row) => badgeForPriority(row.priority_level) },
             { key: "page_segment", label: t("columns.segment"), render: (row) => badgeForSegment(row.page_segment) },
             { key: "page_directory_group", label: t("columns.directoryGroup"), render: (row) => escapeHtml(displayDirectoryGroup(row.page_directory_group)) },
             { key: "source_signal_count", label: t("columns.sourceFlags"), className: "cell-medium", render: renderSourceFlagsCell },
@@ -5017,7 +5904,7 @@
 
       function renderPagesSection() {
         const sectionState = state.current.pages;
-        const rows = pagesRows();
+        const rows = enrichRowsWithNumericPriority(pagesRows(), "quick_win_score", { highRatio: 0.78, mediumRatio: 0.45 });
         const inspectionWindows = state.data.metadata?.page_windows_with_inspection || [];
 
         if (sectionState.kind === "missing_data" || sectionState.kind === "missing") {
@@ -5040,9 +5927,12 @@
           metaId: "pagesMeta",
           rows,
           tableKey: "pages",
+          wideTable: true,
+          stickyFirstColumn: true,
           emptyMessage: t("messages.noPages"),
           columns: [
             { key: "normalized_page_path", label: t("columns.page"), className: "path-cell", render: renderPathCell },
+            { key: "priority_rank", label: t("columns.priority"), render: (row) => badgeForPriority(row.priority_level) },
             { key: "page_segment", label: t("columns.segment"), render: (row) => badgeForSegment(row.page_segment) },
             { key: "page_directory_group", label: t("columns.directoryGroup"), render: (row) => escapeHtml(displayDirectoryGroup(row.page_directory_group)) },
             { key: "gsc_clicks", label: t("columns.clicks"), className: "num", render: (row) => formatInteger(row.gsc_clicks) },
@@ -5067,6 +5957,7 @@
       }
 
       function renderSections() {
+        renderWorkflowGuide();
         renderQuickWinsSection();
         renderQueriesSection();
         renderTopMoversSection();
@@ -5144,6 +6035,7 @@
             state.savedView = "";
             state.filters[filterKey] = event.target.value;
             renderSavedViews();
+            renderFilterMeta();
             renderSections();
           };
           element.addEventListener("input", handler);
@@ -5164,6 +6056,7 @@
           state.savedView = "";
           state.querySearch = event.target.value;
           renderSavedViews();
+          renderFilterMeta();
           renderQueriesSection();
           renderWorkflowToolbar();
         });
@@ -5179,6 +6072,7 @@
             state.savedView = "";
             state[stateKey] = event.target.value;
             renderSavedViews();
+            renderFilterMeta();
             renderQueriesSection();
             renderWorkflowToolbar();
           });
@@ -5191,6 +6085,7 @@
           state.savedView = "";
           state.sitemapIndexedStatus = event.target.value;
           renderSavedViews();
+          renderFilterMeta();
           renderSitemapReviewSection();
           renderWorkflowToolbar();
         });
@@ -5201,6 +6096,45 @@
           button.addEventListener("click", () => {
             applySavedView(button.dataset.savedView);
           });
+        });
+      }
+
+      function bindActiveFilters() {
+        document.getElementById("activeFilters").addEventListener("click", (event) => {
+          const button = event.target.closest("[data-clear-filter]");
+          if (!button) {
+            return;
+          }
+          const key = button.dataset.clearFilter;
+          if (key === "savedView") {
+            clearAllFilters();
+            renderFilterControls();
+            renderSavedViews();
+            renderSections();
+            return;
+          }
+          state.savedView = "";
+          state.filters[key] = "";
+          const elementMap = {
+            reasonCode: "reasonCodeFilter",
+            recommendedAction: "actionFilter",
+            dataSourceMatchType: "sourceMatchFilter",
+            inspectionVerdict: "verdictFilter",
+            inspectionCoverageState: "coverageFilter",
+            inspectionIndexingState: "indexingFilter",
+            inspectionRobotsTxtState: "robotsFilter",
+            pageSegment: "pageSegmentFilter",
+            pageDirectoryGroup: "directoryGroupFilter",
+            workflowStatus: "workflowStatusFilter",
+            pathSearch: "pathSearch",
+          };
+          const element = document.getElementById(elementMap[key] || "");
+          if (element) {
+            element.value = "";
+          }
+          renderSavedViews();
+          renderFilterMeta();
+          renderSections();
         });
       }
 
@@ -5288,6 +6222,7 @@
         bindQueriesFilter();
         bindSitemapReviewFilter();
         bindSavedViews();
+        bindActiveFilters();
         bindWorkflowControls();
         bindFloatingSideNav();
 
