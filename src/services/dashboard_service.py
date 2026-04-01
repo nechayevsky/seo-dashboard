@@ -14,12 +14,17 @@ from ..utils.date_utils import get_date_ranges
 from ..utils.io_utils import read_csv_file, read_json_file, write_csv_file, write_json_file
 from .history_service import HistoryService
 from .inspection_service import enrich_unified_dataset_with_inspection
+from .interpretation_service import InterpretationService, RULES_FILENAME
 from .merge_service import MergeService, WINDOW_TO_SUFFIX
 from .scoring_service import ScoringService, score_page_row
 
 TOP_MOVERS_FIELDNAMES = [
     "normalized_page_path",
     "normalized_page_url",
+    "page_segment",
+    "page_segment_confidence",
+    "page_segment_source",
+    "page_directory_group",
     "current_gsc_clicks",
     "previous_gsc_clicks",
     "current_gsc_impressions",
@@ -39,6 +44,10 @@ TOP_MOVERS_FIELDNAMES = [
 INDEXING_REVIEW_FIELDNAMES = [
     "normalized_page_path",
     "normalized_page_url",
+    "page_segment",
+    "page_segment_confidence",
+    "page_segment_source",
+    "page_directory_group",
     "inspection_verdict",
     "inspection_coverage_state",
     "inspection_indexing_state",
@@ -440,6 +449,7 @@ class DashboardService:
 
         gsc_bundle = self._load_gsc_bundle()
         ga4_bundle = self._load_ga4_bundle()
+        interpretation_service = InterpretationService(self.config, self.paths, active_logger)
         pages_by_window = {
             window_name: self._load_unified_rows(window_name, overwrite=overwrite)
             for window_name in ("last_28_days", "previous_28_days", "last_90_days", "last_365_days")
@@ -450,9 +460,21 @@ class DashboardService:
             pages_by_window["last_28_days"] = inspected_rows
 
         pages_by_window = {
-            window_name: _enrich_scored_rows(rows)
+            window_name: _enrich_scored_rows(interpretation_service.enrich_page_rows(rows))
             for window_name, rows in pages_by_window.items()
         }
+        page_attribute_maps = {
+            window_name: interpretation_service.attribute_map_by_path(rows)
+            for window_name, rows in pages_by_window.items()
+        }
+        last_28_page_attributes = page_attribute_maps.get("last_28_days", {})
+        combined_top_mover_attributes = interpretation_service.attribute_map_by_path(
+            [
+                *pages_by_window.get("last_28_days", []),
+                *pages_by_window.get("previous_28_days", []),
+            ]
+        )
+        quick_wins = interpretation_service.enrich_rows_with_page_attributes(quick_wins, last_28_page_attributes)
 
         top_page_movers = build_top_page_movers(
             pages_by_window.get("last_28_days", []),
@@ -463,6 +485,14 @@ class DashboardService:
             inspected_rows,
             self.config.inspection_scope_prefix,
         )
+        top_page_mover_rows = interpretation_service.enrich_rows_with_page_attributes(
+            [row.to_dict() for row in top_page_movers],
+            combined_top_mover_attributes,
+        )
+        indexing_review_rows = interpretation_service.enrich_rows_with_page_attributes(
+            [row.to_dict() for row in indexing_review],
+            last_28_page_attributes,
+        )
 
         top_movers_csv = self.paths.data_processed_dir / "top_page_movers_last_28_vs_previous_28.csv"
         top_movers_json = self.paths.data_processed_dir / "top_page_movers_last_28_vs_previous_28.json"
@@ -470,22 +500,27 @@ class DashboardService:
         indexing_json = self.paths.data_processed_dir / "indexing_review_last_28_days.json"
 
         output_files: list[str] = []
-        written = write_csv_file(top_movers_csv, [row.to_dict() for row in top_page_movers], TOP_MOVERS_FIELDNAMES, overwrite=overwrite)
+        written = write_csv_file(top_movers_csv, top_page_mover_rows, TOP_MOVERS_FIELDNAMES, overwrite=overwrite)
         if written:
             output_files.append(str(written))
-        written = write_json_file(top_movers_json, {"rows": [row.to_dict() for row in top_page_movers]}, overwrite=overwrite)
+        written = write_json_file(top_movers_json, {"rows": top_page_mover_rows}, overwrite=overwrite)
         if written:
             output_files.append(str(written))
-        written = write_csv_file(indexing_csv, [row.to_dict() for row in indexing_review], INDEXING_REVIEW_FIELDNAMES, overwrite=overwrite)
+        written = write_csv_file(indexing_csv, indexing_review_rows, INDEXING_REVIEW_FIELDNAMES, overwrite=overwrite)
         if written:
             output_files.append(str(written))
-        written = write_json_file(indexing_json, {"rows": [row.to_dict() for row in indexing_review]}, overwrite=overwrite)
+        written = write_json_file(indexing_json, {"rows": indexing_review_rows}, overwrite=overwrite)
         if written:
             output_files.append(str(written))
 
         sitewide_trends = (gsc_bundle or {}).get("sitewide_trends", {})
-        queries = (gsc_bundle or {}).get("query_reports") or {
+        raw_queries = (gsc_bundle or {}).get("query_reports") or {
             "last_28_days": (gsc_bundle or {}).get("query_report", []),
+        }
+        queries = {
+            window_name: interpretation_service.enrich_query_rows(rows)
+            for window_name, rows in raw_queries.items()
+            if isinstance(rows, list)
         }
         countries = (gsc_bundle or {}).get("country_reports", {})
         devices = (gsc_bundle or {}).get("device_reports", {})
@@ -496,13 +531,15 @@ class DashboardService:
                 "project_name": self.config.project_name,
                 "site_url": self.config.site_url,
                 "generated_at": datetime.now(timezone.utc).isoformat(),
-                "contract_version": "1.1",
+                "contract_version": "1.2",
                 "default_language": self.config.default_language,
                 "default_window": "last_28_days",
                 "official_dashboard_path": self.config.output_html,
                 "official_data_path": self.config.output_data_json,
                 "pages_section_mode": "unified_pages",
                 "page_windows_with_inspection": ["last_28_days"],
+                "interpretation_rules_path": str(self.paths.config_dir / RULES_FILENAME),
+                "interpretation_layers": ["brand_split", "query_intent", "page_segment"],
                 "history_snapshot_dir": str(self.paths.data_history_snapshots_dir),
                 "history_latest_dir": str(self.paths.data_history_latest_dir),
             },
@@ -513,10 +550,10 @@ class DashboardService:
                 "queries": queries,
                 "pages": pages_by_window,
                 "top_page_movers": {
-                    "last_28_vs_previous_28": [row.to_dict() for row in top_page_movers],
+                    "last_28_vs_previous_28": top_page_mover_rows,
                 },
                 "indexing_review": {
-                    "last_28_days": [row.to_dict() for row in indexing_review],
+                    "last_28_days": indexing_review_rows,
                 },
                 "quick_wins": {
                     "last_28_days": quick_wins,

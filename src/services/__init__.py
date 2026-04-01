@@ -6,6 +6,7 @@ from .ga4_fetch_service import GA4FetchService
 from .gsc_fetch_service import GSCFetchService
 from .history_service import HistoryService
 from .inspection_service import InspectionService
+from .interpretation_service import InterpretationService
 from .merge_service import MergeService
 from .oauth_service import OAuthService
 from .scoring_service import ScoringService
@@ -18,6 +19,7 @@ __all__ = [
     "GSCFetchService",
     "HistoryService",
     "InspectionService",
+    "InterpretationService",
     "MergeService",
     "OAuthService",
     "ScoringService",

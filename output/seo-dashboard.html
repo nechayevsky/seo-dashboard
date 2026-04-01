@@ -651,10 +651,63 @@
         color: var(--muted);
       }
 
+      .saved-views-shell {
+        display: grid;
+        gap: 12px;
+        margin-bottom: 18px;
+      }
+
+      .saved-views-head {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 8px 16px;
+      }
+
+      .saved-views-copy {
+        color: var(--muted);
+        font-size: 0.92rem;
+      }
+
+      .saved-views-grid {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+
+      .saved-view-button {
+        appearance: none;
+        border: 1px solid var(--line);
+        background: var(--panel-strong);
+        color: var(--text);
+        border-radius: 999px;
+        padding: 10px 14px;
+        cursor: pointer;
+        transition: transform 160ms ease, border-color 160ms ease, background 160ms ease;
+      }
+
+      .saved-view-button:hover {
+        transform: translateY(-1px);
+        border-color: rgba(13, 139, 135, 0.35);
+      }
+
+      .saved-view-button.is-active {
+        background: var(--accent-soft);
+        border-color: rgba(13, 139, 135, 0.35);
+        color: var(--accent-strong);
+      }
+
       .queries-toolbar {
         display: grid;
         gap: 14px;
         margin-bottom: 4px;
+      }
+
+      .queries-controls {
+        display: grid;
+        gap: 14px;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
       }
 
       .queries-filter-note {
@@ -864,6 +917,10 @@
           grid-template-columns: repeat(2, minmax(0, 1fr));
         }
 
+        .queries-controls {
+          grid-template-columns: 1fr;
+        }
+
         .delta-grid {
           grid-template-columns: 1fr;
         }
@@ -908,6 +965,10 @@
 
         table {
           min-width: 720px;
+        }
+
+        .saved-views-grid {
+          gap: 8px;
         }
       }
     </style>
@@ -1047,6 +1108,31 @@
             </button>
           </div>
           <div class="panel-body">
+            <div class="saved-views-shell">
+              <div class="saved-views-head">
+                <strong data-i18n="savedViews.title">Сохранённые представления</strong>
+                <div class="saved-views-copy" data-i18n="savedViews.copy">
+                  Быстрые пресеты для типовых SEO-сценариев.
+                </div>
+              </div>
+              <div class="saved-views-grid" id="savedViewsBar">
+                <button class="saved-view-button" type="button" data-saved-view="nonBrandOpportunities" data-i18n="savedViews.nonBrandOpportunities">
+                  Non-brand opportunities
+                </button>
+                <button class="saved-view-button" type="button" data-saved-view="blogOnly" data-i18n="savedViews.blogOnly">
+                  Blog only
+                </button>
+                <button class="saved-view-button" type="button" data-saved-view="commercialOnly" data-i18n="savedViews.commercialOnly">
+                  Commercial pages only
+                </button>
+                <button class="saved-view-button" type="button" data-saved-view="indexingIssues" data-i18n="savedViews.indexingIssues">
+                  Indexing issues
+                </button>
+                <button class="saved-view-button" type="button" data-saved-view="quickWins" data-i18n="savedViews.quickWins">
+                  Quick wins
+                </button>
+              </div>
+            </div>
             <div class="filters-grid">
               <div class="filter-field">
                 <label for="reasonCodeFilter" data-i18n="filters.reasonCode">Reason code</label>
@@ -1091,6 +1177,18 @@
                 </select>
               </div>
               <div class="filter-field">
+                <label for="pageSegmentFilter" data-i18n="filters.pageSegment">Page segment</label>
+                <select id="pageSegmentFilter">
+                  <option value=""></option>
+                </select>
+              </div>
+              <div class="filter-field">
+                <label for="directoryGroupFilter" data-i18n="filters.directoryGroup">Directory group</label>
+                <select id="directoryGroupFilter">
+                  <option value=""></option>
+                </select>
+              </div>
+              <div class="filter-field">
                 <label for="pathSearch" data-i18n="filters.pathSearch">Поиск по пути</label>
                 <input
                   id="pathSearch"
@@ -1130,14 +1228,28 @@
           <div class="panel-body">
             <div class="table-shell">
               <div class="queries-toolbar">
-                <div class="filter-field">
-                  <label for="queriesSearch" data-i18n="queries.searchLabel">Поиск по запросу</label>
-                  <input
-                    id="queriesSearch"
-                    type="search"
-                    data-i18n-placeholder="queries.searchPlaceholder"
-                    placeholder="Фильтр по query"
-                  />
+                <div class="queries-controls">
+                  <div class="filter-field">
+                    <label for="queriesSearch" data-i18n="queries.searchLabel">Поиск по запросу</label>
+                    <input
+                      id="queriesSearch"
+                      type="search"
+                      data-i18n-placeholder="queries.searchPlaceholder"
+                      placeholder="Фильтр по query"
+                    />
+                  </div>
+                  <div class="filter-field">
+                    <label for="queryBrandFilter" data-i18n="queries.brandFilterLabel">Brand split</label>
+                    <select id="queryBrandFilter">
+                      <option value=""></option>
+                    </select>
+                  </div>
+                  <div class="filter-field">
+                    <label for="queryIntentFilter" data-i18n="queries.intentFilterLabel">Intent</label>
+                    <select id="queryIntentFilter">
+                      <option value=""></option>
+                    </select>
+                  </div>
                 </div>
                 <div class="queries-filter-note" id="queriesFilterNote"></div>
               </div>
@@ -1350,10 +1462,21 @@
             coverage: "Coverage state",
             indexingStatus: "Indexing status",
             robots: "Robots state",
+            pageSegment: "Сегмент страницы",
+            directoryGroup: "Группа директории",
             pathSearch: "Поиск по пути",
             pathPlaceholder: "Искать по normalized_page_path",
             all: "Все",
             unavailable: "Недоступно для выбранного периода",
+          },
+          savedViews: {
+            title: "Сохранённые представления",
+            copy: "Быстрые пресеты для типовых SEO-сценариев.",
+            nonBrandOpportunities: "Non-brand opportunities",
+            blogOnly: "Только блог",
+            commercialOnly: "Только commercial pages",
+            indexingIssues: "Indexing issues",
+            quickWins: "Quick wins",
           },
           quickWins: {
             title: "Top Quick Wins",
@@ -1364,7 +1487,9 @@
             copy: "Запросы GSC для выбранного периода. Глобальные page-фильтры здесь не применяются.",
             searchLabel: "Поиск по запросу",
             searchPlaceholder: "Фильтр по query",
-            filterNote: "Этот фильтр влияет только на раздел Queries.",
+            brandFilterLabel: "Brand split",
+            intentFilterLabel: "Intent",
+            filterNote: "Эти фильтры влияют только на раздел Queries.",
           },
           topMovers: {
             title: "Top Page Movers",
@@ -1486,6 +1611,10 @@
             quickWin: "Quick win",
             reason: "Причина",
             action: "Действие",
+            brand: "Brand split",
+            intent: "Intent",
+            segment: "Сегмент",
+            directoryGroup: "Директория",
             verdict: "Verdict",
             coverage: "Coverage",
             indexing: "Indexing",
@@ -1504,6 +1633,23 @@
             previousClicks: "Previous clicks",
           },
           enums: {
+            query_brand: {
+              brand: "brand",
+              non_brand: "non-brand",
+              mixed: "mixed / uncertain",
+            },
+            query_intent: {
+              informational: "информационный",
+              commercial: "коммерческий",
+              navigational: "навигационный",
+              lead_intent: "lead / transactional",
+              unknown: "неизвестно",
+            },
+            page_segment: {
+              blog: "блог",
+              commercial: "commercial / landing",
+              other: "прочее",
+            },
             reason_code: {
               noindex_detected: "noindex detected",
               canonical_mismatch: "canonical mismatch",
@@ -1610,10 +1756,21 @@
             coverage: "Coverage state",
             indexingStatus: "Indexing status",
             robots: "Robots state",
+            pageSegment: "Page segment",
+            directoryGroup: "Directory group",
             pathSearch: "Path search",
             pathPlaceholder: "Search by normalized_page_path",
             all: "All",
             unavailable: "Unavailable for this date range",
+          },
+          savedViews: {
+            title: "Saved views",
+            copy: "Quick presets for common SEO workflows.",
+            nonBrandOpportunities: "Non-brand opportunities",
+            blogOnly: "Blog only",
+            commercialOnly: "Commercial pages only",
+            indexingIssues: "Indexing issues",
+            quickWins: "Quick wins",
           },
           quickWins: {
             title: "Top Quick Wins",
@@ -1624,7 +1781,9 @@
             copy: "GSC query dataset for the selected range. Global page filters do not apply here.",
             searchLabel: "Query search",
             searchPlaceholder: "Filter by query text",
-            filterNote: "This filter only affects the Queries section.",
+            brandFilterLabel: "Brand split",
+            intentFilterLabel: "Intent",
+            filterNote: "These filters only affect the Queries section.",
           },
           topMovers: {
             title: "Top Page Movers",
@@ -1746,6 +1905,10 @@
             quickWin: "Quick win",
             reason: "Reason",
             action: "Action",
+            brand: "Brand split",
+            intent: "Intent",
+            segment: "Segment",
+            directoryGroup: "Directory group",
             verdict: "Verdict",
             coverage: "Coverage",
             indexing: "Indexing",
@@ -1764,6 +1927,23 @@
             previousClicks: "Previous clicks",
           },
           enums: {
+            query_brand: {
+              brand: "brand",
+              non_brand: "non-brand",
+              mixed: "mixed / uncertain",
+            },
+            query_intent: {
+              informational: "informational",
+              commercial: "commercial",
+              navigational: "navigational",
+              lead_intent: "lead / transactional",
+              unknown: "unknown",
+            },
+            page_segment: {
+              blog: "blog",
+              commercial: "commercial / landing",
+              other: "other",
+            },
             reason_code: {
               noindex_detected: "noindex detected",
               canonical_mismatch: "canonical mismatch",
@@ -1817,7 +1997,10 @@
         language: "ru",
         theme: "light",
         windowName: "last_28_days",
+        savedView: "",
         querySearch: "",
+        queryBrandClassification: "",
+        queryIntent: "",
         filters: {
           reasonCode: "",
           recommendedAction: "",
@@ -1826,6 +2009,8 @@
           inspectionCoverageState: "",
           inspectionIndexingState: "",
           inspectionRobotsTxtState: "",
+          pageSegment: "",
+          pageDirectoryGroup: "",
           pathSearch: "",
         },
         sort: {
@@ -2127,6 +2312,26 @@
         return t(`enums.movement_direction.${String(value || "flat")}`);
       }
 
+      function displayQueryBrand(value) {
+        return t(`enums.query_brand.${String(value || "mixed")}`);
+      }
+
+      function displayQueryIntent(value) {
+        return t(`enums.query_intent.${String(value || "unknown")}`);
+      }
+
+      function displayPageSegment(value) {
+        return t(`enums.page_segment.${String(value || "other")}`);
+      }
+
+      function displayDirectoryGroup(value) {
+        const raw = String(value || "root").trim();
+        if (!raw || raw === "root") {
+          return state.language === "ru" ? "корень" : "root";
+        }
+        return raw.replaceAll("-", " ");
+      }
+
       function displayMessageKey(messageKey, fallbackKey = "messages.noDataGenerated") {
         return messageKey ? t(messageKey) : t(fallbackKey);
       }
@@ -2223,6 +2428,41 @@
             ga4_only: "neutral",
           }[normalized] || "ghost";
         return badge(displayMatchType(normalized), tone);
+      }
+
+      function badgeForQueryBrand(value) {
+        const normalized = String(value || "mixed");
+        const tone =
+          {
+            brand: "neutral",
+            non_brand: "success",
+            mixed: "warning",
+          }[normalized] || "ghost";
+        return badge(displayQueryBrand(normalized), tone);
+      }
+
+      function badgeForQueryIntent(value) {
+        const normalized = String(value || "unknown");
+        const tone =
+          {
+            informational: "neutral",
+            commercial: "warning",
+            navigational: "success",
+            lead_intent: "danger",
+            unknown: "ghost",
+          }[normalized] || "ghost";
+        return badge(displayQueryIntent(normalized), tone);
+      }
+
+      function badgeForSegment(value) {
+        const normalized = String(value || "other");
+        const tone =
+          {
+            blog: "neutral",
+            commercial: "warning",
+            other: "ghost",
+          }[normalized] || "ghost";
+        return badge(displayPageSegment(normalized), tone);
       }
 
       function badgeForMovement(value) {
@@ -2410,6 +2650,15 @@
         ) {
           return false;
         }
+        if (state.filters.pageSegment && row.page_segment !== state.filters.pageSegment) {
+          return false;
+        }
+        if (
+          state.filters.pageDirectoryGroup &&
+          row.page_directory_group !== state.filters.pageDirectoryGroup
+        ) {
+          return false;
+        }
         return matchesPathSearch(row);
       }
 
@@ -2433,6 +2682,15 @@
       function queryRows() {
         const needle = String(state.querySearch || "").trim().toLowerCase();
         return state.current.queries.rows.filter((row) => {
+          if (
+            state.queryBrandClassification &&
+            row.query_brand_classification !== state.queryBrandClassification
+          ) {
+            return false;
+          }
+          if (state.queryIntent && row.query_intent !== state.queryIntent) {
+            return false;
+          }
           if (!needle) {
             return true;
           }
@@ -2793,6 +3051,127 @@
         }
       }
 
+      function updateQuerySelectOptions(selectId, values, formatter, stateKey) {
+        const select = document.getElementById(selectId);
+        const currentValue = select.value;
+        const uniqueValues = [...new Set(values.filter(Boolean).map(String))].sort((a, b) =>
+          String(formatter(a)).localeCompare(String(formatter(b)), locale()),
+        );
+
+        if (!uniqueValues.length) {
+          select.innerHTML = `<option value="">${escapeHtml(t("filters.unavailable"))}</option>`;
+          select.disabled = true;
+          select.value = "";
+          state[stateKey] = "";
+          return;
+        }
+
+        select.disabled = false;
+        const options = [`<option value="">${escapeHtml(t("filters.all"))}</option>`];
+        uniqueValues.forEach((value) => {
+          options.push(`<option value="${escapeHtml(value)}">${escapeHtml(formatter(value))}</option>`);
+        });
+
+        select.innerHTML = options.join("");
+        select.value = uniqueValues.includes(currentValue) ? currentValue : "";
+        state[stateKey] = select.value;
+      }
+
+      function renderSavedViews() {
+        document.querySelectorAll("#savedViewsBar [data-saved-view]").forEach((button) => {
+          button.classList.toggle("is-active", state.savedView === button.dataset.savedView);
+        });
+      }
+
+      function clearAllFilters({ clearSavedView = true } = {}) {
+        Object.keys(state.filters).forEach((key) => {
+          state.filters[key] = "";
+        });
+        state.querySearch = "";
+        state.queryBrandClassification = "";
+        state.queryIntent = "";
+
+        [
+          "reasonCodeFilter",
+          "actionFilter",
+          "sourceMatchFilter",
+          "verdictFilter",
+          "coverageFilter",
+          "indexingFilter",
+          "robotsFilter",
+          "pageSegmentFilter",
+          "directoryGroupFilter",
+          "queryBrandFilter",
+          "queryIntentFilter",
+        ].forEach((id) => {
+          const element = document.getElementById(id);
+          if (element) {
+            element.value = "";
+          }
+        });
+
+        ["pathSearch", "queriesSearch"].forEach((id) => {
+          const element = document.getElementById(id);
+          if (element) {
+            element.value = "";
+          }
+        });
+
+        if (clearSavedView) {
+          state.savedView = "";
+        }
+      }
+
+      function applySavedView(viewId) {
+        clearAllFilters({ clearSavedView: false });
+        state.savedView = viewId;
+
+        let targetId = "overview";
+
+        switch (viewId) {
+          case "nonBrandOpportunities":
+            state.queryBrandClassification = "non_brand";
+            targetId = "queries";
+            break;
+          case "blogOnly":
+            state.filters.pageSegment = "blog";
+            targetId = "pages";
+            break;
+          case "commercialOnly":
+            state.filters.pageSegment = "commercial";
+            targetId = "pages";
+            break;
+          case "indexingIssues":
+            state.windowName = "last_28_days";
+            targetId = "indexing-review";
+            break;
+          case "quickWins":
+            state.windowName = "last_28_days";
+            targetId = "quick-wins";
+            break;
+          default:
+            state.savedView = "";
+            targetId = "overview";
+        }
+
+        syncCurrentSections();
+        applyStaticTranslations();
+        renderWindowSelector();
+        renderSourceStatus();
+        renderKpis();
+        renderTrendChart();
+        renderFilterControls();
+        renderSavedViews();
+        renderSections();
+
+        const target = document.getElementById(targetId);
+        if (target) {
+          requestAnimationFrame(() => {
+            target.scrollIntoView({ behavior: "smooth", block: "start" });
+          });
+        }
+      }
+
       function renderFilterControls() {
         const catalog = pageScopedCatalog();
 
@@ -2832,6 +3211,18 @@
           catalog.map((row) => row.inspection_robots_txt_state),
           translateInspectionValue,
           "inspectionRobotsTxtState",
+        );
+        updateSelectOptions(
+          "pageSegmentFilter",
+          catalog.map((row) => row.page_segment),
+          displayPageSegment,
+          "pageSegment",
+        );
+        updateSelectOptions(
+          "directoryGroupFilter",
+          catalog.map((row) => row.page_directory_group),
+          displayDirectoryGroup,
+          "pageDirectoryGroup",
         );
 
         const pathSearch = document.getElementById("pathSearch");
@@ -2969,6 +3360,7 @@
           emptyMessage: t("messages.noQuickWins"),
           columns: [
             { key: "normalized_page_path", label: t("columns.page"), className: "path-cell", render: renderPathCell },
+            { key: "page_segment", label: t("columns.segment"), render: (row) => badgeForSegment(row.page_segment) },
             { key: "quick_win_score", label: t("columns.quickWin"), className: "num", render: (row) => formatDecimal(row.quick_win_score) },
             { key: "reason_code", label: t("columns.reason"), render: (row) => badgeForReason(row.reason_code) },
             {
@@ -2988,6 +3380,7 @@
         const sectionState = state.current.queries;
         const rows = queryRows();
         const hasQueryFilter = Boolean(String(state.querySearch || "").trim());
+        const hasClassificationFilter = Boolean(state.queryBrandClassification || state.queryIntent);
 
         const searchInput = document.getElementById("queriesSearch");
         searchInput.disabled = sectionState.kind !== "ready";
@@ -2996,6 +3389,35 @@
           searchInput.value = "";
         }
         document.getElementById("queriesFilterNote").textContent = t("queries.filterNote");
+        updateQuerySelectOptions(
+          "queryBrandFilter",
+          sectionState.kind === "ready" ? state.current.queries.rows.map((row) => row.query_brand_classification) : [],
+          displayQueryBrand,
+          "queryBrandClassification",
+        );
+        updateQuerySelectOptions(
+          "queryIntentFilter",
+          sectionState.kind === "ready" ? state.current.queries.rows.map((row) => row.query_intent) : [],
+          displayQueryIntent,
+          "queryIntent",
+        );
+
+        const brandCounts = rows.reduce(
+          (acc, row) => {
+            const key = String(row.query_brand_classification || "mixed");
+            acc[key] = (acc[key] || 0) + 1;
+            return acc;
+          },
+          {},
+        );
+        const queryMeta = tableMetaText(
+          rows.length,
+          [
+            `${displayQueryBrand("brand")}: ${formatInteger(brandCounts.brand || 0)}`,
+            `${displayQueryBrand("non_brand")}: ${formatInteger(brandCounts.non_brand || 0)}`,
+            `${displayQueryBrand("mixed")}: ${formatInteger(brandCounts.mixed || 0)}`,
+          ].join(" · "),
+        );
 
         if (sectionState.kind === "unsupported") {
           renderSectionNotice("queriesNotice", "warning", t("queries.title"), t("messages.unsupportedQueryRange"));
@@ -3012,14 +3434,17 @@
           metaId: "queriesMeta",
           rows,
           tableKey: "queries",
+          metaText: queryMeta,
           emptyMessage:
             sectionState.kind === "unsupported"
               ? t("messages.unsupportedQueryRange")
-              : hasQueryFilter
+              : hasQueryFilter || hasClassificationFilter
                 ? t("messages.noQueriesFiltered")
                 : t("messages.noQueries"),
           columns: [
             { key: "query", label: t("columns.query"), className: "path-cell" },
+            { key: "query_brand_classification", label: t("columns.brand"), render: (row) => badgeForQueryBrand(row.query_brand_classification) },
+            { key: "query_intent", label: t("columns.intent"), render: (row) => badgeForQueryIntent(row.query_intent) },
             { key: "clicks", label: t("columns.clicks"), className: "num", render: (row) => formatInteger(row.clicks) },
             { key: "impressions", label: t("columns.impressions"), className: "num", render: (row) => formatInteger(row.impressions) },
             { key: "ctr", label: t("columns.ctr"), className: "num", render: (row) => formatPercent(row.ctr) },
@@ -3053,6 +3478,7 @@
                 : t("messages.noTopMovers"),
           columns: [
             { key: "normalized_page_path", label: t("columns.page"), className: "path-cell", render: renderPathCell },
+            { key: "page_segment", label: t("columns.segment"), render: (row) => badgeForSegment(row.page_segment) },
             { key: "movement_direction", label: t("columns.direction"), render: (row) => badgeForMovement(row.movement_direction) },
             { key: "mover_score", label: t("columns.moverScore"), className: "num", render: (row) => formatDecimal(row.mover_score) },
             { key: "click_delta", label: t("columns.clickDelta"), className: "num", render: (row) => formatInteger(row.click_delta) },
@@ -3275,7 +3701,11 @@
           issue_tokens: inspectionIssueTokens(row),
           has_issue_rank: inspectionIssueTokens(row).length ? 1 : 0,
         }));
-        const rows = baseRows.filter(filterPageRow);
+        const reviewBaseRows =
+          state.savedView === "indexingIssues"
+            ? baseRows.filter((row) => row.issue_tokens.length > 0)
+            : baseRows;
+        const rows = reviewBaseRows.filter(filterPageRow);
         const issueCount = rows.filter((row) => row.issue_tokens.length > 0).length;
         const totalIssueCount = baseRows.filter((row) => row.issue_tokens.length > 0).length;
         const hasActiveFilter = Object.values(state.filters).some((value) => String(value || "").trim() !== "");
@@ -3391,6 +3821,8 @@
           emptyMessage: t("messages.noPages"),
           columns: [
             { key: "normalized_page_path", label: t("columns.page"), className: "path-cell", render: renderPathCell },
+            { key: "page_segment", label: t("columns.segment"), render: (row) => badgeForSegment(row.page_segment) },
+            { key: "page_directory_group", label: t("columns.directoryGroup"), render: (row) => escapeHtml(displayDirectoryGroup(row.page_directory_group)) },
             { key: "gsc_clicks", label: t("columns.clicks"), className: "num", render: (row) => formatInteger(row.gsc_clicks) },
             { key: "gsc_impressions", label: t("columns.impressions"), className: "num", render: (row) => formatInteger(row.gsc_impressions) },
             { key: "gsc_ctr", label: t("columns.ctr"), className: "num", render: (row) => formatPercent(row.gsc_ctr) },
@@ -3434,6 +3866,7 @@
         document.querySelectorAll("#windowSelector [data-window]").forEach((button) => {
           button.addEventListener("click", () => {
             state.windowName = button.dataset.window;
+            state.savedView = "";
             syncCurrentSections();
             applyStaticTranslations();
             renderWindowSelector();
@@ -3441,6 +3874,7 @@
             renderKpis();
             renderTrendChart();
             renderFilterControls();
+            renderSavedViews();
             renderSections();
           });
         });
@@ -3458,6 +3892,7 @@
             renderKpis();
             renderTrendChart();
             renderFilterControls();
+            renderSavedViews();
             renderSections();
           });
         });
@@ -3472,13 +3907,17 @@
           coverageFilter: "inspectionCoverageState",
           indexingFilter: "inspectionIndexingState",
           robotsFilter: "inspectionRobotsTxtState",
+          pageSegmentFilter: "pageSegment",
+          directoryGroupFilter: "pageDirectoryGroup",
           pathSearch: "pathSearch",
         };
 
         Object.entries(filterMap).forEach(([elementId, filterKey]) => {
           const element = document.getElementById(elementId);
           const handler = (event) => {
+            state.savedView = "";
             state.filters[filterKey] = event.target.value;
+            renderSavedViews();
             renderSections();
           };
           element.addEventListener("input", handler);
@@ -3486,23 +3925,9 @@
         });
 
         document.getElementById("clearFilters").addEventListener("click", () => {
-          Object.keys(state.filters).forEach((key) => {
-            state.filters[key] = "";
-          });
-
-          [
-            "reasonCodeFilter",
-            "actionFilter",
-            "sourceMatchFilter",
-            "verdictFilter",
-            "coverageFilter",
-            "indexingFilter",
-            "robotsFilter",
-          ].forEach((id) => {
-            document.getElementById(id).value = "";
-          });
-
-          document.getElementById("pathSearch").value = "";
+          clearAllFilters();
+          renderFilterControls();
+          renderSavedViews();
           renderSections();
         });
       }
@@ -3510,8 +3935,33 @@
       function bindQueriesFilter() {
         const input = document.getElementById("queriesSearch");
         input.addEventListener("input", (event) => {
+          state.savedView = "";
           state.querySearch = event.target.value;
+          renderSavedViews();
           renderQueriesSection();
+        });
+
+        const queryFilterMap = {
+          queryBrandFilter: "queryBrandClassification",
+          queryIntentFilter: "queryIntent",
+        };
+
+        Object.entries(queryFilterMap).forEach(([elementId, stateKey]) => {
+          const element = document.getElementById(elementId);
+          element.addEventListener("change", (event) => {
+            state.savedView = "";
+            state[stateKey] = event.target.value;
+            renderSavedViews();
+            renderQueriesSection();
+          });
+        });
+      }
+
+      function bindSavedViews() {
+        document.querySelectorAll("#savedViewsBar [data-saved-view]").forEach((button) => {
+          button.addEventListener("click", () => {
+            applySavedView(button.dataset.savedView);
+          });
         });
       }
 
@@ -3570,6 +4020,7 @@
         bindLanguageToggle();
         bindFilters();
         bindQueriesFilter();
+        bindSavedViews();
         bindFloatingSideNav();
 
         const contractResult = await loadJson(CANONICAL_DATA_PATH);
@@ -3593,6 +4044,7 @@
         renderKpis();
         renderTrendChart();
         renderFilterControls();
+        renderSavedViews();
         renderSections();
       }
 

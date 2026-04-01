@@ -1,0 +1,93 @@
+{
+  "brand_terms": [
+    "international surrogacy",
+    "international-surrogacy",
+    "international surrogacy center",
+    "international-surrogacy.com",
+    "delivering dreams"
+  ],
+  "intent_rules": {
+    "lead_intent": [
+      "contact",
+      "consultation",
+      "consult",
+      "apply",
+      "book",
+      "appointment",
+      "start now",
+      "get started",
+      "agency",
+      "clinic"
+    ],
+    "commercial": [
+      "cost",
+      "price",
+      "pricing",
+      "best",
+      "top",
+      "compare",
+      "comparison",
+      "vs",
+      "review",
+      "reviews",
+      "package",
+      "packages",
+      "service",
+      "services",
+      "program",
+      "programs"
+    ],
+    "informational": [
+      "what",
+      "how",
+      "when",
+      "why",
+      "who",
+      "guide",
+      "meaning",
+      "law",
+      "laws",
+      "requirements",
+      "process",
+      "faq",
+      "risks",
+      "benefits",
+      "difference"
+    ],
+    "navigational": [
+      "official",
+      "website",
+      "site",
+      "homepage",
+      "about",
+      "blog",
+      "login"
+    ]
+  },
+  "page_segments": {
+    "blog_prefixes": [
+      "/blog/"
+    ],
+    "commercial_exact": [
+      "/",
+      "/contact",
+      "/pricing",
+      "/services",
+      "/apply"
+    ],
+    "commercial_prefixes": [
+      "/contact",
+      "/pricing",
+      "/service",
+      "/services",
+      "/program",
+      "/programs",
+      "/apply",
+      "/consultation",
+      "/surrogacy",
+      "/egg-donation",
+      "/donor",
+      "/agency"
+    ]
+  }
+}

@@ -346,6 +346,10 @@ Legacy dashboard files remain only for reference and are not used by default:
 - RU/EN localization with Russian as the default UI language
 - top quick wins table
 - queries section
+- rule-based brand vs non-brand query split
+- rule-based query intent classification
+- page segmentation for blog, commercial, and other URL groups
+- saved views for non-brand opportunities, blog-only, commercial pages, indexing issues, and quick wins
 - top page movers section
 - weekly delta section
 - indexing review section
@@ -371,11 +375,48 @@ Legacy dashboard files remain only for reference and are not used by default:
 - `src/services/inspection_service.py` - queue-driven inspection orchestration and unified dataset enrichment
 - `src/services/dashboard_service.py` - canonical dashboard data-contract generation layer
 - `src/services/history_service.py` - local historical snapshot storage and weekly delta generation
+- `src/services/interpretation_service.py` - local rule-based brand, intent, and page-segment interpretation layer
+- `config/seo_rules.json` - editable local rules for brand terms, intent heuristics, and page segmentation
 - `output/seo-dashboard.html` - official read-only static dashboard for local artifact visualization
 - `output/data.json` - canonical dashboard contract consumed by the official dashboard
 - `data/history/` - local snapshot and latest-delta storage
 - `src/utils/` - reusable helpers
 - `data/`, `logs/`, `output/` - runtime directories
+
+## Interpretation Rules
+
+The dashboard uses only local, editable rules. No paid keyword APIs or external SEO tools are required.
+
+- brand split is based on `config/seo_rules.json -> brand_terms`
+- query intent is based on transparent keyword buckets in `config/seo_rules.json -> intent_rules`
+- page segment is based on directory/path rules in `config/seo_rules.json -> page_segments`
+
+Current canonical contract fields include:
+
+- query rows:
+  - `query_brand_classification`
+  - `query_brand_confidence`
+  - `query_brand_matches`
+  - `query_brand_source`
+  - `query_intent`
+  - `query_intent_confidence`
+  - `query_intent_matches`
+  - `query_intent_source`
+- page-based rows where applicable:
+  - `page_segment`
+  - `page_segment_confidence`
+  - `page_segment_source`
+  - `page_directory_group`
+
+The intent labels are heuristic only:
+
+- `informational`
+- `commercial`
+- `navigational`
+- `lead_intent`
+- `unknown`
+
+If no previous artifact exists for comparison or a rule does not match clearly, the dashboard shows that limitation explicitly instead of pretending the classification is certain.
 
 ## Example `ga4_bundle.json`
 
