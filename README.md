@@ -14,6 +14,7 @@ Current scope:
 - unified page dataset merge between GSC pages and GA4 landing pages
 - quick-win scoring and page queue export
 - URL Inspection enrichment for top quick-win pages
+- weekly historical snapshots and weekly delta tracking
 - read-only local HTML dashboard for artifact visualization
 - canonical dashboard data contract at `output/data.json`
 
@@ -198,6 +199,7 @@ That canonical contract is generated from backend artifacts and currently includ
 - `pages`
 - `top_page_movers`
 - `indexing_review`
+- `weekly_delta`
 
 The official dashboard now also includes:
 - a real top-bar date range selector for `28 days`, `90 days`, and `365 days`
@@ -208,6 +210,7 @@ The official dashboard now also includes:
   - `pages` (shown as the unified pages explorer)
   - `top_page_movers`
   - `indexing_review`
+  - `weekly_delta`
 - localized validation and empty states that distinguish:
   - no data generated yet
   - unsupported date range for a section
@@ -220,6 +223,18 @@ The backend artifacts that feed the contract include:
 - `data/processed/unified_pages_last_28_days.csv`
 - `data/processed/page_queue_top_100.csv`
 - `data/raw/gsc_inspection_top_500.json`
+
+Historical weekly state is persisted locally under:
+- `data/history/snapshots/` - immutable timestamped weekly snapshot files
+- `data/history/latest/latest_snapshot.json` - convenience copy of the newest snapshot
+- `data/history/latest/latest_weekly_delta.json` - most recent computed weekly delta
+
+`generate-dashboard` now also:
+- captures a new historical snapshot of the canonical datasets
+- compares the newest snapshot against the most recent prior weekly snapshot
+- exposes the result through the `weekly_delta` section in `output/data.json`
+
+If there is only one snapshot so far, the dashboard shows a clear message that no prior weekly baseline exists yet and that delta will appear after the next weekly run.
 
 Open directly in a browser if local file fetch works in your browser, or run a simple local server:
 
@@ -284,6 +299,22 @@ Legacy dashboard files remain only for reference and are not used by default:
   - exports to:
     - `data/processed/indexing_review_last_28_days.csv`
     - `data/processed/indexing_review_last_28_days.json`
+- Weekly delta strategy:
+  - stores immutable local snapshots instead of overwriting prior state
+  - compares the latest snapshot against the most recent prior snapshot from a different ISO week
+  - tracks:
+    - new issues this week
+    - resolved issues this week
+    - pages improved this week
+    - pages declined this week
+    - new quick wins this week
+    - pages removed from quick wins this week
+    - reason code changes
+  - page movement uses a transparent weighted delta across quick-win score, clicks, impressions, sessions, conversions, and SERP position gain
+  - exports to:
+    - `data/history/snapshots/*.json`
+    - `data/history/latest/latest_snapshot.json`
+    - `data/history/latest/latest_weekly_delta.json`
 - Scoring strategy:
   - `impact_score = (gsc_impressions * 0.3) + (gsc_clicks * 0.2) + (ga4_sessions * 0.3) + (ga4_conversions * 0.2) + (1000 / gsc_position)`
   - `effort_score = 1 + 2 if gsc_ctr < 0.02 + 3 if gsc_position > 20 + 1 if bounce-rate proxy > 70%`
@@ -316,6 +347,7 @@ Legacy dashboard files remain only for reference and are not used by default:
 - top quick wins table
 - queries section
 - top page movers section
+- weekly delta section
 - indexing review section
 - unified pages explorer section
 - clickable page-path links in the major page-based tables
@@ -338,8 +370,10 @@ Legacy dashboard files remain only for reference and are not used by default:
 - `src/clients/inspection_client.py` - URL Inspection API client helpers, parsing, and quota-aware batching
 - `src/services/inspection_service.py` - queue-driven inspection orchestration and unified dataset enrichment
 - `src/services/dashboard_service.py` - canonical dashboard data-contract generation layer
+- `src/services/history_service.py` - local historical snapshot storage and weekly delta generation
 - `output/seo-dashboard.html` - official read-only static dashboard for local artifact visualization
 - `output/data.json` - canonical dashboard contract consumed by the official dashboard
+- `data/history/` - local snapshot and latest-delta storage
 - `src/utils/` - reusable helpers
 - `data/`, `logs/`, `output/` - runtime directories
 

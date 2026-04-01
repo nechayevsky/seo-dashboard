@@ -12,9 +12,10 @@ from ..models import IndexingReviewRow, InspectionResult, PageMoverRow
 from ..paths import ProjectPaths
 from ..utils.date_utils import get_date_ranges
 from ..utils.io_utils import read_csv_file, read_json_file, write_csv_file, write_json_file
+from .history_service import HistoryService
 from .inspection_service import enrich_unified_dataset_with_inspection
 from .merge_service import MergeService, WINDOW_TO_SUFFIX
-from .scoring_service import ScoringService
+from .scoring_service import ScoringService, score_page_row
 
 TOP_MOVERS_FIELDNAMES = [
     "normalized_page_path",
@@ -118,6 +119,16 @@ def _issue_types_for_row(row: dict[str, Any]) -> list[str]:
 
 def _canonical_review_source_type(row: dict[str, Any]) -> str:
     return "inspection" if _string(row.get("inspection_verdict")) else "uninspected"
+
+
+def _enrich_scored_rows(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    enriched_rows: list[dict[str, Any]] = []
+    for row in rows:
+        if not isinstance(row, dict):
+            continue
+        scored_row = score_page_row(row).to_dict()
+        enriched_rows.append({**row, **scored_row})
+    return enriched_rows
 
 
 def build_top_page_movers(
@@ -438,6 +449,11 @@ class DashboardService:
         if inspected_rows:
             pages_by_window["last_28_days"] = inspected_rows
 
+        pages_by_window = {
+            window_name: _enrich_scored_rows(rows)
+            for window_name, rows in pages_by_window.items()
+        }
+
         top_page_movers = build_top_page_movers(
             pages_by_window.get("last_28_days", []),
             pages_by_window.get("previous_28_days", []),
@@ -480,13 +496,15 @@ class DashboardService:
                 "project_name": self.config.project_name,
                 "site_url": self.config.site_url,
                 "generated_at": datetime.now(timezone.utc).isoformat(),
-                "contract_version": "1.0",
+                "contract_version": "1.1",
                 "default_language": self.config.default_language,
                 "default_window": "last_28_days",
                 "official_dashboard_path": self.config.output_html,
                 "official_data_path": self.config.output_data_json,
                 "pages_section_mode": "unified_pages",
                 "page_windows_with_inspection": ["last_28_days"],
+                "history_snapshot_dir": str(self.paths.data_history_snapshots_dir),
+                "history_latest_dir": str(self.paths.data_history_latest_dir),
             },
             "windows": date_windows,
             "kpis": kpis,
@@ -514,6 +532,11 @@ class DashboardService:
                 indexing_review,
             ),
         }
+
+        history_service = HistoryService(self.config, self.paths, active_logger)
+        weekly_delta, history_output_files = history_service.build_weekly_delta(payload, overwrite=overwrite)
+        payload["sections"]["weekly_delta"] = weekly_delta
+        output_files.extend(history_output_files)
 
         data_json_path = self.paths.resolve(self.config.output_data_json)
         written_data_json = write_json_file(data_json_path, payload, overwrite=overwrite)
@@ -546,6 +569,7 @@ class DashboardService:
             "output_files": output_files,
             "validation": validation,
             "metadata": payload.get("metadata", {}),
+            "weekly_delta": payload.get("sections", {}).get("weekly_delta", {}),
         }
 
     def status(self) -> str:

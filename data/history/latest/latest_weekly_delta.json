@@ -1,0 +1,206 @@
+{
+  "history": {
+    "snapshot_count": 2,
+    "current_snapshot_id": "2026-04-01T03-37-22.218432Z00-00",
+    "current_week_key": "2026-W14",
+    "previous_snapshot_id": "",
+    "previous_week_key": ""
+  },
+  "by_window": {
+    "last_28_days": {
+      "available": false,
+      "message_key": "messages.noPriorSnapshot",
+      "current_snapshot": {
+        "snapshot_id": "2026-04-01T03-37-22.218432Z00-00",
+        "generated_at": "2026-04-01T03:37:22.218432+00:00",
+        "week_key": "2026-W14"
+      },
+      "previous_snapshot": null,
+      "summary": {
+        "new_issues_count": 0,
+        "resolved_issues_count": 0,
+        "pages_improved_count": 0,
+        "pages_declined_count": 0,
+        "new_quick_wins_count": 0,
+        "removed_quick_wins_count": 0,
+        "reason_code_changes_count": 0
+      },
+      "sitewide_summary_delta": {},
+      "query_summary_delta": {},
+      "panels": {
+        "new_issues": {
+          "supported": false,
+          "message_key": "messages.noPriorSnapshot",
+          "rows": [],
+          "count": 0
+        },
+        "resolved_issues": {
+          "supported": false,
+          "message_key": "messages.noPriorSnapshot",
+          "rows": [],
+          "count": 0
+        },
+        "new_quick_wins": {
+          "supported": false,
+          "message_key": "messages.noPriorSnapshot",
+          "rows": [],
+          "count": 0
+        },
+        "removed_quick_wins": {
+          "supported": false,
+          "message_key": "messages.noPriorSnapshot",
+          "rows": [],
+          "count": 0
+        },
+        "positive_movers": {
+          "supported": false,
+          "message_key": "messages.noPriorSnapshot",
+          "rows": [],
+          "count": 0
+        },
+        "negative_movers": {
+          "supported": false,
+          "message_key": "messages.noPriorSnapshot",
+          "rows": [],
+          "count": 0
+        },
+        "reason_code_changes": {
+          "supported": false,
+          "message_key": "messages.noPriorSnapshot",
+          "rows": [],
+          "count": 0
+        }
+      }
+    },
+    "last_90_days": {
+      "available": false,
+      "message_key": "messages.noPriorSnapshot",
+      "current_snapshot": {
+        "snapshot_id": "2026-04-01T03-37-22.218432Z00-00",
+        "generated_at": "2026-04-01T03:37:22.218432+00:00",
+        "week_key": "2026-W14"
+      },
+      "previous_snapshot": null,
+      "summary": {
+        "new_issues_count": 0,
+        "resolved_issues_count": 0,
+        "pages_improved_count": 0,
+        "pages_declined_count": 0,
+        "new_quick_wins_count": 0,
+        "removed_quick_wins_count": 0,
+        "reason_code_changes_count": 0
+      },
+      "sitewide_summary_delta": {},
+      "query_summary_delta": {},
+      "panels": {
+        "new_issues": {
+          "supported": false,
+          "message_key": "messages.noPriorSnapshot",
+          "rows": [],
+          "count": 0
+        },
+        "resolved_issues": {
+          "supported": false,
+          "message_key": "messages.noPriorSnapshot",
+          "rows": [],
+          "count": 0
+        },
+        "new_quick_wins": {
+          "supported": false,
+          "message_key": "messages.noPriorSnapshot",
+          "rows": [],
+          "count": 0
+        },
+        "removed_quick_wins": {
+          "supported": false,
+          "message_key": "messages.noPriorSnapshot",
+          "rows": [],
+          "count": 0
+        },
+        "positive_movers": {
+          "supported": false,
+          "message_key": "messages.noPriorSnapshot",
+          "rows": [],
+          "count": 0
+        },
+        "negative_movers": {
+          "supported": false,
+          "message_key": "messages.noPriorSnapshot",
+          "rows": [],
+          "count": 0
+        },
+        "reason_code_changes": {
+          "supported": false,
+          "message_key": "messages.noPriorSnapshot",
+          "rows": [],
+          "count": 0
+        }
+      }
+    },
+    "last_365_days": {
+      "available": false,
+      "message_key": "messages.noPriorSnapshot",
+      "current_snapshot": {
+        "snapshot_id": "2026-04-01T03-37-22.218432Z00-00",
+        "generated_at": "2026-04-01T03:37:22.218432+00:00",
+        "week_key": "2026-W14"
+      },
+      "previous_snapshot": null,
+      "summary": {
+        "new_issues_count": 0,
+        "resolved_issues_count": 0,
+        "pages_improved_count": 0,
+        "pages_declined_count": 0,
+        "new_quick_wins_count": 0,
+        "removed_quick_wins_count": 0,
+        "reason_code_changes_count": 0
+      },
+      "sitewide_summary_delta": {},
+      "query_summary_delta": {},
+      "panels": {
+        "new_issues": {
+          "supported": false,
+          "message_key": "messages.noPriorSnapshot",
+          "rows": [],
+          "count": 0
+        },
+        "resolved_issues": {
+          "supported": false,
+          "message_key": "messages.noPriorSnapshot",
+          "rows": [],
+          "count": 0
+        },
+        "new_quick_wins": {
+          "supported": false,
+          "message_key": "messages.noPriorSnapshot",
+          "rows": [],
+          "count": 0
+        },
+        "removed_quick_wins": {
+          "supported": false,
+          "message_key": "messages.noPriorSnapshot",
+          "rows": [],
+          "count": 0
+        },
+        "positive_movers": {
+          "supported": false,
+          "message_key": "messages.noPriorSnapshot",
+          "rows": [],
+          "count": 0
+        },
+        "negative_movers": {
+          "supported": false,
+          "message_key": "messages.noPriorSnapshot",
+          "rows": [],
+          "count": 0
+        },
+        "reason_code_changes": {
+          "supported": false,
+          "message_key": "messages.noPriorSnapshot",
+          "rows": [],
+          "count": 0
+        }
+      }
+    }
+  }
+}

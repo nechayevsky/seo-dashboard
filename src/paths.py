@@ -12,6 +12,9 @@ class ProjectPaths:
     config_dir: Path
     data_raw_dir: Path
     data_processed_dir: Path
+    data_history_dir: Path
+    data_history_snapshots_dir: Path
+    data_history_latest_dir: Path
     logs_dir: Path
     output_dir: Path
 
@@ -24,6 +27,9 @@ class ProjectPaths:
             config_dir=project_root / "config",
             data_raw_dir=project_root / "data" / "raw",
             data_processed_dir=project_root / "data" / "processed",
+            data_history_dir=project_root / "data" / "history",
+            data_history_snapshots_dir=project_root / "data" / "history" / "snapshots",
+            data_history_latest_dir=project_root / "data" / "history" / "latest",
             logs_dir=project_root / "logs",
             output_dir=project_root / "output",
         )
@@ -34,6 +40,9 @@ class ProjectPaths:
             self.config_dir,
             self.data_raw_dir,
             self.data_processed_dir,
+            self.data_history_dir,
+            self.data_history_snapshots_dir,
+            self.data_history_latest_dir,
             self.logs_dir,
             self.output_dir,
         )
@@ -81,6 +90,9 @@ class ProjectPaths:
             "config_dir": str(self.config_dir),
             "data_raw_dir": str(self.data_raw_dir),
             "data_processed_dir": str(self.data_processed_dir),
+            "data_history_dir": str(self.data_history_dir),
+            "data_history_snapshots_dir": str(self.data_history_snapshots_dir),
+            "data_history_latest_dir": str(self.data_history_latest_dir),
             "logs_dir": str(self.logs_dir),
             "output_dir": str(self.output_dir),
         }

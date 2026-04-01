@@ -4,6 +4,7 @@ from .crawl_service import CrawlService
 from .dashboard_service import DashboardService
 from .ga4_fetch_service import GA4FetchService
 from .gsc_fetch_service import GSCFetchService
+from .history_service import HistoryService
 from .inspection_service import InspectionService
 from .merge_service import MergeService
 from .oauth_service import OAuthService
@@ -15,6 +16,7 @@ __all__ = [
     "DashboardService",
     "GA4FetchService",
     "GSCFetchService",
+    "HistoryService",
     "InspectionService",
     "MergeService",
     "OAuthService",

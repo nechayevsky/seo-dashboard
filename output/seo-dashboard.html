@@ -374,7 +374,9 @@
       .source-grid,
       .kpi-grid,
       .spotlight-grid,
-      .filters-grid {
+      .filters-grid,
+      .delta-summary-grid,
+      .delta-grid {
         display: grid;
         gap: 14px;
       }
@@ -563,6 +565,56 @@
 
       .filters-grid {
         grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+
+      .delta-summary-grid {
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        margin-bottom: 16px;
+      }
+
+      .delta-summary-card,
+      .delta-card {
+        border-radius: var(--radius-md);
+        border: 1px solid var(--line);
+        background: var(--panel-strong);
+      }
+
+      .delta-summary-card {
+        padding: 14px 16px;
+      }
+
+      .delta-summary-card small {
+        display: block;
+        color: var(--muted);
+      }
+
+      .delta-summary-card strong {
+        display: block;
+        margin-top: 8px;
+        font-size: 1.3rem;
+        letter-spacing: -0.03em;
+      }
+
+      .delta-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .delta-card {
+        overflow: hidden;
+      }
+
+      .delta-card .panel-header {
+        padding-bottom: 0;
+      }
+
+      .delta-card .panel-body {
+        padding-top: 16px;
+      }
+
+      .delta-card .table-wrap {
+        max-height: 340px;
+        overflow: auto;
+        overscroll-behavior: contain;
       }
 
       .filter-field {
@@ -812,6 +864,10 @@
           grid-template-columns: repeat(2, minmax(0, 1fr));
         }
 
+        .delta-grid {
+          grid-template-columns: 1fr;
+        }
+
         .floating-side-nav {
           display: none;
         }
@@ -866,6 +922,7 @@
         <a href="#queries" data-nav-item="queries" data-i18n="sideNav.queries">Запросы</a>
         <a href="#pages" data-nav-item="pages" data-i18n="sideNav.pages">Страницы</a>
         <a href="#top-page-movers" data-nav-item="top-page-movers" data-i18n="sideNav.topMovers">Движение страниц</a>
+        <a href="#weekly-delta" data-nav-item="weekly-delta" data-i18n="sideNav.weeklyDelta">Weekly Delta</a>
         <a href="#indexing-review" data-nav-item="indexing-review" data-i18n="sideNav.indexingReview">Indexing review</a>
       </aside>
 
@@ -927,6 +984,7 @@
           <a href="#quick-wins" data-i18n="nav.quickWins">Quick wins</a>
           <a href="#queries" data-i18n="nav.queries">Запросы</a>
           <a href="#top-page-movers" data-i18n="nav.topMovers">Движение страниц</a>
+          <a href="#weekly-delta" data-i18n="nav.weeklyDelta">Weekly Delta</a>
           <a href="#indexing-review" data-i18n="nav.indexingReview">Indexing review</a>
           <a href="#pages" data-i18n="nav.pages">Страницы</a>
         </nav>
@@ -1106,6 +1164,90 @@
           </div>
         </section>
 
+        <section class="panel section-anchor" id="weekly-delta">
+          <div class="panel-header">
+            <div>
+              <h2 class="panel-title" data-i18n="weeklyDelta.title">Weekly Delta</h2>
+              <p class="panel-copy" id="weeklyDeltaCopy"></p>
+            </div>
+          </div>
+          <div class="panel-body">
+            <div id="weeklyDeltaNotice"></div>
+            <div class="delta-summary-grid" id="weeklyDeltaSummary"></div>
+            <div class="delta-grid">
+              <article class="delta-card">
+                <div class="panel-header">
+                  <div>
+                    <h3 class="panel-title" data-i18n="weeklyDelta.newProblems">Новые проблемы</h3>
+                  </div>
+                </div>
+                <div class="panel-body">
+                  <div class="table-shell">
+                    <div class="table-meta" id="weeklyNewIssuesMeta"></div>
+                    <div id="weeklyNewIssuesTable"></div>
+                  </div>
+                </div>
+              </article>
+
+              <article class="delta-card">
+                <div class="panel-header">
+                  <div>
+                    <h3 class="panel-title" data-i18n="weeklyDelta.resolvedProblems">Решённые проблемы</h3>
+                  </div>
+                </div>
+                <div class="panel-body">
+                  <div class="table-shell">
+                    <div class="table-meta" id="weeklyResolvedIssuesMeta"></div>
+                    <div id="weeklyResolvedIssuesTable"></div>
+                  </div>
+                </div>
+              </article>
+
+              <article class="delta-card">
+                <div class="panel-header">
+                  <div>
+                    <h3 class="panel-title" data-i18n="weeklyDelta.newOpportunities">Новые quick wins</h3>
+                  </div>
+                </div>
+                <div class="panel-body">
+                  <div class="table-shell">
+                    <div class="table-meta" id="weeklyNewQuickWinsMeta"></div>
+                    <div id="weeklyNewQuickWinsTable"></div>
+                  </div>
+                </div>
+              </article>
+
+              <article class="delta-card">
+                <div class="panel-header">
+                  <div>
+                    <h3 class="panel-title" data-i18n="weeklyDelta.positiveMovers">Сильнее всего выросли</h3>
+                  </div>
+                </div>
+                <div class="panel-body">
+                  <div class="table-shell">
+                    <div class="table-meta" id="weeklyPositiveMoversMeta"></div>
+                    <div id="weeklyPositiveMoversTable"></div>
+                  </div>
+                </div>
+              </article>
+
+              <article class="delta-card">
+                <div class="panel-header">
+                  <div>
+                    <h3 class="panel-title" data-i18n="weeklyDelta.negativeMovers">Сильнее всего просели</h3>
+                  </div>
+                </div>
+                <div class="panel-body">
+                  <div class="table-shell">
+                    <div class="table-meta" id="weeklyNegativeMoversMeta"></div>
+                    <div id="weeklyNegativeMoversTable"></div>
+                  </div>
+                </div>
+              </article>
+            </div>
+          </div>
+        </section>
+
         <section class="panel section-anchor" id="indexing-review">
           <div class="panel-header">
             <div>
@@ -1170,6 +1312,7 @@
             quickWins: "Quick wins",
             queries: "Запросы",
             topMovers: "Движение страниц",
+            weeklyDelta: "Weekly Delta",
             indexingReview: "Indexing review",
             pages: "Страницы",
           },
@@ -1181,6 +1324,7 @@
             queries: "Запросы",
             pages: "Страницы",
             topMovers: "Движение страниц",
+            weeklyDelta: "Weekly Delta",
             indexingReview: "Indexing review",
           },
           overview: {
@@ -1225,6 +1369,16 @@
           topMovers: {
             title: "Top Page Movers",
             copy: "Канонический dataset движения страниц между current и previous windows.",
+          },
+          weeklyDelta: {
+            title: "Weekly Delta",
+            copy: "Что изменилось по сравнению с предыдущим weekly snapshot: новые проблемы, resolved issues, новые возможности и крупнейшие движения.",
+            newProblems: "Новые проблемы",
+            resolvedProblems: "Решённые проблемы",
+            newOpportunities: "Новые quick wins",
+            removedQuickWins: "Вышли из quick wins",
+            positiveMovers: "Сильнее всего выросли",
+            negativeMovers: "Сильнее всего просели",
           },
           indexingReview: {
             title: "Indexing Review",
@@ -1305,6 +1459,15 @@
             noQueriesFiltered: "Нет query rows под текущий фильтр запроса.",
             noTopMovers: "Нет данных по движению страниц для текущего периода.",
             noTopMoversFiltered: "Нет top mover rows под текущий поиск по пути.",
+            noWeeklyNewIssues: "Новых проблем относительно предыдущего snapshot не обнаружено.",
+            noWeeklyResolvedIssues: "На этой неделе не было resolved issues относительно предыдущего snapshot.",
+            noWeeklyNewQuickWins: "Новых quick wins на этой неделе не появилось.",
+            noWeeklyPositiveMovers: "Нет страниц с положительным weekly delta.",
+            noWeeklyNegativeMovers: "Нет страниц с отрицательным weekly delta.",
+            noPriorSnapshot: "Предыдущий weekly snapshot ещё недоступен. Delta появится после следующего weekly run.",
+            weeklyDeltaQuickWinsRange: "Quick win delta сейчас поддерживается только для 28 дней.",
+            weeklyDeltaIndexingRange: "Indexing delta сейчас поддерживается только для 28 дней.",
+            weeklyDeltaQueriesRange: "Query summary delta сейчас поддерживается только для 28 дней.",
             noIndexingRows: "Нет строк indexing review для выбранного периода.",
             noIndexingFiltered: "Нет строк indexing review под текущий набор фильтров.",
             noPages: "Нет unified page rows под текущие фильтры.",
@@ -1335,6 +1498,8 @@
             clickDelta: "Delta кликов",
             sessionsDelta: "Delta сессий",
             conversionsDelta: "Delta конверсий",
+            deltaScore: "Weekly delta",
+            quickWinDelta: "Delta quick win",
             currentClicks: "Current clicks",
             previousClicks: "Previous clicks",
           },
@@ -1380,6 +1545,9 @@
               canonical_mismatch: "canonical mismatch",
               robots_txt_blocked: "robots.txt blocked",
               indexing_state_issue: "indexing state issue",
+              not_indexed: "не индексируется",
+              noindex_detected: "обнаружен noindex",
+              inspection_error: "ошибка inspection",
             },
           },
         },
@@ -1404,6 +1572,7 @@
             quickWins: "Quick Wins",
             queries: "Queries",
             topMovers: "Top Page Movers",
+            weeklyDelta: "Weekly Delta",
             indexingReview: "Indexing Review",
             pages: "Pages",
           },
@@ -1415,6 +1584,7 @@
             queries: "Queries",
             pages: "Pages",
             topMovers: "Top Page Movers",
+            weeklyDelta: "Weekly Delta",
             indexingReview: "Indexing Review",
           },
           overview: {
@@ -1459,6 +1629,16 @@
           topMovers: {
             title: "Top Page Movers",
             copy: "Canonical mover dataset between the current and previous windows.",
+          },
+          weeklyDelta: {
+            title: "Weekly Delta",
+            copy: "What changed compared to the previous weekly snapshot: new problems, resolved issues, newly emerged opportunities, and the strongest movers.",
+            newProblems: "New problems",
+            resolvedProblems: "Resolved problems",
+            newOpportunities: "New quick wins",
+            removedQuickWins: "Removed from quick wins",
+            positiveMovers: "Strongest positive movers",
+            negativeMovers: "Strongest negative movers",
           },
           indexingReview: {
             title: "Indexing Review",
@@ -1539,6 +1719,15 @@
             noQueriesFiltered: "No query rows matched the current query filter.",
             noTopMovers: "No top mover rows are available for the selected range.",
             noTopMoversFiltered: "No top mover rows matched the current path search.",
+            noWeeklyNewIssues: "No new issues appeared compared to the previous snapshot.",
+            noWeeklyResolvedIssues: "No issues were resolved this week compared to the previous snapshot.",
+            noWeeklyNewQuickWins: "No new quick wins emerged this week.",
+            noWeeklyPositiveMovers: "No pages showed a positive weekly delta.",
+            noWeeklyNegativeMovers: "No pages showed a negative weekly delta.",
+            noPriorSnapshot: "No prior weekly snapshot is available yet. Delta will appear after the next weekly run.",
+            weeklyDeltaQuickWinsRange: "Quick win delta currently supports 28 days only.",
+            weeklyDeltaIndexingRange: "Indexing delta currently supports 28 days only.",
+            weeklyDeltaQueriesRange: "Query summary delta currently supports 28 days only.",
             noIndexingRows: "No indexing review rows are available for the selected range.",
             noIndexingFiltered: "No indexing review rows matched the current filter set.",
             noPages: "No unified page rows matched the current filter set.",
@@ -1569,6 +1758,8 @@
             clickDelta: "Click delta",
             sessionsDelta: "Sessions delta",
             conversionsDelta: "Conversions delta",
+            deltaScore: "Weekly delta",
+            quickWinDelta: "Quick win delta",
             currentClicks: "Current clicks",
             previousClicks: "Previous clicks",
           },
@@ -1614,6 +1805,9 @@
               canonical_mismatch: "canonical mismatch",
               robots_txt_blocked: "robots.txt blocked",
               indexing_state_issue: "indexing state issue",
+              not_indexed: "not indexed",
+              noindex_detected: "noindex detected",
+              inspection_error: "inspection error",
             },
           },
         },
@@ -1638,6 +1832,11 @@
           quickWins: { key: "quick_win_score", direction: "desc" },
           queries: { key: "clicks", direction: "desc" },
           topMovers: { key: "mover_score", direction: "desc" },
+          weeklyNewIssues: { key: "normalized_page_path", direction: "asc" },
+          weeklyResolvedIssues: { key: "normalized_page_path", direction: "asc" },
+          weeklyNewQuickWins: { key: "quick_win_score", direction: "desc" },
+          weeklyPositiveMovers: { key: "delta_score", direction: "desc" },
+          weeklyNegativeMovers: { key: "delta_score", direction: "asc" },
           indexingReview: { key: "has_issue_rank", direction: "desc" },
           pages: { key: "quick_win_score", direction: "desc" },
         },
@@ -1666,6 +1865,14 @@
           pages: { kind: "missing", rows: [] },
           quickWins: { kind: "missing", rows: [] },
           topPageMovers: { kind: "missing", rows: [] },
+          weeklyDelta: {
+            available: false,
+            message_key: "messages.noDataGenerated",
+            summary: {},
+            panels: {},
+            current_snapshot: null,
+            previous_snapshot: null,
+          },
           indexingReview: { kind: "missing", rows: [] },
         },
       };
@@ -1812,15 +2019,28 @@
           ga4_engaged_sessions: parseNumber(row.ga4_engaged_sessions),
           ga4_conversions: parseNumber(row.ga4_conversions),
           quick_win_score: parseNumber(row.quick_win_score),
+          quick_win_score_delta: parseNumber(row.quick_win_score_delta),
+          current_quick_win_score: parseNumber(row.current_quick_win_score),
+          previous_quick_win_score: parseNumber(row.previous_quick_win_score),
           impact_score: parseNumber(row.impact_score),
           effort_score: parseNumber(row.effort_score),
           mover_score: parseNumber(row.mover_score),
+          delta_score: parseNumber(row.delta_score),
           click_delta: parseNumber(row.click_delta),
           impression_delta: parseNumber(row.impression_delta),
           sessions_delta: parseNumber(row.sessions_delta),
           conversions_delta: parseNumber(row.conversions_delta),
           current_gsc_clicks: parseNumber(row.current_gsc_clicks),
           previous_gsc_clicks: parseNumber(row.previous_gsc_clicks),
+          current_gsc_impressions: parseNumber(row.current_gsc_impressions),
+          previous_gsc_impressions: parseNumber(row.previous_gsc_impressions),
+          current_ga4_sessions: parseNumber(row.current_ga4_sessions),
+          previous_ga4_sessions: parseNumber(row.previous_ga4_sessions),
+          current_ga4_conversions: parseNumber(row.current_ga4_conversions),
+          previous_ga4_conversions: parseNumber(row.previous_ga4_conversions),
+          current_gsc_position: parseNumber(row.current_gsc_position),
+          previous_gsc_position: parseNumber(row.previous_gsc_position),
+          position_gain: parseNumber(row.position_gain),
           has_issue: parseBoolean(row.has_issue),
           has_issue_rank: parseBoolean(row.has_issue) ? 1 : 0,
         };
@@ -1905,6 +2125,15 @@
 
       function displayMovementDirection(value) {
         return t(`enums.movement_direction.${String(value || "flat")}`);
+      }
+
+      function displayMessageKey(messageKey, fallbackKey = "messages.noDataGenerated") {
+        return messageKey ? t(messageKey) : t(fallbackKey);
+      }
+
+      function displayIssueType(token) {
+        const translated = t(`enums.issue_labels.${String(token || "").trim()}`);
+        return translated.startsWith("enums.issue_labels.") ? String(token || "") : translated;
       }
 
       function translateInspectionValue(value) {
@@ -2105,6 +2334,24 @@
         return { kind: rows.length ? "ready" : "empty", rows };
       }
 
+      function resolveWeeklyDeltaSection() {
+        const section = state.data.contract?.sections?.weekly_delta || {};
+        const delta = section.by_window?.[state.windowName];
+
+        if (!delta || typeof delta !== "object") {
+          return {
+            available: false,
+            message_key: "messages.noDataGenerated",
+            summary: {},
+            panels: {},
+            current_snapshot: null,
+            previous_snapshot: null,
+          };
+        }
+
+        return delta;
+      }
+
       function syncCurrentSections() {
         state.current.sitewideTrends = resolveStandardSection("sitewide_trends");
         state.current.queries = resolveStandardSection("queries");
@@ -2112,6 +2359,7 @@
         state.current.quickWins = resolveStandardSection("quick_wins");
         state.current.indexingReview = resolveStandardSection("indexing_review");
         state.current.topPageMovers = resolveTopMoversSection();
+        state.current.weeklyDelta = resolveWeeklyDeltaSection();
         state.data.kpis = state.data.contract?.kpis?.[state.windowName] || {};
       }
 
@@ -2816,6 +3064,210 @@
         });
       }
 
+      function renderWeeklyDeltaSummary(deltaState) {
+        const container = document.getElementById("weeklyDeltaSummary");
+        const summary = deltaState.summary || {};
+        const currentWeek = deltaState.current_snapshot?.week_key || "—";
+        const previousWeek = deltaState.previous_snapshot?.week_key || "—";
+
+        container.innerHTML = [
+          {
+            label: state.language === "ru" ? "Текущий weekly snapshot" : "Current weekly snapshot",
+            value: currentWeek,
+          },
+          {
+            label: state.language === "ru" ? "Предыдущий baseline" : "Previous baseline",
+            value: previousWeek,
+          },
+          {
+            label: t("weeklyDelta.newProblems"),
+            value: formatInteger(summary.new_issues_count || 0),
+          },
+          {
+            label: t("weeklyDelta.resolvedProblems"),
+            value: formatInteger(summary.resolved_issues_count || 0),
+          },
+          {
+            label: t("weeklyDelta.newOpportunities"),
+            value: formatInteger(summary.new_quick_wins_count || 0),
+          },
+          {
+            label: t("weeklyDelta.removedQuickWins"),
+            value: formatInteger(summary.removed_quick_wins_count || 0),
+          },
+          {
+            label: state.language === "ru" ? "Причины изменились" : "Reason code changes",
+            value: formatInteger(summary.reason_code_changes_count || 0),
+          },
+        ]
+          .map(
+            (item) => `
+              <article class="delta-summary-card">
+                <small>${escapeHtml(item.label)}</small>
+                <strong>${escapeHtml(item.value)}</strong>
+              </article>
+            `,
+          )
+          .join("");
+      }
+
+      function renderWeeklyDeltaTable({
+        panel,
+        containerId,
+        metaId,
+        tableKey,
+        emptyMessageKey,
+        columns,
+      }) {
+        const supported = Boolean(panel?.supported);
+        const rows = supported ? (panel?.rows || []).map(normalizeRow) : [];
+        const emptyMessage = supported
+          ? t(emptyMessageKey)
+          : displayMessageKey(panel?.message_key, "messages.noDataGenerated");
+
+        renderTable({
+          containerId,
+          metaId,
+          rows,
+          tableKey,
+          emptyMessage,
+          columns,
+          metaText: tableMetaText(rows.length),
+        });
+      }
+
+      function renderWeeklyDeltaSection() {
+        const deltaState = state.current.weeklyDelta || {};
+        const panels = deltaState.panels || {};
+
+        document.getElementById("weeklyDeltaCopy").textContent = t("weeklyDelta.copy");
+        renderWeeklyDeltaSummary(deltaState);
+
+        if (!deltaState.available) {
+          renderSectionNotice(
+            "weeklyDeltaNotice",
+            "warning",
+            t("weeklyDelta.title"),
+            displayMessageKey(deltaState.message_key, "messages.noPriorSnapshot"),
+          );
+        } else {
+          const currentWeek = deltaState.current_snapshot?.week_key || "—";
+          const previousWeek = deltaState.previous_snapshot?.week_key || "—";
+          renderSectionNotice(
+            "weeklyDeltaNotice",
+            "info",
+            "",
+            state.language === "ru"
+              ? `Сравнение ${currentWeek} против ${previousWeek}.`
+              : `Comparing ${currentWeek} against ${previousWeek}.`,
+          );
+        }
+
+        renderWeeklyDeltaTable({
+          panel: panels.new_issues,
+          containerId: "weeklyNewIssuesTable",
+          metaId: "weeklyNewIssuesMeta",
+          tableKey: "weeklyNewIssues",
+          emptyMessageKey: "messages.noWeeklyNewIssues",
+          columns: [
+            { key: "normalized_page_path", label: t("columns.page"), className: "path-cell", render: renderPathCell },
+            {
+              key: "issue_types",
+              label: t("columns.issues"),
+              className: "cell-issues cell-break",
+              render: (row) => {
+                const tokens = Array.isArray(row.issue_types) ? row.issue_types : [];
+                return tokens.length
+                  ? `<div class="badge-group">${tokens.map((token) => badge(displayIssueType(token), token === "robots_txt_blocked" ? "danger" : "warning")).join("")}</div>`
+                  : badge(state.language === "ru" ? "нет проблем" : "no issues", "success");
+              },
+            },
+            {
+              key: "recommended_action",
+              label: t("columns.action"),
+              render: (row) => badgeForAction(row.recommended_action, row.recommended_action_text || ""),
+            },
+          ],
+        });
+
+        renderWeeklyDeltaTable({
+          panel: panels.resolved_issues,
+          containerId: "weeklyResolvedIssuesTable",
+          metaId: "weeklyResolvedIssuesMeta",
+          tableKey: "weeklyResolvedIssues",
+          emptyMessageKey: "messages.noWeeklyResolvedIssues",
+          columns: [
+            { key: "normalized_page_path", label: t("columns.page"), className: "path-cell", render: renderPathCell },
+            {
+              key: "issue_types",
+              label: t("columns.issues"),
+              className: "cell-issues cell-break",
+              render: (row) => {
+                const tokens = Array.isArray(row.issue_types) ? row.issue_types : [];
+                return tokens.length
+                  ? `<div class="badge-group">${tokens.map((token) => badge(displayIssueType(token), "success")).join("")}</div>`
+                  : badge(state.language === "ru" ? "нет проблем" : "no issues", "success");
+              },
+            },
+            {
+              key: "recommended_action",
+              label: t("columns.action"),
+              render: (row) => badgeForAction(row.recommended_action, row.recommended_action_text || ""),
+            },
+          ],
+        });
+
+        renderWeeklyDeltaTable({
+          panel: panels.new_quick_wins,
+          containerId: "weeklyNewQuickWinsTable",
+          metaId: "weeklyNewQuickWinsMeta",
+          tableKey: "weeklyNewQuickWins",
+          emptyMessageKey: "messages.noWeeklyNewQuickWins",
+          columns: [
+            { key: "normalized_page_path", label: t("columns.page"), className: "path-cell", render: renderPathCell },
+            { key: "quick_win_score", label: t("columns.quickWin"), className: "num", render: (row) => formatDecimal(row.quick_win_score) },
+            { key: "reason_code", label: t("columns.reason"), render: (row) => badgeForReason(row.reason_code) },
+            {
+              key: "recommended_action",
+              label: t("columns.action"),
+              render: (row) => badgeForAction(row.recommended_action, row.recommended_action_text || ""),
+            },
+          ],
+        });
+
+        renderWeeklyDeltaTable({
+          panel: panels.positive_movers,
+          containerId: "weeklyPositiveMoversTable",
+          metaId: "weeklyPositiveMoversMeta",
+          tableKey: "weeklyPositiveMovers",
+          emptyMessageKey: "messages.noWeeklyPositiveMovers",
+          columns: [
+            { key: "normalized_page_path", label: t("columns.page"), className: "path-cell", render: renderPathCell },
+            { key: "delta_score", label: t("columns.deltaScore"), className: "num", render: (row) => formatDecimal(row.delta_score) },
+            { key: "quick_win_score_delta", label: t("columns.quickWinDelta"), className: "num", render: (row) => formatDecimal(row.quick_win_score_delta) },
+            { key: "click_delta", label: t("columns.clickDelta"), className: "num", render: (row) => formatInteger(row.click_delta) },
+            { key: "sessions_delta", label: t("columns.sessionsDelta"), className: "num", render: (row) => formatInteger(row.sessions_delta) },
+            { key: "conversions_delta", label: t("columns.conversionsDelta"), className: "num", render: (row) => formatInteger(row.conversions_delta) },
+          ],
+        });
+
+        renderWeeklyDeltaTable({
+          panel: panels.negative_movers,
+          containerId: "weeklyNegativeMoversTable",
+          metaId: "weeklyNegativeMoversMeta",
+          tableKey: "weeklyNegativeMovers",
+          emptyMessageKey: "messages.noWeeklyNegativeMovers",
+          columns: [
+            { key: "normalized_page_path", label: t("columns.page"), className: "path-cell", render: renderPathCell },
+            { key: "delta_score", label: t("columns.deltaScore"), className: "num", render: (row) => formatDecimal(row.delta_score) },
+            { key: "quick_win_score_delta", label: t("columns.quickWinDelta"), className: "num", render: (row) => formatDecimal(row.quick_win_score_delta) },
+            { key: "click_delta", label: t("columns.clickDelta"), className: "num", render: (row) => formatInteger(row.click_delta) },
+            { key: "sessions_delta", label: t("columns.sessionsDelta"), className: "num", render: (row) => formatInteger(row.sessions_delta) },
+            { key: "conversions_delta", label: t("columns.conversionsDelta"), className: "num", render: (row) => formatInteger(row.conversions_delta) },
+          ],
+        });
+      }
+
       function renderIndexingReviewSection() {
         const sectionState = state.current.indexingReview;
         const baseRows = state.current.indexingReview.rows.map((row) => ({
@@ -2963,6 +3415,7 @@
         renderQuickWinsSection();
         renderQueriesSection();
         renderTopMoversSection();
+        renderWeeklyDeltaSection();
         renderIndexingReviewSection();
         renderPagesSection();
         renderSpotlight();
@@ -3081,7 +3534,7 @@
           });
         });
 
-        const targets = ["overview", "sitewide-trend", "quick-wins", "queries", "pages", "top-page-movers", "indexing-review"]
+        const targets = ["overview", "sitewide-trend", "quick-wins", "queries", "pages", "top-page-movers", "weekly-delta", "indexing-review"]
           .map((id) => document.getElementById(id))
           .filter(Boolean);
 

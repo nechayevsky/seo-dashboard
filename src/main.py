@@ -604,6 +604,17 @@ def run_generate_dashboard(config_path: Path, project_paths: ProjectPaths) -> in
             for output_path in result["output_files"]:
                 print(f"- {output_path}")
 
+        weekly_delta = result.get("weekly_delta", {})
+        weekly_history = weekly_delta.get("history", {})
+        if weekly_history:
+            print(f"history snapshots: {weekly_history.get('snapshot_count', 0)}")
+            print(f"current history week: {weekly_history.get('current_week_key', '')}")
+            previous_week = weekly_history.get("previous_week_key")
+            if previous_week:
+                print(f"delta baseline week: {previous_week}")
+            else:
+                print("delta baseline week: none yet")
+
         validation = result.get("validation", {})
         missing_sections = validation.get("missing_sections", [])
         missing_files = validation.get("missing_files", [])
